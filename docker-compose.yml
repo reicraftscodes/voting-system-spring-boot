@@ -1,11 +1,33 @@
+#services:
+#  mysql:
+#    image: mysql:latest
+#    container_name: pinkCatContainer
+#    ports:
+#      - "3306:3306"
+#    environment:
+#      MYSQL_ROOT_PASSWORD: project01
+#      MYSQL_DATABASE: pinkCat
+#    volumes:
+#      - /Users/lauratemay/Documents/Learnings/Spring Boot & AI.I/voting/db:/var/lib/mysql
+
 services:
-  mysql:
-    image: mysql:latest
-    container_name: pinkCatContainer
-    ports:
-      - "3306:3306"
+  db:
+    image: mysql:lates
+    restart: always
     environment:
-      MYSQL_ROOT_PASSWORD: project01
-      MYSQL_DATABASE: pinkCat
+      MYSQL_DATABASE: 'brownCat'
+      MYSQL_USER: 'root'
+      MYSQL_PASSWORD: 'project01'
+      # Password for root access
+      MYSQL_ROOT_PASSWORD: 'project01'
+    ports:
+      - '3306:3306'
+    expose:
+      # Opens port 3306 on the container
+      - '3306'
+      # Where data will be persisted
     volumes:
-      - /Users/lauratemay/Documents/Learnings/Spring Boot & AI.I/voting/db:/var/lib/mysql
+      - my-db:/var/lib/mysql
+# Names our volume
+volumes:
+  mysql-db:
