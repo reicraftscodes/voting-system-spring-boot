@@ -1,5 +1,7 @@
 package com.lms.voting.dto;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,10 +13,20 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @Getter
 @Setter
+@Entity
 public class PersonalDetails {
-    private Integer id;
+
+//    this becomes column of databases
+    @Id
+    private Integer id; // primary key
+
     private String firstName;
+
     private String lastName;
+
     private LocalDate dateOfBirth;
+
     private String nationalInsuranceNumber;
+
+
 }
