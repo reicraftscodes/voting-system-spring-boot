@@ -11,7 +11,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import java.util.List;
 import java.util.Optional;
 
+
 // accept requests from the clients or exposes rest api or exposes rest endpoints
+// reference: https://spring.io/guides/tutorials/rest
+
 @RestController
 @RequestMapping("api/v1/person-details")
 public class PersonDetailsController {
@@ -32,6 +35,7 @@ public class PersonDetailsController {
     }
 
 
+    // add multiple users in the personal details records
     @PostMapping(produces = "application/json")
     public ResponseEntity<PersonalDetails> add(@RequestBody PersonalDetails personalDetails) {
         PersonalDetails addedPersonalDetails = personalDetailsService.addPersonalDetails(personalDetails);
