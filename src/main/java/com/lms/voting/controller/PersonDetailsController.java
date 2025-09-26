@@ -41,11 +41,14 @@ public class PersonDetailsController {
 
     // retrieve a single user
     @GetMapping("/members/{id}")
-     public ResponseEntity<Optional<PersonalDetails>> getPersonalDetailsByID(@PathVariable Integer id) {
+    public ResponseEntity<Optional<PersonalDetails>> getPersonalDetailsByID(@PathVariable Integer id) {
         Optional<PersonalDetails> personalDetails = personalDetailsRepository.findById(id);
-        return new ResponseEntity<>(personalDetails,HttpStatus.OK );
+        return new ResponseEntity<>(personalDetails, HttpStatus.OK);
     }
 
     // delete a single user
-
+    @DeleteMapping("/members/{id}")
+    public void deletePersonalDetailsByID(@PathVariable Integer id) {
+        personalDetailsRepository.deleteById(id);
+    }
 }

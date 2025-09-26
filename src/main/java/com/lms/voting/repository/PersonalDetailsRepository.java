@@ -9,6 +9,9 @@ import java.util.Optional;
 @Repository
 public interface PersonalDetailsRepository extends JpaRepository<PersonalDetails, Integer> {
 
+    @Override
     Optional<PersonalDetails> findById(Integer id);
+
+    void deleteById(Integer id);
 
 }

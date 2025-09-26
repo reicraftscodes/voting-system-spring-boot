@@ -31,9 +31,5 @@ public class PersonalDetailsService{
         return personalDetailsRepository.save(personalDetails);
     }
 
-    // retrieve a single user
-
-    // delete a single user
-
 
 }
