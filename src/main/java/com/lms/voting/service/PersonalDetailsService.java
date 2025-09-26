@@ -22,7 +22,7 @@ public class PersonalDetailsService extends PersonDetailsServiceImp {
         this.personalDetailsRepository = personalDetailsRepository;
     }
 
-    public List<PersonalDetails> getPersonalDetails() {
+    public List<PersonalDetails> getAllPersonalDetails() {
         return personalDetailsRepository.findAll();
     }
 }

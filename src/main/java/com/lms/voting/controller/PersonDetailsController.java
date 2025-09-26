@@ -23,6 +23,6 @@ public class PersonDetailsController {
     //    return list of Person details
     @GetMapping()
     public List<PersonalDetails> getPersonalDetails() {
-        return  personalDetailsService.getPersonalDetails();
+        return personalDetailsService.getAllPersonalDetails();
     }
 }
