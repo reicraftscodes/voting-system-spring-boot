@@ -1,7 +1,6 @@
 package com.lms.voting.controller;
 
 import com.lms.voting.dto.PersonalDetails;
-import com.lms.voting.repository.PersonalDetailsRepository;
 import com.lms.voting.service.PersonalDetailsService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
