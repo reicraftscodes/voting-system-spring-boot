@@ -20,11 +20,9 @@ import java.util.Optional;
 public class PersonDetailsController {
 
     private final PersonalDetailsService personalDetailsService;
-    private final PersonalDetailsRepository personalDetailsRepository;
 
-    public PersonDetailsController(PersonalDetailsService personalDetailsService, PersonalDetailsRepository personalDetailsRepository) {
+    public PersonDetailsController(PersonalDetailsService personalDetailsService) {
         this.personalDetailsService = personalDetailsService;
-        this.personalDetailsRepository = personalDetailsRepository;
     }
 
 
@@ -46,13 +44,18 @@ public class PersonDetailsController {
     // retrieve a single user
     @GetMapping("/members/{id}")
     public ResponseEntity<Optional<PersonalDetails>> getPersonalDetailsByID(@PathVariable Integer id) {
-        Optional<PersonalDetails> personalDetails = personalDetailsRepository.findById(id);
+        Optional<PersonalDetails> personalDetails = personalDetailsService.getPersonalDetailsByID(id);
         return new ResponseEntity<>(personalDetails, HttpStatus.OK);
     }
 
     // delete a single user
     @DeleteMapping("/members/{id}")
-    public void deletePersonalDetailsByID(@PathVariable Integer id) {
-        personalDetailsRepository.deleteById(id);
+    public ResponseEntity<PersonalDetails> deletePersonalDetailsByID(@PathVariable Integer id) {
+        Optional<PersonalDetails> existingId = personalDetailsService.getPersonalDetailsByID(id);
+        if (existingId.isEmpty()) {
+            personalDetailsService.deletePersonalDetailsByID(id);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }
