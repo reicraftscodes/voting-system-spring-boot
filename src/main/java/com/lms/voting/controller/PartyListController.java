@@ -2,6 +2,7 @@ package com.lms.voting.controller;
 
 import com.lms.voting.dto.PartyList;
 import com.lms.voting.service.PartyListService;
+import jakarta.servlet.http.Part;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -31,9 +32,9 @@ public class PartyListController {
     }
 
     @PostMapping(produces = "application/json")
-    public ResponseEntity<Optional<PartyList>> createPartyList(@RequestBody PartyList partyList) {
-        Optional<PartyList> addPartyList = partyListService.createPartyList(partyList);
-        if (addPartyList.isEmpty()) {
+    public ResponseEntity<PartyList> createPartyList(@RequestBody PartyList partyList) {
+        PartyList addPartyList = partyListService.createPartyList(partyList);
+        if (addPartyList == null) {
             return new ResponseEntity<>(addPartyList, HttpStatus.INTERNAL_SERVER_ERROR);
         }
         return new ResponseEntity<>(addPartyList, HttpStatus.OK);

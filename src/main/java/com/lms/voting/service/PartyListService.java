@@ -1,6 +1,7 @@
 package com.lms.voting.service;
 
 import com.lms.voting.dto.PartyList;
+import com.lms.voting.dto.UserDetails;
 import com.lms.voting.repository.PartyListRepository;
 import jakarta.servlet.http.Part;
 import org.springframework.stereotype.Service;
@@ -24,7 +25,8 @@ public class PartyListService {
     }
 
     //add partylist
-    public Optional<PartyList> createPartyList(PartyList partyList){
+    public PartyList createPartyList(PartyList partyList){
         return partyListRepository.save(partyList);
     }
+
 }
