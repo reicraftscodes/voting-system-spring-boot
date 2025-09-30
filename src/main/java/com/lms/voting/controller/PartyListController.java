@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("api/v1/uk-party-list")
@@ -30,8 +31,11 @@ public class PartyListController {
     }
 
     @PostMapping(produces = "application/json")
-    public ResponseEntity<PartyList> createPartyList(@RequestBody PartyList partyList) {
-        PartyList addPartyList = partyListService.createPartyList(partyList);
+    public ResponseEntity<Optional<PartyList>> createPartyList(@RequestBody PartyList partyList) {
+        Optional<PartyList> addPartyList = partyListService.createPartyList(partyList);
+        if (addPartyList.isEmpty()) {
+            return new ResponseEntity<>(addPartyList, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
         return new ResponseEntity<>(addPartyList, HttpStatus.OK);
     }
 

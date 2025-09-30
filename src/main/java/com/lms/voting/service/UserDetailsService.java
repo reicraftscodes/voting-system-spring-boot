@@ -34,12 +34,12 @@ public class UserDetailsService {
     }
 
     // retrieve a single user
-    public Optional<UserDetails> getPersonalDetailsByID(@PathVariable Integer id) {
+    public Optional<UserDetails> getPersonalDetailsByID(Integer id) {
         return personalDetailsRepository.findById(id);
     }
 
     // delete a single user
-    public void deletePersonalDetailsByID(@PathVariable Integer id) {
+    public void deletePersonalDetailsByID(Integer id) {
         personalDetailsRepository.deleteById(id);
     }
 
