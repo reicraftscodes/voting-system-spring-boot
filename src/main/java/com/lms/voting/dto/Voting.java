@@ -17,8 +17,7 @@ public class Voting {
     private Integer id;
     private String referenceNo;
 
-    @ManyToOne
-    @JoinColumn(name = "user_details_id")
+    @Transient
     private UserDetails userDetails;
 
     @ManyToOne
