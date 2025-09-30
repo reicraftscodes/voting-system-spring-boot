@@ -16,7 +16,7 @@ import java.time.LocalDate;
 @Getter
 @Setter
 @Entity
-public class PersonalDetails {
+public class UserDetails {
 
 //    this becomes column of databases
     @Id

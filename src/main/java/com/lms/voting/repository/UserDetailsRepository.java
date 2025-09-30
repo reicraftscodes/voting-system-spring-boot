@@ -1,16 +1,16 @@
 package com.lms.voting.repository;
 
-import com.lms.voting.dto.PersonalDetails;
+import com.lms.voting.dto.UserDetails;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
 @Repository
-public interface PersonalDetailsRepository extends JpaRepository<PersonalDetails, Integer> {
+public interface UserDetailsRepository extends JpaRepository<UserDetails, Integer> {
 
     @Override
-    Optional<PersonalDetails> findById(Integer id);
+    Optional<UserDetails> findById(Integer id);
 
     void deleteById(Integer id);
 

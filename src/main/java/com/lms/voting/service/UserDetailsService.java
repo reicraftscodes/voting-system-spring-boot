@@ -1,9 +1,7 @@
 package com.lms.voting.service;
 
-import com.lms.voting.dto.PersonalDetails;
-import com.lms.voting.repository.PersonalDetailsRepository;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import com.lms.voting.dto.UserDetails;
+import com.lms.voting.repository.UserDetailsRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
 
@@ -16,27 +14,27 @@ import java.util.Optional;
  * then it makes it available to use within other class
  * */
 @Service
-public class PersonalDetailsService {
+public class UserDetailsService {
 
     // get the repository
-    private final PersonalDetailsRepository personalDetailsRepository;
+    private final UserDetailsRepository personalDetailsRepository;
 
-    public PersonalDetailsService(PersonalDetailsRepository personalDetailsRepository) {
-        this.personalDetailsRepository = personalDetailsRepository;
+    public UserDetailsService(UserDetailsRepository userDetailsRepository) {
+        this.personalDetailsRepository = userDetailsRepository;
     }
 
     // get all personal details
-    public List<PersonalDetails> getAllPersonalDetails() {
+    public List<UserDetails> getAllPersonalDetails() {
         return personalDetailsRepository.findAll();
     }
 
     // add personal details
-    public PersonalDetails addPersonalDetails(PersonalDetails personalDetails) {
-        return personalDetailsRepository.save(personalDetails);
+    public UserDetails addPersonalDetails(UserDetails userDetails) {
+        return personalDetailsRepository.save(userDetails);
     }
 
     // retrieve a single user
-    public Optional<PersonalDetails> getPersonalDetailsByID(@PathVariable Integer id) {
+    public Optional<UserDetails> getPersonalDetailsByID(@PathVariable Integer id) {
         return personalDetailsRepository.findById(id);
     }
 
