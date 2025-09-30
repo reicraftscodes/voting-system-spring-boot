@@ -1,9 +1,12 @@
 package com.lms.voting.repository;
 
-import com.lms.voting.dto.PartyList;
+import com.lms.voting.dto.UserDetails;
+import com.lms.voting.dto.Voting;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface VotingRepository extends JpaRepository<PartyList, Integer> {
+import java.util.Optional;
 
-    PartyList getById(Integer id);
+public interface VotingRepository extends JpaRepository<Voting, Integer> {
+    
+    Optional<Voting> findByUserDetails(UserDetails user);
 }

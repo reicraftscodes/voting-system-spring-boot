@@ -7,7 +7,8 @@ import java.util.List;
 
 public interface PartyListRepository extends JpaRepository<PartyList, Integer> {
 
-    List<PartyList> findPartyListById(Integer id);
-
     void deleteById(Integer id);
+
+    PartyList getById(Integer id);
+
 }
