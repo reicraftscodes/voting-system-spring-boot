@@ -24,7 +24,7 @@ public class PartyListService {
         return partyListRepository.findAll();
     }
 
-    //add partylist
+    //create a party list member
     public PartyList createPartyList(PartyList partyList){
         return partyListRepository.save(partyList);
     }
