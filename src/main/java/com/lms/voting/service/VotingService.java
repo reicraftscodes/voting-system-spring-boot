@@ -22,13 +22,14 @@ public class VotingService {
     // cast vote
 
     public String castVote(CastVoteRequest castVoteRequest) {
-        // 1. Check if user exists
-        Optional<UserDetails> userOpt = userDetailsRepository.findById(castVoteRequest.getUserId());
-        if (userOpt.isEmpty()) {
+
+        //  Check if user exists
+        Optional<UserDetails> userDetails = userDetailsRepository.findById(castVoteRequest.getUserId());
+        if (userDetails.isEmpty()) {
             return "User not found.";
         }
 
-        UserDetails user = userOpt.get();
+        UserDetails user = userDetails.get();
 
         // Check if user already voted
         Optional<Voting> existingVote = votingRepository.findByUserDetails(user);
@@ -42,18 +43,17 @@ public class VotingService {
             return "Party not found.";
         }
 
-        // 4. Save the vote
         saveVote(user, votedPartyList.get(), castVoteRequest.getReferenceNo());
+
         return "Vote successfully cast.";
     }
 
 
-    private void saveVote(UserDetails user, PartyList partyList, String referenceNo) {
+    public void saveVote(UserDetails user, PartyList partyList, String referenceNo) {
         Voting vote = new Voting();
         vote.setReferenceNo(referenceNo);
         vote.setUserDetails(user);
         vote.setPartyList(partyList);
         votingRepository.save(vote);
     }
-
 }

@@ -5,7 +5,6 @@ import com.lms.voting.service.UserDetailsService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
 import java.util.Optional;
@@ -34,7 +33,7 @@ public class UserDetailsController {
 
     // add multiple users in the personal details records
     @PostMapping(produces = "application/json")
-    public ResponseEntity<UserDetails> add(@RequestBody UserDetails userDetails) {
+    public ResponseEntity<UserDetails> createUser(@RequestBody UserDetails userDetails) {
         UserDetails addedUserDetails = userDetailsService.addPersonalDetails(userDetails);
         return new ResponseEntity<>(addedUserDetails, HttpStatus.CREATED);
     }

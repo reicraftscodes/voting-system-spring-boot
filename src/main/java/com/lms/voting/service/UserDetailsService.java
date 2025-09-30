@@ -3,7 +3,6 @@ package com.lms.voting.service;
 import com.lms.voting.dto.UserDetails;
 import com.lms.voting.repository.UserDetailsRepository;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.List;
 import java.util.Optional;

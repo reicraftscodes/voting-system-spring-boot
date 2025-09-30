@@ -2,14 +2,11 @@ package com.lms.voting.controller;
 
 import com.lms.voting.dto.PartyList;
 import com.lms.voting.service.PartyListService;
-import jakarta.servlet.http.Part;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("api/v1/uk-party-list")
