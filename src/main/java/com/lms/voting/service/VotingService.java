@@ -23,7 +23,8 @@ public class VotingService {
 
     public String castVote(CastVoteRequest castVoteRequest) {
 
-        //  Check if user exists
+        // Check if the user exists using the user ID from the CastVoteRequest DTO.
+        // The CastVoteRequest was created to carry the user ID during the voting process.
         Optional<UserDetails> userDetails = userDetailsRepository.findById(castVoteRequest.getUserId());
         if (userDetails.isEmpty()) {
             return "User not found.";
@@ -43,6 +44,7 @@ public class VotingService {
             return "Party not found.";
         }
 
+        // save
         saveVote(user, votedPartyList.get(), castVoteRequest.getReferenceNo());
 
         return "Vote successfully cast.";
