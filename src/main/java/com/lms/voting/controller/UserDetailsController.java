@@ -2,6 +2,7 @@ package com.lms.voting.controller;
 
 import com.lms.voting.dto.UserDetails;
 import com.lms.voting.service.UserDetailsService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,12 +18,8 @@ import java.util.Optional;
 @RequestMapping("api/v1/person-details")
 public class UserDetailsController {
 
-    private final UserDetailsService userDetailsService;
-
-    public UserDetailsController(UserDetailsService userDetailsService) {
-        this.userDetailsService = userDetailsService;
-    }
-
+    @Autowired
+    private UserDetailsService userDetailsService;
 
     //    return list of Person details
     @GetMapping

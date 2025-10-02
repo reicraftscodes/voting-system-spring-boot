@@ -7,20 +7,22 @@ import com.lms.voting.dto.Voting;
 import com.lms.voting.repository.PartyListRepository;
 import com.lms.voting.repository.UserDetailsRepository;
 import com.lms.voting.repository.VotingRepository;
-import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
-@AllArgsConstructor
 @Service
 public class VotingService {
 
-    private final PartyListRepository partyListRepository;
-    private final UserDetailsRepository userDetailsRepository;
-    private final VotingRepository votingRepository;
-    // cast vote
+    @Autowired
+    private PartyListRepository partyListRepository;
+    @Autowired
+    private  UserDetailsRepository userDetailsRepository;
+    @Autowired
+    private  VotingRepository votingRepository;
 
+    // cast vote
     public String castVote(CastVoteRequest castVoteRequest) {
 
         // Check if the user exists using the user ID from the CastVoteRequest DTO.

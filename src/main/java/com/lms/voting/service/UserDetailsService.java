@@ -2,6 +2,7 @@ package com.lms.voting.service;
 
 import com.lms.voting.dto.UserDetails;
 import com.lms.voting.repository.UserDetailsRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,11 +17,9 @@ import java.util.Optional;
 public class UserDetailsService {
 
     // get the repository
-    private final UserDetailsRepository personalDetailsRepository;
+    @Autowired
+    private UserDetailsRepository personalDetailsRepository;
 
-    public UserDetailsService(UserDetailsRepository userDetailsRepository) {
-        this.personalDetailsRepository = userDetailsRepository;
-    }
 
     // get all personal details
     public List<UserDetails> getAllPersonalDetails() {

@@ -2,6 +2,7 @@ package com.lms.voting.controller;
 
 import com.lms.voting.dto.PartyList;
 import com.lms.voting.service.PartyListService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -12,11 +13,8 @@ import java.util.List;
 @RequestMapping("api/v1/uk-party-list")
 public class PartyListController {
 
-    private final PartyListService partyListService;
-
-    public PartyListController(PartyListService partyListService) {
-        this.partyListService = partyListService;
-    }
+    @Autowired
+    private PartyListService partyListService;
 
     //get all party members
     @GetMapping

@@ -2,9 +2,8 @@ package com.lms.voting.controller;
 
 
 import com.lms.voting.dto.CastVoteRequest;
-import com.lms.voting.repository.VotingRepository;
 import com.lms.voting.service.VotingService;
-import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -14,17 +13,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/v1/voting")
-@AllArgsConstructor
 public class VotingController {
 
-    private final VotingService votingService;
-    private final VotingRepository votingRepository;
-
-
-//    @GetMapping
-//    public void getAllVotes(){
-//        votingRepository.getAllById();
-//    }
+    @Autowired
+    private VotingService votingService;
 
     @PostMapping
     public ResponseEntity<String> castVote(@RequestBody CastVoteRequest castVoteRequest) {
