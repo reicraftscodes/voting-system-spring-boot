@@ -1,4 +1,4 @@
-package com.lms.voting.service;
+package com.lms.voting.service.imp;
 
 import com.lms.voting.entity.UserDetails;
 import com.lms.voting.repository.UserDetailsRepository;

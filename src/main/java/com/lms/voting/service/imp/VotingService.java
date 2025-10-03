@@ -1,5 +1,6 @@
-package com.lms.voting.service;
+package com.lms.voting.service.imp;
 
+import com.lms.voting.exception.NoVotingRecordsFoundException;
 import com.lms.voting.dto.CastVoteRequest;
 import com.lms.voting.entity.PartyList;
 import com.lms.voting.entity.UserDetails;
@@ -19,9 +20,9 @@ public class VotingService {
     @Autowired
     private PartyListRepository partyListRepository;
     @Autowired
-    private  UserDetailsRepository userDetailsRepository;
+    private UserDetailsRepository userDetailsRepository;
     @Autowired
-    private  VotingRepository votingRepository;
+    private VotingRepository votingRepository;
 
     // cast vote
     public String castVote(CastVoteRequest castVoteRequest) {
@@ -63,8 +64,12 @@ public class VotingService {
     }
 
 
-    public List<Voting> votingReceiptDisplays(){
-        return votingRepository.findAll();
+    public List<Voting> votingReceiptDisplays() {
+        List<Voting> voting = votingRepository.findAll();
+        if (voting.isEmpty()) {
+            throw new NoVotingRecordsFoundException("No record is found {}");
+        }
+        return voting;
     }
 
 }
