@@ -1,9 +1,9 @@
 package com.lms.voting.service;
 
 import com.lms.voting.dto.CastVoteRequest;
-import com.lms.voting.dto.PartyList;
-import com.lms.voting.dto.UserDetails;
-import com.lms.voting.dto.Voting;
+import com.lms.voting.entity.PartyList;
+import com.lms.voting.entity.UserDetails;
+import com.lms.voting.entity.Voting;
 import com.lms.voting.repository.PartyListRepository;
 import com.lms.voting.repository.UserDetailsRepository;
 import com.lms.voting.repository.VotingRepository;

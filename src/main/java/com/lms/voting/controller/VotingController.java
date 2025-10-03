@@ -2,7 +2,7 @@ package com.lms.voting.controller;
 
 
 import com.lms.voting.dto.CastVoteRequest;
-import com.lms.voting.dto.Voting;
+import com.lms.voting.entity.Voting;
 import com.lms.voting.service.VotingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -10,7 +10,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/v1/voting")

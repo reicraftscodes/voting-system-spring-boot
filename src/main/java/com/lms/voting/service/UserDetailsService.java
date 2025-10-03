@@ -1,6 +1,6 @@
 package com.lms.voting.service;
 
-import com.lms.voting.dto.UserDetails;
+import com.lms.voting.entity.UserDetails;
 import com.lms.voting.repository.UserDetailsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

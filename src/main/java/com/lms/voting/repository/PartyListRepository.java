@@ -1,6 +1,6 @@
 package com.lms.voting.repository;
 
-import com.lms.voting.dto.PartyList;
+import com.lms.voting.entity.PartyList;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface PartyListRepository extends JpaRepository<PartyList, Integer> {

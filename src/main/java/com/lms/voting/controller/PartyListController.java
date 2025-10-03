@@ -1,6 +1,6 @@
 package com.lms.voting.controller;
 
-import com.lms.voting.dto.PartyList;
+import com.lms.voting.entity.PartyList;
 import com.lms.voting.service.PartyListService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

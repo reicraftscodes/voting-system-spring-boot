@@ -1,6 +1,6 @@
 package com.lms.voting.service;
 
-import com.lms.voting.dto.PartyList;
+import com.lms.voting.entity.PartyList;
 import com.lms.voting.repository.PartyListRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
