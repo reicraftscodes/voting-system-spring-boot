@@ -10,6 +10,7 @@ import com.lms.voting.repository.VotingRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -60,4 +61,10 @@ public class VotingService {
         vote.setPartyList(partyList);
         votingRepository.save(vote);
     }
+
+
+    public List<Voting> votingReceiptDisplays(){
+        return votingRepository.findAll();
+    }
+
 }

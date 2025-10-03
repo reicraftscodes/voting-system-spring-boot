@@ -2,14 +2,15 @@ package com.lms.voting.controller;
 
 
 import com.lms.voting.dto.CastVoteRequest;
+import com.lms.voting.dto.Voting;
 import com.lms.voting.service.VotingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/v1/voting")
@@ -27,5 +28,11 @@ public class VotingController {
         } else {
             return new ResponseEntity<>(result, HttpStatus.BAD_REQUEST);
         }
+    }
+
+    @GetMapping("display-receipt")
+    public ResponseEntity<List<Voting>> getAllVotesReceipt() {
+        List<Voting> voting = votingService.votingReceiptDisplays();
+        return new ResponseEntity<>(voting, HttpStatus.OK);
     }
 }
