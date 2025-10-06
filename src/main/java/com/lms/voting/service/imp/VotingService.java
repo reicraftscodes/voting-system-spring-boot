@@ -48,13 +48,14 @@ public class VotingService {
             return "Party not found.";
         }
 
-        // save
-        saveVote(user, votedPartyList.get(), castVoteRequest.getReferenceNo());
+        // save method
+        saveVote(user, votedPartyList.get(), castVoteRequest.generateRandomReceiptNumbers());
 
         return "Vote successfully cast.";
     }
 
 
+    // save vote triggers here and save to repository
     public void saveVote(UserDetails user, PartyList partyList, String referenceNo) {
         Voting vote = new Voting();
         vote.setReferenceNo(referenceNo);
