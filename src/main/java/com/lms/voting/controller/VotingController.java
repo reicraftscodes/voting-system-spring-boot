@@ -3,7 +3,7 @@ package com.lms.voting.controller;
 
 import com.lms.voting.dto.CastVoteRequest;
 import com.lms.voting.entity.Voting;
-import com.lms.voting.service.imp.VotingService;
+import com.lms.voting.service.imp.VotingServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,11 +16,11 @@ import java.util.List;
 public class VotingController {
 
     @Autowired
-    private VotingService votingService;
+    private VotingServiceImpl votingServiceImpl;
 
     @PostMapping
     public ResponseEntity<String> castVote(@RequestBody CastVoteRequest castVoteRequest) {
-        String result = votingService.castVote(castVoteRequest);
+        String result = votingServiceImpl.castVote(castVoteRequest);
 
         if (result.equalsIgnoreCase("Vote successfully cast.")) {
             return new ResponseEntity<>(result, HttpStatus.OK);
@@ -31,7 +31,7 @@ public class VotingController {
 
     @GetMapping("display-receipt")
     public ResponseEntity<List<Voting>> getAllVotesReceipt() {
-        List<Voting> voting = votingService.votingReceiptDisplays();
+        List<Voting> voting = votingServiceImpl.votingReceiptDisplays();
         return new ResponseEntity<>(voting, HttpStatus.OK);
     }
 }

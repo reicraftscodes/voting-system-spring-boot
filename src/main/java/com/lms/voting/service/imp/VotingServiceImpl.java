@@ -8,6 +8,7 @@ import com.lms.voting.entity.Voting;
 import com.lms.voting.repository.PartyListRepository;
 import com.lms.voting.repository.UserDetailsRepository;
 import com.lms.voting.repository.VotingRepository;
+import com.lms.voting.service.VotingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,7 +16,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class VotingService {
+public class VotingServiceImpl implements VotingService {
 
     @Autowired
     private PartyListRepository partyListRepository;

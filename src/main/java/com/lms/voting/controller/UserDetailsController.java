@@ -1,7 +1,7 @@
 package com.lms.voting.controller;
 
 import com.lms.voting.entity.UserDetails;
-import com.lms.voting.service.imp.UserDetailsService;
+import com.lms.voting.service.imp.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,19 +19,19 @@ import java.util.Optional;
 public class UserDetailsController {
 
     @Autowired
-    private UserDetailsService userDetailsService;
+    private UserDetailsServiceImpl userDetailsServiceImpl;
 
     //    return list of Person details
     @GetMapping
     public List<UserDetails> getPersonalDetails() {
-        return userDetailsService.getAllPersonalDetails();
+        return userDetailsServiceImpl.getAllPersonalDetails();
     }
 
 
     // add multiple users in the personal details records
     @PostMapping(produces = "application/json")
     public ResponseEntity<UserDetails> createUser(@RequestBody UserDetails userDetails) {
-        UserDetails addedUserDetails = userDetailsService.addPersonalDetails(userDetails);
+        UserDetails addedUserDetails = userDetailsServiceImpl.addPersonalDetails(userDetails);
         return new ResponseEntity<>(addedUserDetails, HttpStatus.CREATED);
     }
 
@@ -39,16 +39,16 @@ public class UserDetailsController {
     // retrieve a single user
     @GetMapping("/members/{id}")
     public ResponseEntity<Optional<UserDetails>> getPersonalDetailsByID(@PathVariable Integer id) {
-        Optional<UserDetails> personalDetails = userDetailsService.getPersonalDetailsByID(id);
+        Optional<UserDetails> personalDetails = userDetailsServiceImpl.getPersonalDetailsByID(id);
         return new ResponseEntity<>(personalDetails, HttpStatus.OK);
     }
 
     // delete a single user
     @DeleteMapping("/members/{id}")
     public ResponseEntity<UserDetails> deletePersonalDetailsByID(@PathVariable Integer id) {
-        Optional<UserDetails> existingId = userDetailsService.getPersonalDetailsByID(id);
+        Optional<UserDetails> existingId = userDetailsServiceImpl.getPersonalDetailsByID(id);
         if (existingId.isEmpty()) {
-            userDetailsService.deletePersonalDetailsByID(id);
+            userDetailsServiceImpl.deletePersonalDetailsByID(id);
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         return new ResponseEntity<>(HttpStatus.OK);

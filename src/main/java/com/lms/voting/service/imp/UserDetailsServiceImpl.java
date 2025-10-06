@@ -2,6 +2,7 @@ package com.lms.voting.service.imp;
 
 import com.lms.voting.entity.UserDetails;
 import com.lms.voting.repository.UserDetailsRepository;
+import com.lms.voting.service.UserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,7 +15,7 @@ import java.util.Optional;
  * then it makes it available to use within other class
  * */
 @Service
-public class UserDetailsService {
+public class UserDetailsServiceImpl implements UserDetailsService {
 
     // get the repository
     @Autowired
