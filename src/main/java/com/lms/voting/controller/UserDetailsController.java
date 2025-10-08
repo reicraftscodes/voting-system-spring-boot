@@ -3,12 +3,12 @@ package com.lms.voting.controller;
 import com.lms.voting.entity.UserDetails;
 import com.lms.voting.service.imp.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 
 // accept requests from the clients or exposes rest api or exposes rest endpoints
@@ -32,25 +32,25 @@ public class UserDetailsController {
     @PostMapping(produces = "application/json")
     public ResponseEntity<UserDetails> createUser(@RequestBody UserDetails userDetails) {
         UserDetails addedUserDetails = userDetailsServiceImpl.addPersonalDetails(userDetails);
-        return new ResponseEntity<>(addedUserDetails, HttpStatus.CREATED);
+        return ResponseEntity.status(HttpStatus.CREATED).body(addedUserDetails);
     }
 
 
     // retrieve a single user
     @GetMapping("/members/{id}")
-    public ResponseEntity<Optional<UserDetails>> getPersonalDetailsByID(@PathVariable Integer id) {
-        Optional<UserDetails> personalDetails = userDetailsServiceImpl.getPersonalDetailsByID(id);
-        return new ResponseEntity<>(personalDetails, HttpStatus.OK);
+    public ResponseEntity<UserDetails> getPersonalDetailsByID(@PathVariable Integer id) {
+        return userDetailsServiceImpl.getPersonalDetailsByID(id)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 
-    // delete a single user
+    /**
+     * TODO: Implement DELETE user endpoint that returns 204 when deleted, 404 if user not found
+     */
     @DeleteMapping("/members/{id}")
-    public ResponseEntity<UserDetails> deletePersonalDetailsByID(@PathVariable Integer id) {
-        Optional<UserDetails> existingId = userDetailsServiceImpl.getPersonalDetailsByID(id);
-        if (existingId.isEmpty()) {
-            userDetailsServiceImpl.deletePersonalDetailsByID(id);
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-        return new ResponseEntity<>(HttpStatus.OK);
+    public ResponseEntity<Object> deletePersonalDetailsByID(@PathVariable Integer id) {
+        userDetailsServiceImpl.deletePersonalDetailsByID(id);
+        return ResponseEntity.noContent().build();
+
     }
 }
