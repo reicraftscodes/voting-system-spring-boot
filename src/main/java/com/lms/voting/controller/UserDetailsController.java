@@ -3,7 +3,6 @@ package com.lms.voting.controller;
 import com.lms.voting.entity.UserDetails;
 import com.lms.voting.service.imp.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -44,13 +43,4 @@ public class UserDetailsController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    /**
-     * TODO: Implement DELETE user endpoint that returns 204 when deleted, 404 if user not found
-     */
-    @DeleteMapping("/members/{id}")
-    public ResponseEntity<Object> deletePersonalDetailsByID(@PathVariable Integer id) {
-        userDetailsServiceImpl.deletePersonalDetailsByID(id);
-        return ResponseEntity.noContent().build();
-
-    }
 }

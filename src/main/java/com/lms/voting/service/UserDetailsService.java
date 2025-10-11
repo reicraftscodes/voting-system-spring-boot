@@ -13,6 +13,4 @@ public interface UserDetailsService {
 
     Optional<UserDetails> getPersonalDetailsByID(Integer id);
 
-    void deletePersonalDetailsByID(Integer id);
-
 }

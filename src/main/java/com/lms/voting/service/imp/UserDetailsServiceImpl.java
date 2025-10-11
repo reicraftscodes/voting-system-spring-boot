@@ -3,6 +3,7 @@ package com.lms.voting.service.imp;
 import com.lms.voting.entity.UserDetails;
 import com.lms.voting.repository.UserDetailsRepository;
 import com.lms.voting.service.UserDetailsService;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -36,11 +37,5 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     public Optional<UserDetails> getPersonalDetailsByID(Integer id) {
         return personalDetailsRepository.findById(id);
     }
-
-    // delete a single user
-    public void deletePersonalDetailsByID(Integer id) {
-        personalDetailsRepository.deleteById(id);
-    }
-
 
 }
