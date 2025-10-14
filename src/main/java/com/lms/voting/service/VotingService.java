@@ -15,4 +15,5 @@ public interface VotingService {
 
     List<Voting> votingReceiptDisplays();
 
+    Integer getTotalCountVoter();
 }

@@ -34,4 +34,10 @@ public class VotingController {
         List<Voting> voting = votingServiceImpl.votingReceiptDisplays();
         return new ResponseEntity<>(voting, HttpStatus.OK);
     }
+
+    @GetMapping("count-total-vote")
+    public ResponseEntity<Integer> getTotalCountVoter() {
+        Integer votes = votingServiceImpl.getTotalCountVoter();
+        return new ResponseEntity<>(votes, HttpStatus.OK);
+    }
 }

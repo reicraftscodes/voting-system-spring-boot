@@ -1,10 +1,10 @@
 package com.lms.voting.service.imp;
 
-import com.lms.voting.exception.NoVotingRecordsFoundException;
 import com.lms.voting.dto.CastVoteRequest;
 import com.lms.voting.entity.PartyList;
 import com.lms.voting.entity.UserDetails;
 import com.lms.voting.entity.Voting;
+import com.lms.voting.exception.NoVotingRecordsFoundException;
 import com.lms.voting.repository.PartyListRepository;
 import com.lms.voting.repository.UserDetailsRepository;
 import com.lms.voting.repository.VotingRepository;
@@ -72,6 +72,10 @@ public class VotingServiceImpl implements VotingService {
             throw new NoVotingRecordsFoundException("No record is found {}");
         }
         return voting;
+    }
+
+    public Integer getTotalCountVoter() {
+       return votingRepository.getTotalCountVoter();
     }
 
 }
