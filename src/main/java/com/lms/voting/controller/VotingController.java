@@ -36,10 +36,6 @@ public class VotingController {
         return new ResponseEntity<>(voting, HttpStatus.OK);
     }
 
-    /**
-     * Uses SQL query to get the total part cost of all aircraft.
-     * @return returns the total cost.
-     */
     @GetMapping("count-total-vote")
     public ResponseEntity<Integer> getTotalCountVoter() {
         Integer votes = votingServiceImpl.getTotalCountVoter();

@@ -17,10 +17,18 @@ public interface VotingRepository extends JpaRepository<Voting, Long> {
 
     List<Voting> findAll();
 
+
+    /**
+     * Uses SQL query to get the total vote count overall.
+     * @return returns the total vote count.
+     */
     @Query(value = "SELECT COUNT(DISTINCT id ) from voting", nativeQuery = true)
     Integer getTotalCountVoter();
 
-
+    /**
+     * Uses SQL query to get the total count per party list in UK
+     * @return returns the total count per party list.
+     */
     @Query(value = "SELECT COUNT(u.id) FROM user_details u INNER JOIN party_list p ON u.id = p.id WHERE LOWER(p.party_name) = LOWER(:partyName)", nativeQuery = true)
     Long getAllTotalVotersVoteNumberByParty(@Param("partyName") String partyName);
 }
