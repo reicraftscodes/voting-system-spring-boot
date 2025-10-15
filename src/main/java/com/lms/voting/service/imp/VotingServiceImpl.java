@@ -12,7 +12,9 @@ import com.lms.voting.service.VotingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -75,7 +77,24 @@ public class VotingServiceImpl implements VotingService {
     }
 
     public Integer getTotalCountVoter() {
-       return votingRepository.getTotalCountVoter();
+        return votingRepository.getTotalCountVoter();
+    }
+
+    @Override
+    public Map<String, Object> getTotalVotesByParty(String partyName) {
+        Long totalVotes = votingRepository.getAllTotalVotersVoteNumberByParty(partyName);
+
+        Map<String, Object> response = new LinkedHashMap<>();
+
+        response.put("partyName" , partyName);
+
+        if (totalVotes != null) {
+            response.put("totalVotes" , totalVotes);
+        } else {
+            response.put("totalVotes" , 0L);
+        }
+
+        return response;
     }
 
 }

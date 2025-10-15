@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/v1/voting")
@@ -30,7 +31,7 @@ public class VotingController {
     }
 
     @GetMapping("display-receipt")
-    public ResponseEntity<List<Voting>> getAllVotesReceipt() {
+    public ResponseEntity<List<Voting>> getAllVotesReceiptDisplays() {
         List<Voting> voting = votingServiceImpl.votingReceiptDisplays();
         return new ResponseEntity<>(voting, HttpStatus.OK);
     }
@@ -44,4 +45,18 @@ public class VotingController {
         Integer votes = votingServiceImpl.getTotalCountVoter();
         return new ResponseEntity<>(votes, HttpStatus.OK);
     }
+
+    // show users who voted specific party list - total-vote?partyName=Labour"
+    @GetMapping("/total-vote")
+    public ResponseEntity<Map<String, Object>> getTotalCountVoterByParty(
+            @RequestParam("partyName") String partyName) {
+
+        if (partyName == null || partyName.isEmpty()) {
+            return ResponseEntity.badRequest().body(Map.of("error" , "partyName is required"));
+        }
+
+        Map<String, Object> results = votingServiceImpl.getTotalVotesByParty(partyName);
+        return new ResponseEntity<> (results,HttpStatus.OK);
+    }
+
 }

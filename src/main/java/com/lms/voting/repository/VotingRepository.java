@@ -4,13 +4,14 @@ import com.lms.voting.entity.UserDetails;
 import com.lms.voting.entity.Voting;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface VotingRepository extends JpaRepository<Voting, Integer> {
+public interface VotingRepository extends JpaRepository<Voting, Long> {
 
     Optional<Voting> findByUserDetails(UserDetails user);
 
@@ -18,4 +19,8 @@ public interface VotingRepository extends JpaRepository<Voting, Integer> {
 
     @Query(value = "SELECT COUNT(DISTINCT id ) from voting", nativeQuery = true)
     Integer getTotalCountVoter();
+
+
+    @Query(value = "SELECT COUNT(u.id) FROM user_details u INNER JOIN party_list p ON u.id = p.id WHERE LOWER(p.party_name) = LOWER(:partyName)", nativeQuery = true)
+    Long getAllTotalVotersVoteNumberByParty(@Param("partyName") String partyName);
 }

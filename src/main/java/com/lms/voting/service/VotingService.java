@@ -6,6 +6,7 @@ import com.lms.voting.entity.UserDetails;
 import com.lms.voting.entity.Voting;
 
 import java.util.List;
+import java.util.Map;
 
 public interface VotingService {
 
@@ -15,5 +16,6 @@ public interface VotingService {
 
     List<Voting> votingReceiptDisplays();
 
-    Integer getTotalCountVoter();
+    Map<String, Object> getTotalVotesByParty(String partyName);
+
 }
