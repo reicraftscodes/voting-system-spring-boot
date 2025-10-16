@@ -16,8 +16,12 @@ import java.util.Map;
 @RequestMapping("/api/v1/voting")
 public class VotingController {
 
-    @Autowired
     private VotingServiceImpl votingServiceImpl;
+
+    @Autowired
+    public VotingController(VotingServiceImpl votingService){
+        this.votingServiceImpl = votingService;
+    }
 
     @PostMapping
     public ResponseEntity<String> castVote(@RequestBody CastVoteRequest castVoteRequest) {
@@ -42,17 +46,16 @@ public class VotingController {
         return new ResponseEntity<>(votes, HttpStatus.OK);
     }
 
-    // show users who voted specific party list - total-vote?partyName=Labour"
+    // show users who voted specific party list: /api/v1/voting/total-vote?partyName=2
     @GetMapping("/total-vote")
-    public ResponseEntity<Map<String, Object>> getTotalCountVoterByParty(
-            @RequestParam("partyName") Integer partyName) {
+    public ResponseEntity<Map<String, Object>> getTotalCountVoterByParty(@RequestParam("partyName") Integer partyName) {
 
-        if (partyName == null || partyName.equals("")) {
+        if (partyName == null) {
             return ResponseEntity.badRequest().body(Map.of("error" , "partyName is required"));
         }
 
         Map<String, Object> results = votingServiceImpl.getTotalVotesByParty(partyName);
-        return new ResponseEntity (results,HttpStatus.OK);
+        return new ResponseEntity<>(results,HttpStatus.OK);
     }
 
 }
