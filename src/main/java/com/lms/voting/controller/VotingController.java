@@ -52,7 +52,7 @@ public class VotingController {
         }
 
         Map<String, Object> results = votingServiceImpl.getTotalVotesByParty(partyName);
-        return new ResponseEntity<> (results,HttpStatus.OK);
+        return new ResponseEntity (results,HttpStatus.OK);
     }
 
 }
