@@ -30,5 +30,5 @@ public interface VotingRepository extends JpaRepository<Voting, Long> {
      * @return returns the total count per party list.
      */
     @Query(value = "SELECT COUNT(u.id) FROM user_details u INNER JOIN voting p ON u.id = p.id WHERE p.party_list = :partyName", nativeQuery = true)
-    Long getAllTotalVotersVoteNumberByParty(@Param("partyName") Integer partyName);
+    Long getAllTotalVotersVoteNumberByParty(@Param("partyName") Integer partyId);
 }
