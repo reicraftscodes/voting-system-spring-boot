@@ -45,9 +45,9 @@ public class VotingController {
     // show users who voted specific party list - total-vote?partyName=Labour"
     @GetMapping("/total-vote")
     public ResponseEntity<Map<String, Object>> getTotalCountVoterByParty(
-            @RequestParam("partyName") String partyName) {
+            @RequestParam("partyName") Integer partyName) {
 
-        if (partyName == null || partyName.isEmpty()) {
+        if (partyName == null || partyName.equals("")) {
             return ResponseEntity.badRequest().body(Map.of("error" , "partyName is required"));
         }
 

@@ -16,6 +16,6 @@ public interface VotingService {
 
     List<Voting> votingReceiptDisplays();
 
-    Map<String, Object> getTotalVotesByParty(String partyName);
+    Map<String, Object> getTotalVotesByParty(Integer partyName);
 
 }

@@ -81,7 +81,7 @@ public class VotingServiceImpl implements VotingService {
     }
 
     @Override
-    public Map<String, Object> getTotalVotesByParty(String partyName) {
+    public Map<String, Object> getTotalVotesByParty(Integer partyName) {
         Long totalVotes = votingRepository.getAllTotalVotersVoteNumberByParty(partyName);
 
         Map<String, Object> response = new LinkedHashMap<>();

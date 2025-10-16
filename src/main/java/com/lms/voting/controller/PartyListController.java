@@ -13,8 +13,12 @@ import java.util.List;
 @RequestMapping("api/v1/uk-party-list")
 public class PartyListController {
 
+    private final PartyListService partyListServiceImp;
+
     @Autowired
-    private PartyListService partyListServiceImp;
+    public PartyListController(PartyListService partyListService){
+        this.partyListServiceImp = partyListService;
+    }
 
     //get all party members
     @GetMapping
