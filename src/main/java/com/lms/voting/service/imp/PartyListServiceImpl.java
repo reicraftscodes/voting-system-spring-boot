@@ -11,8 +11,13 @@ import java.util.List;
 @Service
 public class PartyListServiceImpl implements PartyListService {
 
+
+    private final PartyListRepository partyListRepository;
+
     @Autowired
-    private PartyListRepository partyListRepository;
+    public PartyListServiceImpl(PartyListRepository partyListRepository){
+        this.partyListRepository = partyListRepository;
+    }
 
     // find all party list groups
     public List<PartyList> getAllPartyMembers() {

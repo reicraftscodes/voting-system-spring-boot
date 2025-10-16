@@ -17,8 +17,13 @@ import java.util.List;
 @RequestMapping("api/v1/person-details")
 public class UserDetailsController {
 
-    @Autowired
+
     private UserDetailsServiceImpl userDetailsServiceImpl;
+
+    @Autowired
+    public UserDetailsController(UserDetailsServiceImpl userDetailsServiceImpl){
+        this.userDetailsServiceImpl = userDetailsServiceImpl;
+    }
 
     //    return list of Person details
     @GetMapping

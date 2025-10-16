@@ -20,12 +20,18 @@ import java.util.Optional;
 @Service
 public class VotingServiceImpl implements VotingService {
 
+    private final PartyListRepository partyListRepository;
+
+    private final UserDetailsRepository userDetailsRepository;
+
+    private final VotingRepository votingRepository;
+
     @Autowired
-    private PartyListRepository partyListRepository;
-    @Autowired
-    private UserDetailsRepository userDetailsRepository;
-    @Autowired
-    private VotingRepository votingRepository;
+    public VotingServiceImpl(PartyListRepository partyListRepository, UserDetailsRepository userDetailsRepository, VotingRepository votingRepository) {
+        this.partyListRepository = partyListRepository;
+        this.userDetailsRepository = userDetailsRepository;
+        this.votingRepository = votingRepository;
+    }
 
     // cast vote
     public String castVote(CastVoteRequest castVoteRequest) {
@@ -86,12 +92,12 @@ public class VotingServiceImpl implements VotingService {
 
         Map<String, Object> response = new LinkedHashMap<>();
 
-        response.put("partyName" , partyName);
+        response.put("partyName", partyName);
 
         if (totalVotes != null) {
-            response.put("totalVotes" , totalVotes);
+            response.put("totalVotes", totalVotes);
         } else {
-            response.put("totalVotes" , 0L);
+            response.put("totalVotes", 0L);
         }
 
         return response;
