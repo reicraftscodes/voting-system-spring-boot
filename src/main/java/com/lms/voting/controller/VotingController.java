@@ -50,17 +50,21 @@ public class VotingController {
 
     // show users who voted specific party list: /api/v1/voting/total-vote?partyName=2
     @GetMapping("/total-vote")
-    public ResponseEntity<Map<String, Object>> getTotalCountVoterByParty(@RequestParam("partyName") Integer partyId) {
+    public ResponseEntity<Map<String, Object>> getTotalCountVoterByParty(@RequestParam(value = "partyName", required = false) Integer partyId) {
+        // with value ="", required = false difference param
 
-        // Create a simple in-memory mapping between party IDs and their readable names
+        // Create a simple in-memory mapping between party IDs and their readable names (hardcoded)
         Map<Integer, String> partyMap = new HashMap<>();
         partyMap.put(1, "Reform UK");
         partyMap.put(2, "Labour");
         partyMap.put(53, "Sample");
 
-        // Validate the request
+        // Get the party name that matches the given party ID.
         String partyName = partyMap.get(partyId);
-        if (partyId == null || partyName == null) {
+
+        // Check if the party ID is missing or not found in the list.
+        if (partyId == null || !partyMap.containsKey(partyId)) {
+            // If it's missing or wrong, send back an error message.
             return ResponseEntity.badRequest().body(Map.of("error", "Invalid or missing party ID"));
         }
 
