@@ -53,6 +53,7 @@ public class VotingController {
     public ResponseEntity<Map<String, Object>> getTotalCountVoterByParty(@RequestParam(value = "partyName", required = false) Integer partyId) {
         // with value ="", required = false difference param
 
+        // todo: remove hardcoded from here
         // Create a simple in-memory mapping between party IDs and their readable names (hardcoded)
         Map<Integer, String> partyMap = new HashMap<>();
         partyMap.put(1, "Reform UK");
