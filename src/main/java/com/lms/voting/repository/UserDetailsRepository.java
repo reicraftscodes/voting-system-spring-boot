@@ -14,4 +14,5 @@ public interface UserDetailsRepository extends JpaRepository<UserDetails, Intege
 
     void deleteById(Integer id);
 
+    boolean existsByNationalInsuranceNumber(String nationalInsuranceNumber);
 }

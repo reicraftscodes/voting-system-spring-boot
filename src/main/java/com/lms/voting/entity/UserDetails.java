@@ -22,6 +22,7 @@ public class UserDetails {
 
     private LocalDate dateOfBirth;
 
+    @Column(unique = true)
     private String nationalInsuranceNumber;
 
 

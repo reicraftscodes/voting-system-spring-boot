@@ -1,6 +1,7 @@
 package com.lms.voting.service.imp;
 
 import com.lms.voting.entity.UserDetails;
+import com.lms.voting.exception.DuplicateValueException;
 import com.lms.voting.repository.UserDetailsRepository;
 import com.lms.voting.service.UserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +21,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     private final UserDetailsRepository personalDetailsRepository;
 
     @Autowired
-    public UserDetailsServiceImpl(UserDetailsRepository userDetailsRepository){
+    public UserDetailsServiceImpl(UserDetailsRepository userDetailsRepository) {
         this.personalDetailsRepository = userDetailsRepository;
     }
 
@@ -31,6 +32,10 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     // add personal details
     public UserDetails addPersonalDetails(UserDetails userDetails) {
+        if (personalDetailsRepository.existsByNationalInsuranceNumber(userDetails.getNationalInsuranceNumber())) {
+            throw new DuplicateValueException("A user with this insurance number already exists.");
+        }
+
         return personalDetailsRepository.save(userDetails);
     }
 

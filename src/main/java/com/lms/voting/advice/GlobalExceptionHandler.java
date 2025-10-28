@@ -2,6 +2,7 @@ package com.lms.voting.advice;
 
 import com.lms.voting.constant.MessageConstant;
 import com.lms.voting.dto.ErrorResponse;
+import com.lms.voting.exception.DuplicateValueException;
 import com.lms.voting.exception.NoVotingRecordsFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -44,4 +45,14 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(DuplicateValueException.class)
+    public ResponseEntity<ErrorResponse> handleDuplicateInsuranceNumber(DuplicateValueException ex) {
+        ErrorResponse errorResponse = new ErrorResponse(
+                ex.getMessage(),
+                HttpStatus.CONFLICT.value(),
+                LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))
+        );
+
+        return new ResponseEntity<>(errorResponse, HttpStatus.CONFLICT);
+    }
 }
