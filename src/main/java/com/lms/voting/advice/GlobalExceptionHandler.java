@@ -1,5 +1,6 @@
 package com.lms.voting.advice;
 
+import com.lms.voting.constant.MessageConstant;
 import com.lms.voting.dto.ErrorResponse;
 import com.lms.voting.exception.NoVotingRecordsFoundException;
 import org.slf4j.Logger;
@@ -33,10 +34,9 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
     public ResponseEntity<ErrorResponse> handleTypeMismatch(MethodArgumentTypeMismatchException ex) {
-        String message = String.format("Invalid value, expected a number.");
-
+        logger.error(ex.getMessage());
         ErrorResponse errorResponse = new ErrorResponse(
-                message,
+                MessageConstant.INVALID_NUMBER,
                 HttpStatus.BAD_REQUEST.value(),
                 LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))
         );
