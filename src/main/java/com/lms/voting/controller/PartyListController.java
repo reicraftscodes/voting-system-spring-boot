@@ -16,7 +16,7 @@ public class PartyListController {
     private final PartyListService partyListServiceImp;
 
     @Autowired
-    public PartyListController(PartyListService partyListService){
+    public PartyListController(PartyListService partyListService) {
         this.partyListServiceImp = partyListService;
     }
 
@@ -33,8 +33,8 @@ public class PartyListController {
     @PostMapping(produces = "application/json")
     public ResponseEntity<PartyList> createPartyList(@RequestBody PartyList partyList) {
         PartyList addPartyList = partyListServiceImp.createPartyList(partyList);
-        if (addPartyList == null) {
-            return new ResponseEntity<>(addPartyList, HttpStatus.INTERNAL_SERVER_ERROR);
+        if (addPartyList.getPartyName().isEmpty() || addPartyList.getPosition().isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
         return new ResponseEntity<>(addPartyList, HttpStatus.OK);
     }
