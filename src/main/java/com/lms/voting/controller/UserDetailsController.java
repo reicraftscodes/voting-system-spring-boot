@@ -18,19 +18,12 @@ import java.util.List;
 public class UserDetailsController {
 
 
-    private UserDetailsServiceImpl userDetailsServiceImpl;
+    private final UserDetailsServiceImpl userDetailsServiceImpl;
 
     @Autowired
     public UserDetailsController(UserDetailsServiceImpl userDetailsServiceImpl){
         this.userDetailsServiceImpl = userDetailsServiceImpl;
     }
-
-    //    return list of Person details
-    @GetMapping
-    public List<UserDetails> getPersonalDetails() {
-        return userDetailsServiceImpl.getAllPersonalDetails();
-    }
-
 
     // add multiple users in the personal details records
     @PostMapping(produces = "application/json")
