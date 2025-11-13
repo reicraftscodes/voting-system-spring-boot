@@ -24,3 +24,6 @@ Swagger UI is available once the application is running at:
 ## Disclaimer
 This project is for educational and experimental use only.
 It is not intended for real-world election or production use.
+
+## Author
+@reicraftscodes
