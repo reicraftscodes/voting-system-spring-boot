@@ -1,6 +1,6 @@
 # 🗳️ UK Voting System
 
-## Description
+### Description
 This project is part of an ongoing learning process.
 A simple implementation of a UK-style voting system built for practice and experimental purposes. This project simulates the core functionalities of a general election process in the United Kingdom — including voter registration, candidate listing, vote casting, and result tallying.
 
