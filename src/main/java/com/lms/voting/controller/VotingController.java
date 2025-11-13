@@ -4,6 +4,7 @@ package com.lms.voting.controller;
 import com.lms.voting.dto.CastVoteRequest;
 import com.lms.voting.entity.PartyList;
 import com.lms.voting.entity.Voting;
+import com.lms.voting.service.imp.PartyListServiceImpl;
 import com.lms.voting.service.imp.VotingServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,10 +20,12 @@ import java.util.Map;
 public class VotingController {
 
     private final VotingServiceImpl votingServiceImpl;
+    private final PartyListServiceImpl partyListServiceImpl;
 
     @Autowired
-    public VotingController(VotingServiceImpl votingService){
+    public VotingController(VotingServiceImpl votingService, PartyListServiceImpl partyListServiceImpl){
         this.votingServiceImpl = votingService;
+        this.partyListServiceImpl = partyListServiceImpl;
     }
 
     @PostMapping
@@ -53,20 +56,19 @@ public class VotingController {
     public ResponseEntity<Map<String, Object>> getTotalCountVoterByParty(@RequestParam(value = "partyName", required = false) Integer partyId) {
         // with value ="", required = false difference param
 
-        // todo: remove hardcoded from here
-        // Create a simple in-memory mapping between party IDs and their readable names (hardcoded)
-        Map<Integer, String> partyMap = new HashMap<>();
-        partyMap.put(1, "Reform UK");
-        partyMap.put(2, "Labour");
-        partyMap.put(53, "Sample");
+        // Check if partyId is provided
+        if (partyId == null) {
+            return ResponseEntity.badRequest()
+                    .body(Map.of("error", "Missing party ID"));
+        }
 
-        // Get the party name that matches the given party ID.
-        String partyName = partyMap.get(partyId);
+        // Get the party name from your database/service
+        String partyName = partyListServiceImpl.getPartyNameById(partyId);
 
-        // Check if the party ID is missing or not found in the list.
-        if (partyId == null || !partyMap.containsKey(partyId)) {
-            // If it's missing or wrong, send back an error message.
-            return ResponseEntity.badRequest().body(Map.of("error", "Invalid or missing party ID"));
+        // Check if the ID exists in the database
+        if (partyName == null) {
+            return ResponseEntity.badRequest()
+                    .body(Map.of("error", "Party not found: " + partyId));
         }
 
         // Call the service to get the total number of votes for this party.
