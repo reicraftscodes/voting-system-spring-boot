@@ -1,4 +1,4 @@
-# 🗳️ Basic UK Voting System
+# 🗳️ UK Voting System
 
 ## Description
 This project is part of an ongoing learning process.
