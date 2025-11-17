@@ -2,8 +2,9 @@ package com.lms.voting.controller;
 
 
 import com.lms.voting.dto.CastVoteRequest;
-import com.lms.voting.entity.PartyList;
 import com.lms.voting.entity.Voting;
+import com.lms.voting.service.PartyListService;
+import com.lms.voting.service.VotingService;
 import com.lms.voting.service.imp.PartyListServiceImpl;
 import com.lms.voting.service.imp.VotingServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +12,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -19,18 +19,18 @@ import java.util.Map;
 @RequestMapping("/api/v1/voting")
 public class VotingController {
 
-    private final VotingServiceImpl votingServiceImpl;
-    private final PartyListServiceImpl partyListServiceImpl;
+    private final VotingService votingService;
+    private final PartyListService partyListService;
 
     @Autowired
-    public VotingController(VotingServiceImpl votingService, PartyListServiceImpl partyListServiceImpl){
-        this.votingServiceImpl = votingService;
-        this.partyListServiceImpl = partyListServiceImpl;
+    public VotingController(VotingService votingService, PartyListService partyListService){
+        this.votingService = votingService;
+        this.partyListService = partyListService;
     }
 
     @PostMapping
     public ResponseEntity<String> castVote(@RequestBody CastVoteRequest castVoteRequest) {
-        String result = votingServiceImpl.castVote(castVoteRequest);
+        String result = votingService.castVote(castVoteRequest);
 
         if (result.equalsIgnoreCase("Vote successfully cast.")) {
             return new ResponseEntity<>(result, HttpStatus.OK);
@@ -41,13 +41,13 @@ public class VotingController {
 
     @GetMapping("display-receipt")
     public ResponseEntity<List<Voting>> getAllVotesReceiptDisplays() {
-        List<Voting> voting = votingServiceImpl.votingReceiptDisplays();
+        List<Voting> voting = votingService.votingReceiptDisplays();
         return new ResponseEntity<>(voting, HttpStatus.OK);
     }
 
     @GetMapping("count-total-vote")
     public ResponseEntity<Integer> getTotalCountVoter() {
-        Integer votes = votingServiceImpl.getTotalCountVoter();
+        Integer votes = votingService.getTotalCountVoter();
         return new ResponseEntity<>(votes, HttpStatus.OK);
     }
 
@@ -63,7 +63,7 @@ public class VotingController {
         }
 
         // Get the party name from your database/service
-        String partyName = partyListServiceImpl.getPartyNameById(partyId);
+        String partyName = partyListService.getPartyNameById(partyId);
 
         // Check if the ID exists in the database
         if (partyName == null) {
@@ -73,7 +73,7 @@ public class VotingController {
 
         // Call the service to get the total number of votes for this party.
         // The service queries the database using the numeric party ID.
-        Map<String, Object> results = votingServiceImpl.getTotalVotesByParty(partyId);
+        Map<String, Object> results = votingService.getTotalVotesByParty(partyId);
 
         // Replace the numeric ID in the results with the actual party name for better readability in the API response.
         results.put("partyName", partyName);

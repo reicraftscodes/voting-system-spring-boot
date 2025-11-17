@@ -18,4 +18,8 @@ public interface VotingService {
 
     Map<String, Object> getTotalVotesByParty(Integer partyName);
 
+    Integer getTotalCountVoter();
+
+
+
 }
