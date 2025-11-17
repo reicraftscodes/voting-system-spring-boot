@@ -21,5 +21,4 @@ public interface VotingService {
     Integer getTotalCountVoter();
 
 
-
 }

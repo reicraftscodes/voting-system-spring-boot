@@ -7,8 +7,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 
 // accept requests from the clients or exposes rest api or exposes rest endpoints
 // reference: https://spring.io/guides/tutorials/rest

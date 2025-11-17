@@ -53,13 +53,4 @@ public class PartyListServiceImpl implements PartyListService {
         }
     }
 
-
-    // Alternative
-    // Returns the party name for a given ID, or null if not found
-//    public String getPartyNameById(Integer partyId) {
-//        return partyListRepository.findById(partyId)
-//                .map(PartyList::getPartyName)
-//                .orElse(null);
-//    }
-
 }
