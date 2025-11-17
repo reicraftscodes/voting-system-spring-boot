@@ -53,7 +53,7 @@ class PartyListControllerTests {
         mockMvc.perform(get("/api/v1/uk-party-list"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].partyName").value("Party A"))
-                .andExpect(jsonPath("$[1].position").value("Leftist"));
+                .andExpect(jsonPath("$[1].position").value("Rightist"));
     }
 
     @Test
