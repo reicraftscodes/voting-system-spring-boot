@@ -13,17 +13,17 @@ import java.util.List;
 @RequestMapping("api/v1/uk-party-list")
 public class PartyListController {
 
-    private final PartyListService partyListServiceImp;
+    private final PartyListService partyListService;
 
     @Autowired
     public PartyListController(PartyListService partyListService) {
-        this.partyListServiceImp = partyListService;
+        this.partyListService = partyListService;
     }
 
     //get all party members
     @GetMapping
     public ResponseEntity<List<PartyList>> getAllPartyMembers() {
-        List<PartyList> partyLists = partyListServiceImp.getAllPartyMembers();
+        List<PartyList> partyLists = partyListService.getAllPartyMembers();
         if (partyLists.isEmpty()) {
             return new ResponseEntity<>(partyLists, HttpStatus.NO_CONTENT);
         }
@@ -32,7 +32,7 @@ public class PartyListController {
 
     @PostMapping(produces = "application/json")
     public ResponseEntity<PartyList> createPartyList(@RequestBody PartyList partyList) {
-        PartyList addPartyList = partyListServiceImp.createPartyList(partyList);
+        PartyList addPartyList = partyListService.createPartyList(partyList);
         if (addPartyList.getPartyName().isEmpty() || addPartyList.getPosition().isEmpty()) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }

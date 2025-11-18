@@ -32,6 +32,10 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     // add personal details
     public UserDetails addPersonalDetails(UserDetails userDetails) {
+
+        if (userDetails == null) {
+            throw new NullPointerException("Fields cannot be null");
+        }
         if (personalDetailsRepository.existsByNationalInsuranceNumber(userDetails.getNationalInsuranceNumber())) {
             throw new DuplicateValueException("A user with this insurance number already exists.");
         }

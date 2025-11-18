@@ -16,17 +16,17 @@ import org.springframework.web.bind.annotation.*;
 public class UserDetailsController {
 
 
-    private final UserDetailsServiceImpl userDetailsServiceImpl;
+    private final UserDetailsServiceImpl userDetailsService;
 
     @Autowired
-    public UserDetailsController(UserDetailsServiceImpl userDetailsServiceImpl){
-        this.userDetailsServiceImpl = userDetailsServiceImpl;
+    public UserDetailsController(UserDetailsServiceImpl userDetailsService){
+        this.userDetailsService = userDetailsService;
     }
 
     // add multiple users in the personal details records
     @PostMapping(produces = "application/json")
     public ResponseEntity<UserDetails> createUser(@RequestBody UserDetails userDetails) {
-        UserDetails addedUserDetails = userDetailsServiceImpl.addPersonalDetails(userDetails);
+        UserDetails addedUserDetails = userDetailsService.addPersonalDetails(userDetails);
         return ResponseEntity.status(HttpStatus.CREATED).body(addedUserDetails);
     }
 
@@ -34,7 +34,7 @@ public class UserDetailsController {
     // retrieve a single user
     @GetMapping("/members/{id}")
     public ResponseEntity<UserDetails> getPersonalDetailsByID(@PathVariable Integer id) {
-        return userDetailsServiceImpl.getPersonalDetailsByID(id)
+        return userDetailsService.getPersonalDetailsByID(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
