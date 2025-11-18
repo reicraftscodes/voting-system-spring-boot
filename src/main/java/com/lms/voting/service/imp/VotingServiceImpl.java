@@ -14,7 +14,6 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.Period;
-import java.time.Year;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -79,10 +78,7 @@ public class VotingServiceImpl implements VotingService {
         int age = Period.between(dob, LocalDate.now()).getYears();
 
         // Return true only if the user is older than 18
-        if (age <= 18) {
-            return true;
-        }
-        return false;
+        return age <= 18;
     }
 
     // save vote triggers here and save to repository
