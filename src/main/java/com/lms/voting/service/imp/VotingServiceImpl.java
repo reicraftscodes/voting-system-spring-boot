@@ -12,6 +12,9 @@ import com.lms.voting.service.VotingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.Period;
+import java.time.Year;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -37,32 +40,50 @@ public class VotingServiceImpl implements VotingService {
     public String castVote(CastVoteRequest castVoteRequest) {
 
         // Check if the user exists using the user ID from the CastVoteRequest DTO.
-        // The CastVoteRequest was created to carry the user ID during the voting process.
         Optional<UserDetails> userDetails = userDetailsRepository.findById(castVoteRequest.getUserId());
         if (userDetails.isEmpty()) {
             return "User not found.";
         }
 
+        // Retrieve the UserDetails object from the Optional
         UserDetails user = userDetails.get();
 
-        // Check if user already voted
+        // age verification check
+        if (isEligibleToVote(user)) {
+            return "User must be 18 or older to vote.";
+        }
+        // Check whether the current user has already submitted a vote. If a Voting record exists for this user, prevent duplicate voting.
         Optional<Voting> existingVote = votingRepository.findByUserDetails(user);
         if (existingVote.isPresent()) {
             return "This user has already voted.";
         }
 
-        // Check if party exists
+        // Verify that the selected party exists.
         Optional<PartyList> votedPartyList = partyListRepository.findById(castVoteRequest.getPartyId());
         if (votedPartyList.isEmpty()) {
             return "Party not found.";
         }
 
-        // save method
+        //  Save the user's vote, including the selected party and a newly generated receipt number.
         saveVote(user, votedPartyList.get(), castVoteRequest.generateRandomReceiptNumbers());
 
         return "Vote successfully cast.";
     }
 
+    // / Age verification to determine whether the user meets the minimum voting age requirement
+    public boolean isEligibleToVote(UserDetails userDetails){
+        // Retrieve the user's date of birth
+        LocalDate dob = userDetails.getDateOfBirth();
+
+        // Calculate the user's age based on today's date
+        int age = Period.between(dob, LocalDate.now()).getYears();
+
+        // Return true only if the user is older than 18
+        if (age <= 18) {
+            return true;
+        }
+        return false;
+    }
 
     // save vote triggers here and save to repository
     public void saveVote(UserDetails user, PartyList partyList, String referenceNo) {
