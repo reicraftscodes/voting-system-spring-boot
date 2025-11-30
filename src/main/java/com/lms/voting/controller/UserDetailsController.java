@@ -1,6 +1,7 @@
 package com.lms.voting.controller;
 
 import com.lms.voting.entity.UserDetails;
+import com.lms.voting.service.UserDetailsService;
 import com.lms.voting.service.imp.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,10 +17,10 @@ import org.springframework.web.bind.annotation.*;
 public class UserDetailsController {
 
 
-    private final UserDetailsServiceImpl userDetailsService;
+    private final UserDetailsService userDetailsService;
 
     @Autowired
-    public UserDetailsController(UserDetailsServiceImpl userDetailsService){
+    public UserDetailsController(UserDetailsService userDetailsService){
         this.userDetailsService = userDetailsService;
     }
 
