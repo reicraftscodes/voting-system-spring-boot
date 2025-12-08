@@ -8,68 +8,82 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.time.LocalDate;
 import java.util.Optional;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 
 @AutoConfigureMockMvc
 @WebMvcTest(UserDetailsController.class)// testing the web layer (controller) without loading the entire Spring context.
 class UserDetailsControllerTests {
 
-    // to perform the request: This allows you to simulate HTTP requests to your controller and check the response.
+    //This allows you to simulate HTTP requests to your controller and check the response.
     @Autowired
     private MockMvc mockMvc;
 
     @Autowired
     private ObjectMapper objectMapper;
 
-
-    // You’ll need to mock the UserDetailsService that the controller relies on. You can do this using @MockBean.
-    @Autowired
+    // to mock service layer responses without calling the real service.
+    // Also, service layer beans are not included in the application context.
+    // It provides @AutoConfigureMockMvc by default
+    @MockBean
     private UserDetailsService userDetailsService;
 
-
-    // test a single member
     @Test
-    void testGetUserById_Success() throws Exception {
-        Integer testId = 1;
-        UserDetails user = new UserDetails();
-        user.setId(testId);
-        user.setFirstName("John");
-        user.setLastName("Doe");
-        user.setDateOfBirth(LocalDate.of(1990, 1, 1));
-        user.setNationalInsuranceNumber("AB123456C");
+    void createNewUserTest() throws Exception {
+        UserDetails userDetails = new UserDetails();
+        userDetails.setId(1);
+        userDetails.setFirstName("May");
+        userDetails.setLastName("San");
+        userDetails.setDateOfBirth(LocalDate.of(1990, 3, 28));
+        userDetails.setNationalInsuranceNumber("123455");
 
-        // Mock the service to return a user when the ID exists
-        when(userDetailsService.getPersonalDetailsByID(testId)).thenReturn(Optional.of(user));
+        // the any() means accept anything of this type. mockito will match whatever object the method receives.
+        when(userDetailsService.addPersonalDetails(any(UserDetails.class))).thenReturn(userDetails);
 
-        mockMvc.perform(get("/members/{id}", testId))
-                .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.id").value(testId))
-                .andExpect(jsonPath("$.firstName").value("John"))
-                .andExpect(jsonPath("$.lastName").value("Doe"))
-                .andExpect(jsonPath("$.dateOfBirth").value("1990-01-01"))
-                .andExpect(jsonPath("$.nationalInsuranceNumber").value("AB123456C"));
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/person-details")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(userDetails)))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.id").value("1"))
+                .andExpect(jsonPath("$.firstName").value("May"))
+                .andExpect(jsonPath("$.lastName").value("San"))
+                .andExpect(jsonPath("$.dateOfBirth").value("1990-03-28"))
+                .andExpect(jsonPath("$.nationalInsuranceNumber").value("123455"));
     }
 
     @Test
-    void testGetUserById_NotFound() throws Exception {
-        // Assuming this ID doesn't exist
-        Integer testId = 999;
+    void getPersonalDetailsByIDTest() throws Exception {
+        int userId = 1;
 
-        // Mock the service to return an empty Optional when the ID is not found
-        when(userDetailsService.getPersonalDetailsByID(testId)).thenReturn(Optional.empty());
+        UserDetails userDetailsInfo = new UserDetails();
+        userDetailsInfo.setId(userId);
+        userDetailsInfo.setFirstName("John");
+        userDetailsInfo.setLastName("Doe");
+        userDetailsInfo.setDateOfBirth(LocalDate.of(1990, 3, 27));
+        userDetailsInfo.setNationalInsuranceNumber("12345667");
 
-        mockMvc.perform(get("/members/{id}", testId))
-                .andExpect(status().isNotFound());
+        when(userDetailsService.getPersonalDetailsByID(userDetailsInfo.getId())).thenReturn(Optional.of(userDetailsInfo));
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/person-details/members/1")
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(userId))
+                .andExpect(jsonPath("$.firstName").value("John"))
+                .andExpect(jsonPath("$.lastName").value("Doe"))
+                .andExpect(jsonPath("$.dateOfBirth").value("1990-03-27"))
+                .andExpect(jsonPath("$.nationalInsuranceNumber").value("12345667"));
+
     }
 
 
