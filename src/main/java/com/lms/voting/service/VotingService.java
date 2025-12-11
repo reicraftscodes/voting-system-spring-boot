@@ -8,6 +8,7 @@ import com.lms.voting.entity.Voting;
 import java.util.List;
 import java.util.Map;
 
+
 public interface VotingService {
 
     String castVote(CastVoteRequest castVoteRequest);

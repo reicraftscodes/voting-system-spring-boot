@@ -50,40 +50,35 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
 
     private static UpdateUserDetailsDto getUpdateDetailsDto(UserDetails user) {
-        // Create a new DTO instance to store the mapped user data.
         UpdateUserDetailsDto updateDetailsDto = new UpdateUserDetailsDto();
-
-        // Map entity fields to the DTO fields.
         updateDetailsDto.setId(user.getId());
         updateDetailsDto.setFirstName(user.getFirstName());
         updateDetailsDto.setLastName(user.getLastName());
         updateDetailsDto.setDateOfBirth(user.getDateOfBirth());
         updateDetailsDto.setNationalInsuranceNumber(user.getNationalInsuranceNumber());
 
-        // Return the fully populated DTO.
         return updateDetailsDto;
     }
 
-    @Transactional
-    public UpdateUserDetailsDto updateUserDetails(Integer id, UpdateUserDetailsDto updateUserDetailsDto) {
 
-        // Attempt to retrieve the user by ID.
-        // If no user is found, throw an exception to indicate invalid input.
+    // general recommended practice not to update directly through entity, so you need DTO
+    @Transactional
+    public UpdateUserDetailsDto updateUserDetails(Integer id, UpdateUserDetailsDto updateDetailsDto) {
         UserDetails user = userDetailsRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        // Update the user's fields with values from the DTO.
-        // Only fields provided by the DTO will overwrite existing values.
-        user.setFirstName(updateUserDetailsDto.getFirstName());
-        user.setLastName(updateUserDetailsDto.getLastName());
-        user.setDateOfBirth(updateUserDetailsDto.getDateOfBirth());
-        user.setNationalInsuranceNumber(updateUserDetailsDto.getNationalInsuranceNumber());
+        // update only the allowed fields
+        user.setFirstName(updateDetailsDto.getFirstName());
+        user.setLastName(updateDetailsDto.getLastName());
+        user.setDateOfBirth(updateDetailsDto.getDateOfBirth());
+        user.setNationalInsuranceNumber(updateDetailsDto.getNationalInsuranceNumber());
 
-        // Persist the updated user details to the database.
+        // save all new details to the repo
         userDetailsRepository.save(user);
 
-        // Convert the updated entity back into a DTO and return it.
+        // return new update user details via dto
         return getUpdateDetailsDto(user);
+
     }
 
 
