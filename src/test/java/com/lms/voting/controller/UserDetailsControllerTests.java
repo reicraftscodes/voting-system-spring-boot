@@ -2,6 +2,7 @@ package com.lms.voting.controller;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.lms.voting.dto.UpdateUserDetailsDto;
 import com.lms.voting.entity.UserDetails;
 import com.lms.voting.service.UserDetailsService;
 import org.junit.jupiter.api.Test;
@@ -17,6 +18,7 @@ import java.time.LocalDate;
 import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -86,5 +88,31 @@ class UserDetailsControllerTests {
 
     }
 
+    @Test
+    void updateUserDetailsTest() throws Exception {
+        int userId = 1;
 
+
+        UpdateUserDetailsDto updateUserDetailsDto = new UpdateUserDetailsDto();
+        updateUserDetailsDto.setId(userId);
+        updateUserDetailsDto.setFirstName("May");
+        updateUserDetailsDto.setLastName("Doe");
+        updateUserDetailsDto.setDateOfBirth(LocalDate.of(2000, 2, 2));
+        updateUserDetailsDto.setNationalInsuranceNumber("12345667");
+
+        when(userDetailsService.updateUserDetails(eq(userId), any(UpdateUserDetailsDto.class)))
+                .thenReturn(updateUserDetailsDto);
+
+        mockMvc.perform(MockMvcRequestBuilders.patch("/api/v1/person-details/members/update/{id}", userId)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(updateUserDetailsDto)))
+                .andExpect(status().isOk())
+                // Verify the response JSON matches our expected updated values
+                .andExpect(jsonPath("$.id").value(userId))
+                .andExpect(jsonPath("$.firstName").value("May"))
+                .andExpect(jsonPath("$.lastName").value("Doe"))
+                .andExpect(jsonPath("$.dateOfBirth").value("2000-02-02"))
+                .andExpect(jsonPath("$.nationalInsuranceNumber").value("12345667"));
+    }
 }
+
