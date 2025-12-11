@@ -3,6 +3,7 @@ package com.lms.voting.controller;
 import com.lms.voting.entity.UserDetails;
 import com.lms.voting.service.UserDetailsService;
 import com.lms.voting.service.imp.UserDetailsServiceImpl;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
