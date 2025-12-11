@@ -24,18 +24,12 @@ public class PartyListController {
     @GetMapping
     public ResponseEntity<List<PartyList>> getAllPartyMembers() {
         List<PartyList> partyLists = partyListService.getAllPartyMembers();
-        if (partyLists.isEmpty()) {
-            return new ResponseEntity<>(partyLists, HttpStatus.NO_CONTENT);
-        }
         return new ResponseEntity<>(partyLists, HttpStatus.OK);
     }
 
     @PostMapping(produces = "application/json")
     public ResponseEntity<PartyList> createPartyList(@RequestBody PartyList partyList) {
         PartyList addPartyList = partyListService.createPartyList(partyList);
-        if (addPartyList.getPartyName().isEmpty() || addPartyList.getPosition().isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
         return new ResponseEntity<>(addPartyList, HttpStatus.OK);
     }
 

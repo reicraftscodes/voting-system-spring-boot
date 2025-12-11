@@ -35,7 +35,7 @@ class PartyListControllerTests {
     private PartyListService partyListService;
 
     @Test
-    void testGetAllPartyMembers() throws Exception {
+    void retrieveAllPartyMembersTest() throws Exception {
         PartyList party1 = new PartyList();
         party1.setId(1);
         party1.setPartyName("Party A");
@@ -57,7 +57,7 @@ class PartyListControllerTests {
     }
 
     @Test
-    void testCreatePartyList() throws Exception {
+    void createPartyListTest() throws Exception {
         PartyList newParty = new PartyList();
         newParty.setId(1);
         newParty.setPartyName("Labour Party");
