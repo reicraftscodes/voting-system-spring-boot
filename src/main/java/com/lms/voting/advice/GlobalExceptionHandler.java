@@ -22,12 +22,11 @@ public class GlobalExceptionHandler {
 
     private static final Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
-    // Handle NoVotingRecordsFoundException
     @ExceptionHandler(NoVotingRecordsFoundException.class)
     public ResponseEntity<ErrorResponse> handleVotingRecordsFoundException(NoVotingRecordsFoundException exception) {
         logger.error("No voting records found: {}", exception.getMessage());
         ErrorResponse errorResponse = new ErrorResponse(
-                exception.getMessage(),
+                MessageConstant.RECORD_EMPTY,
                 HttpStatus.NOT_FOUND.value(),
                 LocalDate.now().toString());
         return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
@@ -47,8 +46,9 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(DuplicateValueException.class)
     public ResponseEntity<ErrorResponse> handleDuplicateInsuranceNumber(DuplicateValueException ex) {
+        logger.error(ex.getMessage());
         ErrorResponse errorResponse = new ErrorResponse(
-                ex.getMessage(),
+                MessageConstant.DUPLICATED_VALUE,
                 HttpStatus.CONFLICT.value(),
                 LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))
         );

@@ -17,16 +17,10 @@ public class CastVoteRequest {
 
     public String generateRandomReceiptNumbers() {
 
-        // prefix for identification
         String prefix = "VLGLAM";
-
-        // Date for reference
         String date = new SimpleDateFormat("yyyyMMdd").format(new Date());
-
-        // generate random UUID
         String uuidPart = UUID.randomUUID().toString().replace("-", "").substring(0, 8).toUpperCase();
 
-        // combined all and return
         return String.format("%s-%s-%s", prefix, date, uuidPart);
 
     }
