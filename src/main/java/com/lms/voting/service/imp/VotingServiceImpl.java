@@ -23,9 +23,7 @@ import java.util.Optional;
 public class VotingServiceImpl implements VotingService {
 
     private final PartyListRepository partyListRepository;
-
     private final UserDetailsRepository userDetailsRepository;
-
     private final VotingRepository votingRepository;
 
     @Autowired
@@ -35,53 +33,58 @@ public class VotingServiceImpl implements VotingService {
         this.votingRepository = votingRepository;
     }
 
-    // cast vote
     public String castVote(CastVoteRequest castVoteRequest) {
 
-        // Check if the user exists using the user ID from the CastVoteRequest DTO.
-        Optional<UserDetails> userDetails = userDetailsRepository.findById(castVoteRequest.getUserId());
+        // Check if the user exists using National Insurance Number and Last Name.
+        Optional<UserDetails> userDetails = userDetailsRepository.findByNationalInsuranceNumberAndLastName(
+                castVoteRequest.getNationalInsuranceNumber(),
+                castVoteRequest.getLastName()
+        );
+
+        // If user is not found, return error
         if (userDetails.isEmpty()) {
-            return "User not found.";
+            return "User not found or details do not match.";
         }
 
         // Retrieve the UserDetails object from the Optional
         UserDetails user = userDetails.get();
 
-        // age verification check
-        if (isEligibleToVote(user)) {
+        // Age verification check
+        if (!isEligibleToVote(user)) {
             return "User must be 18 or older to vote.";
         }
-        // Check whether the current user has already submitted a vote. If a Voting record exists for this user, prevent duplicate voting.
+
+        // Check if the user has already voted
         Optional<Voting> existingVote = votingRepository.findByUserDetails(user);
         if (existingVote.isPresent()) {
             return "This user has already voted.";
         }
 
-        // Verify that the selected party exists.
+        // Verify that the selected party exists
         Optional<PartyList> votedPartyList = partyListRepository.findById(castVoteRequest.getPartyId());
         if (votedPartyList.isEmpty()) {
             return "Party not found.";
         }
 
-        //  Save the user's vote, including the selected party and a newly generated receipt number.
+        // Save the user's vote
         saveVote(user, votedPartyList.get(), castVoteRequest.generateRandomReceiptNumbers());
 
         return "Vote successfully cast.";
     }
 
-    // / Age verification to determine whether the user meets the minimum voting age requirement
-    public boolean isEligibleToVote(UserDetails userDetails){
+    // Age verification to determine whether the user meets the minimum voting age requirement
+    public boolean isEligibleToVote(UserDetails userDetails) {
         // Retrieve the user's date of birth
         LocalDate dob = userDetails.getDateOfBirth();
 
         // Calculate the user's age based on today's date
         int age = Period.between(dob, LocalDate.now()).getYears();
 
-        // Return true only if the user is older than 18
-        return age <= 18;
+        // Return true only if the user is 18 or older
+        return age >= 18;
     }
 
-    // save vote triggers here and save to repository
+    // Save vote to repository
     public void saveVote(UserDetails user, PartyList partyList, String referenceNo) {
         Voting vote = new Voting();
         vote.setReferenceNo(referenceNo);
@@ -90,15 +93,16 @@ public class VotingServiceImpl implements VotingService {
         votingRepository.save(vote);
     }
 
-
+    // Display all voting receipts
     public List<Voting> votingReceiptDisplays() {
         List<Voting> voting = votingRepository.findAll();
         if (voting.isEmpty()) {
-            throw new NoVotingRecordsFoundException("No record is found {}");
+            throw new NoVotingRecordsFoundException("No voting records found.");
         }
         return voting;
     }
 
+    // Get the total count of voters
     public Integer getTotalCountVoter() {
         return votingRepository.getTotalCountVoter();
     }
@@ -108,7 +112,6 @@ public class VotingServiceImpl implements VotingService {
         Long totalVotes = votingRepository.getAllTotalVotersVoteNumberByParty(partyName);
 
         Map<String, Object> response = new LinkedHashMap<>();
-
         response.put("partyName", partyName);
 
         if (totalVotes != null) {
@@ -119,5 +122,4 @@ public class VotingServiceImpl implements VotingService {
 
         return response;
     }
-
 }

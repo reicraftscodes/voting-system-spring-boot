@@ -1,5 +1,6 @@
 package com.lms.voting.service.imp;
 
+import com.lms.voting.constant.MessageConstant;
 import com.lms.voting.dto.UpdateUserDetailsDto;
 import com.lms.voting.entity.UserDetails;
 import com.lms.voting.exception.DuplicateValueException;
@@ -37,7 +38,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     public UserDetails addPersonalDetails(UserDetails userDetails) {
         // check if there's an existing insurance number
         if (userDetailsRepository.existsByNationalInsuranceNumber(userDetails.getNationalInsuranceNumber())) {
-            throw new DuplicateValueException("A user with this insurance number already exists.");
+            throw new DuplicateValueException(MessageConstant.DUPLICATED_VALUE);
         }
 
         return userDetailsRepository.save(userDetails);
