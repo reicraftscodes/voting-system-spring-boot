@@ -41,13 +41,14 @@ public class VotingServiceImpl implements VotingService {
                 castVoteRequest.getLastName()
         );
 
-        // If user is not found, return error
-        if (userDetails.isEmpty()) {
-            return "User not found or details do not match.";
-        }
-
         // Retrieve the UserDetails object from the Optional
         UserDetails user = userDetails.get();
+
+        // If the user's NI number or Last Name doesn't match the request
+        if (!user.getNationalInsuranceNumber().equals(castVoteRequest.getNationalInsuranceNumber())
+                || !user.getLastName().equals(castVoteRequest.getLastName())) {
+            return "Incorrect details, try again";
+        }
 
         // Age verification check
         if (!isEligibleToVote(user)) {
