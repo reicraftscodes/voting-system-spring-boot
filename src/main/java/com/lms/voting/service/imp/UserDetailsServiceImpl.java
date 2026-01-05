@@ -3,11 +3,12 @@ package com.lms.voting.service.imp;
 import com.lms.voting.constant.MessageConstant;
 import com.lms.voting.dto.UpdateUserDetailsDto;
 import com.lms.voting.entity.UserDetails;
-import com.lms.voting.exception.DuplicateValueException;
+import com.lms.voting.exception.CustomException;
 import com.lms.voting.repository.UserDetailsRepository;
 import com.lms.voting.service.UserDetailsService;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -38,7 +39,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     public UserDetails addPersonalDetails(UserDetails userDetails) {
         // check if there's an existing insurance number
         if (userDetailsRepository.existsByNationalInsuranceNumber(userDetails.getNationalInsuranceNumber())) {
-            throw new DuplicateValueException(MessageConstant.DUPLICATED_VALUE);
+            throw new CustomException(MessageConstant.DUPLICATED_VALUE, HttpStatus.CONFLICT);
         }
 
         return userDetailsRepository.save(userDetails);
@@ -65,7 +66,8 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     // general recommended practice not to update directly through entity, so you need DTO
     @Transactional
     public UpdateUserDetailsDto updateUserDetails(Integer id, UpdateUserDetailsDto updateDetailsDto) {
-        UserDetails user = userDetailsRepository.findById(id)
+        UserDetails user = userDetailsRepository
+                .findById(id)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
         // update only the allowed fields

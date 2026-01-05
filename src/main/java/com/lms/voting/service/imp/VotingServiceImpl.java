@@ -4,7 +4,7 @@ import com.lms.voting.dto.CastVoteRequest;
 import com.lms.voting.entity.PartyList;
 import com.lms.voting.entity.UserDetails;
 import com.lms.voting.entity.Voting;
-import com.lms.voting.exception.NoVotingRecordsFoundException;
+import com.lms.voting.exception.CustomException;
 import com.lms.voting.repository.PartyListRepository;
 import com.lms.voting.repository.UserDetailsRepository;
 import com.lms.voting.repository.VotingRepository;
@@ -96,11 +96,7 @@ public class VotingServiceImpl implements VotingService {
 
     // Display all voting receipts
     public List<Voting> votingReceiptDisplays() {
-        List<Voting> voting = votingRepository.findAll();
-        if (voting.isEmpty()) {
-            throw new NoVotingRecordsFoundException("No voting records found.");
-        }
-        return voting;
+        return votingRepository.findAll();
     }
 
     // Get the total count of voters

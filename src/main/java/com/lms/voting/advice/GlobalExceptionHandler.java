@@ -2,8 +2,7 @@ package com.lms.voting.advice;
 
 import com.lms.voting.constant.MessageConstant;
 import com.lms.voting.dto.ErrorResponse;
-import com.lms.voting.exception.DuplicateValueException;
-import com.lms.voting.exception.NoVotingRecordsFoundException;
+import com.lms.voting.exception.CustomException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -16,19 +15,19 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
     private static final Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
-    @ExceptionHandler(NoVotingRecordsFoundException.class)
-    public ResponseEntity<ErrorResponse> handleVotingRecordsFoundException(NoVotingRecordsFoundException exception) {
+    @ExceptionHandler(CustomException.class)
+    public ResponseEntity<ErrorResponse> handleVotingRecordsFoundException(CustomException exception) {
         logger.error("No voting records found: {}", exception.getMessage());
         ErrorResponse errorResponse = new ErrorResponse(
                 MessageConstant.RECORD_EMPTY,
                 HttpStatus.NOT_FOUND.value(),
-                LocalDate.now().toString());
+                LocalDate.now().toString()
+        );
         return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
     }
 
@@ -38,21 +37,22 @@ public class GlobalExceptionHandler {
         ErrorResponse errorResponse = new ErrorResponse(
                 MessageConstant.INVALID_NUMBER,
                 HttpStatus.BAD_REQUEST.value(),
-                LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))
+                LocalDateTime.now()
+                        .format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))
         );
-
         return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler(DuplicateValueException.class)
-    public ResponseEntity<ErrorResponse> handleDuplicateInsuranceNumber(DuplicateValueException ex) {
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ErrorResponse> handleDuplicateInsuranceNumber(
+            Exception ex) {
         logger.error(ex.getMessage());
         ErrorResponse errorResponse = new ErrorResponse(
                 MessageConstant.DUPLICATED_VALUE,
                 HttpStatus.CONFLICT.value(),
-                LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))
+                LocalDateTime.now()
+                        .format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))
         );
-
         return new ResponseEntity<>(errorResponse, HttpStatus.CONFLICT);
     }
 }
