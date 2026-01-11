@@ -1,6 +1,5 @@
-package com.lms.voting.service.impl;
+package com.lms.voting.service.imp;
 
-import com.lms.voting.constant.VotingConstant;
 import com.lms.voting.dto.CastVoteRequest;
 import com.lms.voting.dto.PartyVoteSummary;
 import com.lms.voting.dto.VoteResponse;
