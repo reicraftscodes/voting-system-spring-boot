@@ -1,5 +1,6 @@
 package com.lms.voting.controller;
 
+import com.lms.voting.dto.ApiResponse;
 import com.lms.voting.dto.UpdateUserDetailsDto;
 import com.lms.voting.entity.UserDetails;
 import com.lms.voting.service.UserDetailsService;
@@ -7,10 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-
-// accept requests from the clients or exposes rest api or exposes rest endpoints
-// reference: https://spring.io/guides/tutorials/rest
 
 @RestController
 @RequestMapping("api/v1/person-details")
@@ -25,9 +22,10 @@ public class UserDetailsController {
     }
 
     @PostMapping(produces = "application/json")
-    public ResponseEntity<UserDetails> createUser(@RequestBody UserDetails userDetails) {
+    public ResponseEntity<ApiResponse> createUser(@RequestBody UserDetails userDetails) {
         UserDetails addedUserDetails = userDetailsService.addPersonalDetails(userDetails);
-        return ResponseEntity.status(HttpStatus.CREATED).body(addedUserDetails);
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(ApiResponse.success(addedUserDetails, HttpStatus.CREATED.value()));
     }
 
 
@@ -39,10 +37,11 @@ public class UserDetailsController {
     }
 
     @PatchMapping("/members/update/{id}")
-    public ResponseEntity<?> updateUserDetails(@PathVariable Integer id, @RequestBody UpdateUserDetailsDto updateDetailsDto) {
+    public ResponseEntity<ApiResponse> updateUserDetails(@PathVariable Integer id, @RequestBody UpdateUserDetailsDto updateDetailsDto) {
         UpdateUserDetailsDto updated = userDetailsService.updateUserDetails(id, updateDetailsDto);
 
-        return ResponseEntity.ok(updated);
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(ApiResponse.success(updated, HttpStatus.OK.value()));
     }
 
 }
