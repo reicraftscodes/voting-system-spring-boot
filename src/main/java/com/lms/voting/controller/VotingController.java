@@ -1,83 +1,83 @@
 package com.lms.voting.controller;
 
-
+import com.lms.voting.dto.ApiResponse;
 import com.lms.voting.dto.CastVoteRequest;
+import com.lms.voting.dto.VoteResponse;
+import com.lms.voting.dto.PartyVoteSummary;
 import com.lms.voting.entity.Voting;
-import com.lms.voting.service.PartyListService;
 import com.lms.voting.service.VotingService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/api/v1/voting")
 public class VotingController {
 
     private final VotingService votingService;
-    private final PartyListService partyListService;
 
     @Autowired
-    public VotingController(VotingService votingService, PartyListService partyListService){
+    public VotingController(VotingService votingService) {
         this.votingService = votingService;
-        this.partyListService = partyListService;
     }
 
     @PostMapping
-    public ResponseEntity<String> castVote(@RequestBody CastVoteRequest castVoteRequest) {
-        String result = votingService.castVote(castVoteRequest);
+    public ResponseEntity<ApiResponse> castVote(@Valid @RequestBody CastVoteRequest request) {
+        VoteResponse response = votingService.castVote(request);
 
-        if (result.equalsIgnoreCase("Vote successfully cast.")) {
-            return new ResponseEntity<>(result, HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(result, HttpStatus.BAD_REQUEST);
-        }
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(ApiResponse.success(
+                        "Vote Cast Successfully",
+                        "New vote has been recorded",
+                        response,
+                        HttpStatus.CREATED.value()
+                ));
     }
 
-    @GetMapping("display-receipt")
-    public ResponseEntity<List<Voting>> getAllVotesReceiptDisplays() {
-        List<Voting> voting = votingService.votingReceiptDisplays();
-        return new ResponseEntity<>(voting, HttpStatus.OK);
+    @GetMapping("/receipts")
+    public ResponseEntity<ApiResponse> getAllVotingReceipts() {
+        List<Voting> receipts = votingService.votingReceiptDisplays();
+
+        return ResponseEntity.ok(
+                ApiResponse.success(
+                        "Receipts Retrieved",
+                        "All voting receipts have been retrieved",
+                        receipts,
+                        HttpStatus.OK.value()
+                )
+        );
     }
 
-    @GetMapping("count-total-vote")
-    public ResponseEntity<Integer> getTotalCountVoter() {
-        Integer votes = votingService.getTotalCountVoter();
-        return new ResponseEntity<>(votes, HttpStatus.OK);
+    @GetMapping("/count")
+    public ResponseEntity<ApiResponse> getTotalVoteCount() {
+        Integer totalVotes = votingService.getTotalCountVoter();
+
+        return ResponseEntity.ok(
+                ApiResponse.success(
+                        "Vote Count Retrieved",
+                        "Total number of votes has been calculated successfully",
+                        totalVotes,
+                        HttpStatus.OK.value()
+                )
+        );
     }
 
-    // show users who voted specific party list: /api/v1/voting/total-vote?partyName=2
-    @GetMapping("/total-vote")
-    public ResponseEntity<Map<String, Object>> getTotalCountVoterByParty(@RequestParam(value = "partyName", required = false) Integer partyId) {
-        // with value ="", required = false difference param
+    @GetMapping("/party/{partyId}")
+    public ResponseEntity<ApiResponse> getVotesByParty(@PathVariable Integer partyId) {
+        PartyVoteSummary summary = votingService.getTotalVotesByParty(partyId);
 
-        // Check if partyId is provided
-        if (partyId == null) {
-            return ResponseEntity.badRequest()
-                    .body(Map.of("error", "Missing party ID"));
-        }
-
-        // Get the party name from your database/service
-        String partyName = partyListService.getPartyNameById(partyId);
-
-        // Check if the ID exists in the database
-        if (partyName == null) {
-            return ResponseEntity.badRequest()
-                    .body(Map.of("error", "Party not found: " + partyId));
-        }
-
-        // Call the service to get the total number of votes for this party.
-        // The service queries the database using the numeric party ID.
-        Map<String, Object> results = votingService.getTotalVotesByParty(partyId);
-
-        // Replace the numeric ID in the results with the actual party name for better readability in the API response.
-        results.put("partyName", partyName);
-
-
-        return new ResponseEntity<>(results,HttpStatus.OK);
+        return ResponseEntity.ok(
+                ApiResponse.success(
+                        "Party Votes Retrieved",
+                        "Vote summary for the selected party has been retrieved successfully",
+                        summary,
+                        HttpStatus.OK.value()
+                )
+        );
     }
-
 }

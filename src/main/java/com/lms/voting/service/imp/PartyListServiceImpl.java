@@ -1,17 +1,18 @@
 package com.lms.voting.service.imp;
 
 import com.lms.voting.entity.PartyList;
+import com.lms.voting.exception.ResourceNotFoundException;
 import com.lms.voting.repository.PartyListRepository;
 import com.lms.voting.service.PartyListService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
 
 @Service
 public class PartyListServiceImpl implements PartyListService {
-
 
     private final PartyListRepository partyListRepository;
 
@@ -20,37 +21,41 @@ public class PartyListServiceImpl implements PartyListService {
         this.partyListRepository = partyListRepository;
     }
 
-    // find all party list groups
+    @Override
     public List<PartyList> getAllPartyMembers() {
-        return partyListRepository.findAll();
+        List<PartyList> parties = partyListRepository.findAll();
+        if (parties.isEmpty()) {
+            throw new ResourceNotFoundException("No parties found in the system.");
+        }
+        return parties;
     }
 
-    //create a party list member
+    @Override
+    @Transactional
     public PartyList createPartyList(PartyList partyList) {
         return partyListRepository.save(partyList);
     }
 
-    // Retrieves the name of a party based on its ID.
-    // @param partyId The ID of the party to look up.
-    // @return The party's name if found, or null if no party exists with that ID.
+    @Override
     public String getPartyNameById(Integer partyId) {
-        // Query the database (through the repository) to find a PartyList entity by its ID.
-        // findById() returns an Optional, which may or may not contain a PartyList object.
         Optional<PartyList> partyOptional = partyListRepository.findById(partyId);
 
-        // Check if a PartyList object was found.
         if (partyOptional.isPresent()) {
-
-            // Extract the PartyList object from the Optional
             PartyList party = partyOptional.get();
-
-            // Return the name of the party
             return party.getPartyName();
-
         } else {
-            // If the party ID doesn't exist in the database, return null
-            return null;
+            throw new ResourceNotFoundException("Party not found with ID: " + partyId);
         }
     }
 
+    @Override
+    public PartyList getPartyById(Integer partyId) {
+        Optional<PartyList> partyOptional = partyListRepository.findById(partyId);
+
+        if (partyOptional.isPresent()) {
+            return partyOptional.get();
+        } else {
+            throw new ResourceNotFoundException("Party not found with ID: " + partyId);
+        }
+    }
 }

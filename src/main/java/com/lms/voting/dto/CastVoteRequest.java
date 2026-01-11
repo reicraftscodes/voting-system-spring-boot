@@ -1,28 +1,41 @@
 package com.lms.voting.dto;
 
-import lombok.Getter;
-import lombok.Setter;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.UUID;
+import java.util.Random;
 
-@Getter
-@Setter
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class CastVoteRequest {
-    private Integer userId;
-    private Integer partyId;
+
+    @NotBlank(message = "National Insurance Number is required")
     private String nationalInsuranceNumber;
+
+    @NotBlank(message = "Last Name is required")
     private String lastName;
-    private String referenceNo;
 
+    @NotNull(message = "Party ID is required")
+    @Positive(message = "Party ID must be positive")
+    private Integer partyId;
 
+    // Generate random reference number for voting receipt
     public String generateRandomReceiptNumbers() {
+        Random random = new Random();
 
-        String date = new SimpleDateFormat("yyyyMMdd").format(new Date());
-        String uuidPart = UUID.randomUUID().toString().replace("-", "").substring(0, 8).toUpperCase();
+        StringBuilder referenceNo = new StringBuilder();
 
-        return String.format("%s-%s", date, uuidPart);
+        for (int i = 0; i < 10; i++) {
+            referenceNo.append(random.nextInt(10));
+        }
 
+        return referenceNo.toString();
     }
 }
