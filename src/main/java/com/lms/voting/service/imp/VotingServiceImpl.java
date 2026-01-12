@@ -14,6 +14,7 @@ import com.lms.voting.repository.PartyListRepository;
 import com.lms.voting.repository.UserDetailsRepository;
 import com.lms.voting.repository.VotingRepository;
 import com.lms.voting.service.VotingService;
+import com.lms.voting.util.ReceiptGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -65,8 +66,11 @@ public class VotingServiceImpl implements VotingService {
         // Validate party exists
         PartyList party = findParty(request.getPartyId());
 
-        // Save vote
-        Voting vote = saveVote(userFound, party, request.generateRandomReceiptNumbers());
+        //  Generate receipt using utility class
+        String referenceNumber = ReceiptGenerator.generateReceipt(request.getPartyId());
+
+        // Save votes
+        Voting vote = saveVote(userFound, party, referenceNumber);
 
         return VoteResponse.builder()
                 .referenceNo(vote.getReferenceNo())

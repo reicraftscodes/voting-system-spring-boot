@@ -8,8 +8,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Random;
-
 @Data
 @Builder
 @NoArgsConstructor
@@ -26,16 +24,4 @@ public class CastVoteRequest {
     @Positive(message = "Party ID must be positive")
     private Integer partyId;
 
-    // Generate random reference number for voting receipt
-    public String generateRandomReceiptNumbers() {
-        Random random = new Random();
-
-        StringBuilder referenceNo = new StringBuilder();
-
-        for (int i = 0; i < 10; i++) {
-            referenceNo.append(random.nextInt(10));
-        }
-
-        return referenceNo.toString();
-    }
 }

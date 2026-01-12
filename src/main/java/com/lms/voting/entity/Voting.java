@@ -1,7 +1,10 @@
 package com.lms.voting.entity;
 
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Data;
+
+import java.time.LocalDateTime;
 
 
 @Data
@@ -21,7 +24,5 @@ public class Voting {
     @ManyToOne
     @JoinColumn(name = "party_list")
     private PartyList partyList;
-
-
 
 }
