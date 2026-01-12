@@ -1,8 +1,12 @@
 package com.lms.voting.advice;
 
+import com.lms.voting.constant.ErrorCode;
 import com.lms.voting.dto.ApiResponse;
 import com.lms.voting.dto.ErrorDetailsResponse;
-import com.lms.voting.exception.*;
+import com.lms.voting.exception.DuplicateResourceException;
+import com.lms.voting.exception.IneligibleVoterException;
+import com.lms.voting.exception.InvalidRequestException;
+import com.lms.voting.exception.ResourceNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -23,33 +27,30 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ApiResponse> handleResourceNotFound(ResourceNotFoundException ex) {
         logger.error("Resource not found: {}", ex.getMessage());
 
-        ApiResponse response = ApiResponse.error(
-                "Resource Not Found",
-                ex.getMessage(),
-                ErrorDetailsResponse.builder()
-                        .code("RESOURCE_NOT_FOUND")
+        ApiResponse response = ApiResponse.builder()
+                .title("Resource not found")
+                .detail("Vote with id 42 was not found")
+                .error(ErrorDetailsResponse.builder()
+                        .code(ErrorCode.RESOURCE_NOT_FOUND.name())
                         .details(ex.getMessage())
-                        .build(),
-                HttpStatus.NOT_FOUND.value()
-        );
+                        .build())
+                .build();
 
-        return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
     }
 
     @ExceptionHandler(DuplicateResourceException.class)
     public ResponseEntity<ApiResponse> handleDuplicateResource(DuplicateResourceException ex) {
         logger.error("Duplicate resource: {}", ex.getMessage());
 
-        ApiResponse response = ApiResponse.error(
-                "Duplicate Resource",
-                ex.getMessage(),
-                ErrorDetailsResponse.builder()
-                        .code("DUPLICATE_RESOURCE")
+        ApiResponse response = ApiResponse.builder()
+                .title("Duplicate Resource")
+                .detail("Duplicate Resource")
+                .error(ErrorDetailsResponse.builder()
+                        .code(ErrorCode.DUPLICATE_RESOURCE.name())
                         .details(ex.getMessage())
-                        .build(),
-                HttpStatus.CONFLICT.value()
-        );
-
+                        .build())
+                .build();
         return new ResponseEntity<>(response, HttpStatus.CONFLICT);
     }
 
@@ -57,15 +58,14 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ApiResponse> handleInvalidRequest(InvalidRequestException ex) {
         logger.error("Invalid request: {}", ex.getMessage());
 
-        ApiResponse response = ApiResponse.error(
-                "Invalid Request",
-                ex.getMessage(),
-                ErrorDetailsResponse.builder()
-                        .code("INVALID_REQUEST")
+        ApiResponse response = ApiResponse.builder()
+                .title("Invalid Request")
+                .detail("Invalid Request")
+                .error(ErrorDetailsResponse.builder()
+                        .code(ErrorCode.INVALID_REQUEST.name())
                         .details(ex.getMessage())
-                        .build(),
-                HttpStatus.BAD_REQUEST.value()
-        );
+                        .build())
+                .build();
 
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
@@ -74,15 +74,14 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ApiResponse> handleIneligibleVoter(IneligibleVoterException ex) {
         logger.error("Ineligible voter: {}", ex.getMessage());
 
-        ApiResponse response = ApiResponse.error(
-                "Ineligible Voter",
-                ex.getMessage(),
-                ErrorDetailsResponse.builder()
-                        .code("INELIGIBLE_VOTER")
+        ApiResponse response = ApiResponse.builder()
+                .title("Ineligible Voter")
+                .detail("User is under 18 not qualified to vote")
+                .error(ErrorDetailsResponse.builder()
+                        .code(ErrorCode.INVALID_REQUEST.name())
                         .details(ex.getMessage())
-                        .build(),
-                HttpStatus.FORBIDDEN.value()
-        );
+                        .build())
+                .build();
 
         return new ResponseEntity<>(response, HttpStatus.FORBIDDEN);
     }
@@ -91,20 +90,27 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ApiResponse> handleTypeMismatch(MethodArgumentTypeMismatchException ex) {
         logger.error("Type mismatch: {}", ex.getMessage());
 
-        String message = String.format("Invalid value '%s' for parameter '%s'. Expected type: %s",
+        String expectedType = "unknown";
+        if (ex.getRequiredType() != null) {
+            expectedType = ex.getRequiredType().getSimpleName();
+        }
+
+        String message = String.format(
+                "Invalid value '%s' for parameter '%s'. Expected type: %s",
                 ex.getValue(),
                 ex.getName(),
-                ex.getRequiredType() != null ? ex.getRequiredType().getSimpleName() : "unknown");
-
-        ApiResponse response = ApiResponse.error(
-                "Invalid Parameter Type",
-                message,
-                ErrorDetailsResponse.builder()
-                        .code("TYPE_MISMATCH")
-                        .details(message)
-                        .build(),
-                HttpStatus.BAD_REQUEST.value()
+                expectedType
         );
+
+        ApiResponse response = ApiResponse.builder()
+                .title("Invalid Parameter Typer")
+                .detail("Invalid Parameter Type")
+                .error(ErrorDetailsResponse.builder()
+                        .code(ErrorCode.INVALID_REQUEST.name())
+                        .details(message)
+                        .build())
+                .build();
+
 
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
@@ -119,15 +125,14 @@ public class GlobalExceptionHandler {
                 .map(error -> error.getField() + ": " + error.getDefaultMessage())
                 .collect(Collectors.joining(", "));
 
-        ApiResponse response = ApiResponse.error(
-                "Validation Failed",
-                errors,
-                ErrorDetailsResponse.builder()
-                        .code("VALIDATION_ERROR")
+        ApiResponse response = ApiResponse.builder()
+                .title("Validation Failed")
+                .detail("Validation Failed")
+                .error(ErrorDetailsResponse.builder()
+                        .code(ErrorCode.VALIDATION_ERROR.name())
                         .details(errors)
-                        .build(),
-                HttpStatus.BAD_REQUEST.value()
-        );
+                        .build())
+                .build();
 
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
@@ -136,15 +141,14 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ApiResponse> handleGenericException(Exception ex) {
         logger.error("Unexpected error: ", ex);
 
-        ApiResponse response = ApiResponse.error(
-                "Internal Server Error",
-                "An unexpected error occurred while processing your request",
-                ErrorDetailsResponse.builder()
-                        .code("INTERNAL_ERROR")
+        ApiResponse response = ApiResponse.builder()
+                .title("Internal Server Error")
+                .detail("An unexpected error occurred while processing your request")
+                .error(ErrorDetailsResponse.builder()
+                        .code(ErrorCode.VALIDATION_ERROR.name())
                         .details(ex.getMessage())
-                        .build(),
-                HttpStatus.INTERNAL_SERVER_ERROR.value()
-        );
+                        .build())
+                .build();
 
         return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
     }

@@ -71,7 +71,7 @@ public class VotingServiceImpl implements VotingService {
         return VoteResponse.builder()
                 .referenceNo(vote.getReferenceNo())
                 .partyName(party.getPartyName())
-                .message("Vote successfully cast")
+                .description("Vote successfully cast")
                 .build();
     }
 
