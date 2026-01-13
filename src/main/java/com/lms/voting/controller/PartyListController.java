@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("api/v1/uk-party-list")
+@RequestMapping("api/v1/uk/parties")
 public class PartyListController {
 
     private final PartyListService partyListService;
@@ -20,17 +20,16 @@ public class PartyListController {
         this.partyListService = partyListService;
     }
 
-    //get all party members
-    @GetMapping
-    public ResponseEntity<List<PartyList>> getAllPartyMembers() {
-        List<PartyList> partyLists = partyListService.getAllPartyMembers();
-        return new ResponseEntity<>(partyLists, HttpStatus.OK);
-    }
-
     @PostMapping(produces = "application/json")
     public ResponseEntity<PartyList> createPartyList(@RequestBody PartyList partyList) {
         PartyList addPartyList = partyListService.createPartyList(partyList);
-        return new ResponseEntity<>(addPartyList, HttpStatus.OK);
+        return ResponseEntity.status(HttpStatus.OK).body(addPartyList);
+    }
+
+    @GetMapping("/all")
+    public ResponseEntity<List<PartyList>> getAllPartyMembers() {
+        List<PartyList> partyLists = partyListService.getAllPartyMembers();
+        return ResponseEntity.status(HttpStatus.OK).body(partyLists);
     }
 
 }

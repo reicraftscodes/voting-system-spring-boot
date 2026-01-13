@@ -18,5 +18,5 @@ public class VoteResponse {
 
 
     @Builder.Default
-    private LocalDateTime timestamp = LocalDateTime.now(); // auto-set when building
+    private LocalDateTime timestamp = LocalDateTime.now();
 }

@@ -1,11 +1,11 @@
 package com.lms.voting.service.imp;
 
-import com.lms.voting.constant.MessageConstant;
+import com.lms.voting.constant.ErrorCode;
 import com.lms.voting.dto.UpdateUserDetailsDto;
 import com.lms.voting.entity.UserDetails;
-import com.lms.voting.exception.CustomException;
 import com.lms.voting.repository.UserDetailsRepository;
 import com.lms.voting.service.UserDetailsService;
+import com.sun.jdi.request.DuplicateRequestException;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -39,7 +39,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     public UserDetails addPersonalDetails(UserDetails userDetails) {
         // check if there's an existing insurance number
         if (userDetailsRepository.existsByNationalInsuranceNumber(userDetails.getNationalInsuranceNumber())) {
-            throw new CustomException(MessageConstant.DUPLICATED_VALUE, HttpStatus.CONFLICT);
+            throw new DuplicateRequestException();
         }
 
         return userDetailsRepository.save(userDetails);

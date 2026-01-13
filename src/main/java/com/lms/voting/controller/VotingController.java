@@ -34,13 +34,13 @@ public class VotingController {
     public ResponseEntity<List<Voting>> getAllVotingReceipts() {
         List<Voting> receipts = votingService.votingReceiptDisplays();
 
-        return ResponseEntity.ok(receipts);
+        return ResponseEntity.status(HttpStatus.OK).body(receipts);
     }
 
     @GetMapping("/count")
     public ResponseEntity<Integer> getTotalVoteCount() {
         Integer totalVotes = votingService.getTotalCountVoter();
-        return ResponseEntity.ok(totalVotes);
+        return ResponseEntity.status(HttpStatus.OK).body(totalVotes);
     }
 
     @GetMapping("/party/{partyId}")
