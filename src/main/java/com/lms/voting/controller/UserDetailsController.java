@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("api/v1/users")
 public class UserDetailsController {
 
-
     private final UserDetailsService userDetailsService;
 
     @Autowired
@@ -21,21 +20,21 @@ public class UserDetailsController {
     }
 
     @PostMapping(produces = "application/json")
-    public ResponseEntity<?> createUser(@RequestBody UserDetails userDetails) {
+    public ResponseEntity<UserDetails> createUser(@RequestBody UserDetails userDetails) {
         UserDetails addedUserDetails = userDetailsService.addPersonalDetails(userDetails);
         return ResponseEntity.status(HttpStatus.OK).body(addedUserDetails);
     }
 
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> getPersonalDetailsByID(@PathVariable Integer id) {
+    public ResponseEntity<UserDetails> getPersonalDetailsByID(@PathVariable Integer id) {
         return userDetailsService.getPersonalDetailsByID(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 
     @PatchMapping("/update/{id}")
-    public ResponseEntity<?> updateUserDetails(@PathVariable Integer id, @RequestBody UpdateUserDetailsDto updateDetailsDto) {
+    public ResponseEntity<UpdateUserDetailsDto> updateUserDetails(@PathVariable Integer id, @RequestBody UpdateUserDetailsDto updateDetailsDto) {
         UpdateUserDetailsDto updated = userDetailsService.updateUserDetails(id, updateDetailsDto);
         return ResponseEntity.status(HttpStatus.OK).body(updated);
     }

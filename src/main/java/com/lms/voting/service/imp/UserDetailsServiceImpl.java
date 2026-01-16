@@ -1,6 +1,5 @@
 package com.lms.voting.service.imp;
 
-import com.lms.voting.constant.ErrorCode;
 import com.lms.voting.dto.UpdateUserDetailsDto;
 import com.lms.voting.entity.UserDetails;
 import com.lms.voting.repository.UserDetailsRepository;
@@ -8,7 +7,6 @@ import com.lms.voting.service.UserDetailsService;
 import com.sun.jdi.request.DuplicateRequestException;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

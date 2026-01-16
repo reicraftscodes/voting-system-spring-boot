@@ -13,10 +13,9 @@ import java.time.LocalDate;
 @Table(name = "user_details")
 public class UserDetails {
 
-//    this becomes column of databases
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id; // primary key
+    private Integer id;
 
     @NotBlank(message = "First name cannot be empty")
     private String firstName;
