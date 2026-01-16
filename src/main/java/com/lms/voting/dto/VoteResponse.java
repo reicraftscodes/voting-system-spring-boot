@@ -12,10 +12,10 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class VoteResponse {
+
     private String referenceNo;
     private String partyName;
     private String description;
-
 
     @Builder.Default
     private LocalDateTime timestamp = LocalDateTime.now();

@@ -2,11 +2,15 @@ package com.lms.voting.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
 
-@Data
+@Getter
+@Setter
 @Entity
+@ToString
 @Table(name = "party_list")
 public class PartyList {
     @Id

@@ -15,13 +15,11 @@ import java.time.LocalDateTime;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class ApiResponse {
 
-    // short summary
     private String title;
-    // specific explanation
     private String detail;
-
     private ErrorDetailsResponse error;
 
     @Builder.Default
     private LocalDateTime timestamp = LocalDateTime.now();
+
 }

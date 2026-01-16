@@ -1,14 +1,14 @@
 package com.lms.voting.util;
 
+import lombok.AllArgsConstructor;
+
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
+@AllArgsConstructor
 public class ReceiptGenerator {
 
     private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyyMMddHHmmssSSS");
-
-    private ReceiptGenerator() {
-    }
 
     public static String generateReceipt(Integer partyId) {
         LocalDateTime now = LocalDateTime.now();

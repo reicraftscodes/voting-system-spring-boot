@@ -22,4 +22,5 @@ public interface VotingService {
     PartyVoteSummary getTotalVotesByParty(Integer partyId);
 
     Integer getTotalCountVoter();
+
 }

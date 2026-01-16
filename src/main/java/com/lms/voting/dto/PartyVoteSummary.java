@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class PartyVoteSummary {
+
     private Integer partyId;
     private String partyName;
     private Long totalVotes;

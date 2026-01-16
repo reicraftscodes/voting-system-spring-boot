@@ -52,14 +52,13 @@ public class VotingServiceImpl implements VotingService {
         );
 
         if (!userOptional.isPresent()) {
-            // No user found with the provided credentials – throw an error
             throw new InvalidRequestException(
                     "Invalid credentials. Please check your National Insurance Number and Last Name."
             );
         }
 
         // Continue processing with the found user
-        UserDetails userFound = userOptional.get(); // directly use this in the rest of the method
+        UserDetails userFound = userOptional.get();
         validateVotingEligibility(userFound);
         checkExistingVote(userFound);
 

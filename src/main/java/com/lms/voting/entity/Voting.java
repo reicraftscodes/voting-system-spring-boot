@@ -1,13 +1,12 @@
 package com.lms.voting.entity;
 
 import jakarta.persistence.*;
-import lombok.Builder;
-import lombok.Data;
-
-import java.time.LocalDateTime;
+import lombok.Getter;
+import lombok.Setter;
 
 
-@Data
+@Getter
+@Setter
 @Entity
 @Table(name = "voting")
 public class Voting {
