@@ -19,7 +19,7 @@ This project is also being actively checked with SonarLint integrated in the dev
 
 
 ## API Documentation
-The services below have their own Swagger OpenAPI specifications. To access the API Docs, go to the following URLs:
+The services below have their own Swagger OpenAPI specifications, in order access the API Docs locally copy and paste the following url http://localhost:8080/swagger-ui/index.html
 
 ![Swagger](https://res.cloudinary.com/dvwxun4vh/image/upload/v1768582221/Swagger_sauuxo.png)
 
@@ -75,7 +75,6 @@ Cast Vote API `/api/v1/voting`
 * P99 response time: 41 ms
 * Error %: 0.00%
 * Failure %: 0.00%
-
 
 ## Disclaimer
 It is not intended for real-world election or production use.
