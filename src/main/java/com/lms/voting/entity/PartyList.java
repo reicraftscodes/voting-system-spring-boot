@@ -9,8 +9,8 @@ import lombok.ToString;
 
 @Getter
 @Setter
-@Entity
 @ToString
+@Entity
 @Table(name = "party_list")
 public class PartyList {
     @Id
