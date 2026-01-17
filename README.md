@@ -10,6 +10,7 @@ This project uses a number of tools and frameworks to work properly:
 - Lombok
 - JUnit, Mockito, MockMVC
 - Swagger (OpenAPI)
+- Api documentation
 - SLF4J (logging)
 - Postman (API & performance testing)
 
