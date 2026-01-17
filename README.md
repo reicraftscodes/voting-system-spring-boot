@@ -16,7 +16,7 @@ This project uses a number of tools and frameworks to work properly:
 ## Testing
 The services Voting, UserDetails, PartyList are unit-tested with JUnit, Mockito, and MockMVC.
 
-This project is also being actively checked with SonarLint integrated in the developer's IDE. An analysis with SonarQube to would reveal the following:
+This project is also being actively checked with Sonarqube integrated in the developer's IDE. An analysis with SonarQube to would reveal the following:
 
 ![SonarQube](https://res.cloudinary.com/dvwxun4vh/image/upload/v1768582564/sonarqube_wasubl.png)
 
