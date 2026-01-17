@@ -3,12 +3,15 @@ UK-style election simulator demonstrating a first-past-the-post voting system. F
 
 ## Technologies
 This project uses a number of tools and frameworks to work properly:
-- Java, MySQL 
-- Spring Boot - Web, Actuator 
+- Java, MySQL
+- Spring Boot 3 (Web, Actuator)
 - Spring Data JPA
+- Maven
+- Lombok
 - JUnit, Mockito, MockMVC
-- Swagger
-- Amazon Web Services - Aurora & RDS and Elastic Beanstalk
+- Swagger (OpenAPI)
+- SLF4J (logging)
+- Postman (API & performance testing)
 
 ## Testing
 The services Voting, UserDetails, PartyList are unit-tested with JUnit, Mockito, and MockMVC.
@@ -75,6 +78,13 @@ Cast Vote API `/api/v1/voting`
 * P99 response time: 41 ms
 * Error %: 0.00%
 * Failure %: 0.00%
+
+
+## Cloud & Deployment
+
+Amazon Web Services (AWS)
+- Amazon RDS / Aurora (database)
+- Elastic Beanstalk (application deployment)
 
 ## Disclaimer
 It is not intended for real-world election or production use.
