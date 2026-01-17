@@ -12,11 +12,6 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 
-/***
- * Service annotation
- * This make whole class available as a BEAN, so that basically Spring instantiate it, and
- * then it makes it available to use within other class
- * */
 
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
