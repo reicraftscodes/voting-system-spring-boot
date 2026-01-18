@@ -3,7 +3,6 @@ package com.lms.voting.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lms.voting.entity.PartyList;
 import com.lms.voting.service.PartyListService;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -19,7 +18,8 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 
 @AutoConfigureMockMvc
@@ -45,17 +45,17 @@ class PartyListControllerTests {
     private PartyListService partyListService;
     @Test
     void retrieveAllPartyMembersTest() throws Exception {
-        PartyList party1 = new PartyList();
-        party1.setId(1);
-        party1.setPartyName("Party A");
-        party1.setPosition("Leftist");
+        PartyList partyCandidateOne = new PartyList();
+        partyCandidateOne.setId(1);
+        partyCandidateOne.setPartyName("Party A");
+        partyCandidateOne.setPosition("Leftist");
 
-        PartyList party2 = new PartyList();
-        party2.setId(2);
-        party2.setPartyName("Party B");
-        party2.setPosition("Rightist");
+        PartyList partyCandidateTwo = new PartyList();
+        partyCandidateTwo.setId(2);
+        partyCandidateTwo.setPartyName("Party B");
+        partyCandidateTwo.setPosition("Rightist");
 
-        List<PartyList> partyLists = Arrays.asList(party1, party2);
+        List<PartyList> partyLists = Arrays.asList(partyCandidateOne, partyCandidateTwo);
 
         when(partyListService.getAllPartyMembers()).thenReturn(partyLists);
 
