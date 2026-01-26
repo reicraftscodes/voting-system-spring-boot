@@ -54,6 +54,7 @@ The services below have their own Swagger OpenAPI specifications, in order acces
 
 ## Performance Testing
 This is a simple test scenario to learn how APIs behave under load. We simulate multiple users casting votes at the same time to understand. 
+
 Note: focus is on understanding API performance basics rather than achieving high-scale testing.
 
 Cast Vote API `/api/v1/voting`
