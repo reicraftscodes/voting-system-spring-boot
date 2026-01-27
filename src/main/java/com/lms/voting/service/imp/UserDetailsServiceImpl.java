@@ -55,15 +55,12 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         return updateDetailsDto;
     }
 
-
-    // general recommended practice not to update directly through entity, so you need DTO
     @Transactional
     public UpdateUserDetailsDto updateUserDetails(Integer id, UpdateUserDetailsDto updateDetailsDto) {
         UserDetails user = userDetailsRepository
                 .findById(id)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        // update only the allowed fields
         user.setFirstName(updateDetailsDto.getFirstName());
         user.setLastName(updateDetailsDto.getLastName());
         user.setDateOfBirth(updateDetailsDto.getDateOfBirth());
