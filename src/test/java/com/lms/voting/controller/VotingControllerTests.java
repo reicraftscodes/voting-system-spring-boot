@@ -1,7 +1,6 @@
 package com.lms.voting.controller;
 
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lms.voting.dto.PartyVoteSummary;
 import com.lms.voting.service.VotingService;
 import org.junit.jupiter.api.Test;
@@ -27,6 +26,17 @@ public class VotingControllerTests {
     @MockBean
     private VotingService votingService;
 
+    @Test
+    void countAllTotalVotes() throws Exception {
+
+        Integer totalVotes = 145;
+
+        when(votingService.getTotalCountVoter()).thenReturn(totalVotes);
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/voting/count")
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+    }
 
     @Test
     void countTotalVotesByParty() throws Exception {
