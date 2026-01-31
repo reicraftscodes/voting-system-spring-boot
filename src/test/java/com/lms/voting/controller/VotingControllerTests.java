@@ -5,6 +5,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lms.voting.dto.CastVoteRequest;
 import com.lms.voting.dto.PartyVoteSummary;
 import com.lms.voting.dto.VoteResponse;
+import com.lms.voting.entity.PartyList;
+import com.lms.voting.entity.UserDetails;
 import com.lms.voting.entity.Voting;
 import com.lms.voting.service.VotingService;
 import org.junit.jupiter.api.Test;
@@ -80,6 +82,43 @@ public class VotingControllerTests {
                 .andExpect(status().isOk())
                 // Expect the response body to be an empty array.
                 .andExpect(content().json("[]"));
+    }
+
+    @Test
+    void getAllVotingReceipts_withItems() throws Exception {
+
+        UserDetails userDetails = new UserDetails();
+        userDetails.setId(1);
+        userDetails.setFirstName("John");
+        userDetails.setLastName("Doe");
+        userDetails.setNationalInsuranceNumber("SampleReferences1234");
+
+        PartyList partyListCandidateSample = new PartyList();
+        partyListCandidateSample.setId(1);
+        partyListCandidateSample.setPartyName("Labour");
+        partyListCandidateSample.setPosition("Left Wing");
+
+        Voting userVotedOne = new Voting();
+        userVotedOne.setId(1);
+        userVotedOne.setReferenceNo("SampleReferences1234");
+        userVotedOne.setUserDetails(userDetails);
+        userVotedOne.setPartyList(partyListCandidateSample);
+
+
+        List<Voting> votingListWithItems = List.of(
+                userVotedOne);
+
+        when(votingService.votingReceiptDisplays()).thenReturn(votingListWithItems);
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/voting/receipts")
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().json("["
+                        + "{\"id\":1,"
+                        + "\"referenceNo\":\"SampleReferences1234\","
+                        + "\"userDetails\":{\"id\":1,\"firstName\":\"John\",\"lastName\":\"Doe\",\"nationalInsuranceNumber\":\"SampleReferences1234\"},"
+                        + "\"partyList\":{\"id\":1,\"partyName\":\"Labour\",\"position\":\"Left Wing\"}"
+                        + "}]"));  // expect the response body to match the JSON structure
     }
 
     @Test

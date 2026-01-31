@@ -37,7 +37,6 @@ public class VotingController {
     @GetMapping("/receipts")
     public ResponseEntity<List<Voting>> getAllVotingReceipts() {
         List<Voting> receipts = votingService.votingReceiptDisplays();
-
         return ResponseEntity.status(HttpStatus.OK).body(receipts);
     }
 
