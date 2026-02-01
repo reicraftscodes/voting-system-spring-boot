@@ -21,6 +21,8 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.hamcrest.Matchers.hasSize;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -61,13 +63,19 @@ public class VotingControllerTests {
                         // which causes HttpMediaTypeNotSupportedException.
                         // Explicitly set Content-Type to application/json so Spring can deserialize the request body into CastVoteRequest.
 
-                        // Set the Content-Type to application/json
+                        //  Set the Content-Type of the request to application/json
                         .contentType(MediaType.APPLICATION_JSON)
-                        // Indicate that the response should be in JSON format
-                        .accept(MediaType.APPLICATION_JSON)
-                        // Convert the voteResponse to JSON string
-                        .content(objectMapper.writeValueAsString(voteResponse)))
-                .andExpect(status().isCreated());
+                        // Indicate that the response should be in JSON format or  expected response type
+                        .accept(MediaType.APPLICATION_JSON)  // The response should also be JSON
+                        //Serialize the castVoteRequest object to a JSON string as the body of the POST request
+                        .content(objectMapper.writeValueAsString(castVoteRequest)))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.referenceNo").value("20260130173747817001"))
+                .andExpect(jsonPath("$.partyName").value("Labour"))
+                .andExpect(jsonPath("$.description").value("Vote successfully cast"));
+
+        // Verify the service was called with correct argument
+        verify(votingService).castVote(castVoteRequest);
     }
 
     @Test
@@ -80,13 +88,35 @@ public class VotingControllerTests {
         mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/voting/receipts")
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                // Expect the response body to be an empty array.
+                // Expect the response body to be an empty array
                 .andExpect(content().json("[]"));
     }
 
     @Test
     void getAllVotingReceipts_withItems() throws Exception {
 
+        Voting userVotedOne = getUserVotedOne();
+
+        List<Voting> votingListWithItems = List.of(
+                userVotedOne);
+
+        when(votingService.votingReceiptDisplays()).thenReturn(votingListWithItems);
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/voting/receipts")
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                // hasSize() matcher to verify array size
+                .andExpect(jsonPath("$", hasSize(1)))
+                // Check first element fields
+                .andExpect(jsonPath("$[0].id").value(1))
+                .andExpect(jsonPath("$[0].referenceNo").value("SampleReferences1234"))
+                .andExpect(jsonPath("$[0].userDetails.firstName").value("John"))
+                .andExpect(jsonPath("$[0].userDetails.lastName").value("Doe"))
+                .andExpect(jsonPath("$[0].partyList.partyName").value("Labour"))
+                .andExpect(jsonPath("$[0].partyList.position").value("Left Wing"));
+    }
+
+    private static Voting getUserVotedOne() {
         UserDetails userDetails = new UserDetails();
         userDetails.setId(1);
         userDetails.setFirstName("John");
@@ -103,26 +133,11 @@ public class VotingControllerTests {
         userVotedOne.setReferenceNo("SampleReferences1234");
         userVotedOne.setUserDetails(userDetails);
         userVotedOne.setPartyList(partyListCandidateSample);
-
-
-        List<Voting> votingListWithItems = List.of(
-                userVotedOne);
-
-        when(votingService.votingReceiptDisplays()).thenReturn(votingListWithItems);
-
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/voting/receipts")
-                        .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(content().json("["
-                        + "{\"id\":1,"
-                        + "\"referenceNo\":\"SampleReferences1234\","
-                        + "\"userDetails\":{\"id\":1,\"firstName\":\"John\",\"lastName\":\"Doe\",\"nationalInsuranceNumber\":\"SampleReferences1234\"},"
-                        + "\"partyList\":{\"id\":1,\"partyName\":\"Labour\",\"position\":\"Left Wing\"}"
-                        + "}]"));  // expect the response body to match the JSON structure
+        return userVotedOne;
     }
 
     @Test
-    void countAllTotalVotes() throws Exception {
+    void whenUserCountAllTotalVotes() throws Exception {
 
         Integer totalVotes = 145;
 
@@ -130,12 +145,12 @@ public class VotingControllerTests {
 
         mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/voting/count")
                         .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
+                .andExpect(status().isOk())
+                .andExpect(content().string("145"));
     }
 
     @Test
-    void countTotalVotesByParty() throws Exception {
-
+    void whenUserCountTotalVotesByParty() throws Exception {
         // Create a mock PartyVoteSummary using the builder pattern
         // Must use .builder() because PartyVoteSummary has @Builder annotation
         PartyVoteSummary partyVoteSummary = PartyVoteSummary.builder()

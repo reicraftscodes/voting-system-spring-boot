@@ -9,7 +9,6 @@ import lombok.ToString;
 @Getter
 @Setter
 @Entity
-@ToString
 @Table(name = "voting")
 public class Voting {
     @Id
