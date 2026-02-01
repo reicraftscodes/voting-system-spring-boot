@@ -15,6 +15,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -43,6 +44,7 @@ class PartyListControllerTests {
      */
     @MockBean
     private PartyListService partyListService;
+
     @Test
     void retrieveAllPartyMembersTest() throws Exception {
         PartyList partyCandidateOne = new PartyList();
@@ -61,7 +63,11 @@ class PartyListControllerTests {
 
         mockMvc.perform(get("/api/v1/uk/parties/all"))
                 .andExpect(status().isOk())
+                // Verify the partyName and position of the first party
                 .andExpect(jsonPath("$[0].partyName").value("Party A"))
+                .andExpect(jsonPath("$[0].position").value("Leftist"))
+                // Verify the partyName and position of the second party
+                .andExpect(jsonPath("$[1].partyName").value("Party B"))
                 .andExpect(jsonPath("$[1].position").value("Rightist"));
     }
 
@@ -86,5 +92,8 @@ class PartyListControllerTests {
                 .andExpect(jsonPath("$.id").value(1))
                 .andExpect(jsonPath("$.partyName").value("Labour Party"))
                 .andExpect(jsonPath("$.position").value("Leftist"));
+
+        // Verify that the service method was called with any PartyList object
+        verify(partyListService).createPartyList(any(PartyList.class));
     }
 }
