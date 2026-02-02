@@ -54,10 +54,7 @@ Controller → Service Interface → Service Implementation → Repository → D
 ### Voter Eligibility & Validation
 - Only users **18+** can vote
 - Validated against **National Insurance Number** and **Last Name**
-- Custom exceptions for meaningful feedback:
-    - `DuplicateResourceException`
-    - `IneligibleVoterException`
-    - `InvalidRequestException`
+- Custom exceptions for meaningful feedback
 
 > “Validation is separated from persistence for clear error handling and maintainable code.”
 
@@ -170,7 +167,7 @@ This project is also being actively checked with Sonarqube integrated in the dev
 - AWS Elastic Beanstalk for deployment
 
 ## Disclaimer
-This project is for **educational purposes only** and not suitable for real elections.
+This project is not suitable for real elections.
 
 ## Author
 @reicraftscodes
