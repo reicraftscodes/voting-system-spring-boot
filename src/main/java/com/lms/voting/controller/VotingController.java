@@ -41,8 +41,8 @@ public class VotingController {
     }
 
     @GetMapping("/count")
-    public ResponseEntity<Integer> getTotalVoteCount() {
-        Integer totalVotes = votingService.getTotalCountVoter();
+    public ResponseEntity<Long> getTotalVoteCount() {
+        Long totalVotes = votingService.getTotalCountVoter();
         log.info(VotingDetailsConstant.TOTAL_COUNT_RETRIEVED_SUCCESS, totalVotes);
         return ResponseEntity.status(HttpStatus.OK).body(totalVotes);
     }
