@@ -133,10 +133,10 @@ public class VotingServiceImpl implements VotingService {
     }
 
     @Override
-    public Integer getTotalCountVoter() {
-        Integer count = votingRepository.getTotalCountVoter();
+    public Long getTotalCountVoter() {
+        Long count = votingRepository.getTotalCountVoter();
         if (count == null) {
-            return 0;
+            return 0L;
         }
         return count;
     }

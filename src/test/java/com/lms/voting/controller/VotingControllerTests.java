@@ -139,7 +139,7 @@ public class VotingControllerTests {
     @Test
     void whenUserCountAllTotalVotes() throws Exception {
 
-        Integer totalVotes = 145;
+        Long totalVotes = 145L;
 
         when(votingService.getTotalCountVoter()).thenReturn(totalVotes);
 
