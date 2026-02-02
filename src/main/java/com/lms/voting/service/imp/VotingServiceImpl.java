@@ -45,13 +45,14 @@ public class VotingServiceImpl implements VotingService {
     @Override
     @Transactional
     public VoteResponse castVote(CastVoteRequest request) {
-        // Find and validate user based on National Insurance Number and Last Name
+
+        // Find and validate user based on NI and Last Name
         Optional<UserDetails> userOptional = userDetailsRepository.findByNationalInsuranceNumberAndLastName(
                 request.getNationalInsuranceNumber(),
                 request.getLastName()
         );
 
-        if (!userOptional.isPresent()) {
+        if (userOptional.isEmpty()) {
             throw new InvalidRequestException(
                     "Invalid credentials. Please check your National Insurance Number and Last Name."
             );

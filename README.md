@@ -8,6 +8,7 @@ UK-style election simulator demonstrating a first-past-the-post voting system. F
 - Spring Data JPA
 - JUnit, Mockito, MockMVC
 - Swagger (OpenAPI)
+- Api documentation
 - SLF4J (logging)
 - Postman (API & performance testing)
 - SonarQube (code quality analysis)
@@ -16,6 +17,7 @@ UK-style election simulator demonstrating a first-past-the-post voting system. F
 ---
 
 ## Architectural Design
+This project is also being actively checked with Sonarqube integrated in the developer's IDE. An analysis with SonarQube to would reveal the following:
 
 The backend follows a **layered architecture**:
 
@@ -123,6 +125,10 @@ http://localhost:8080/api/v1
 ```
 
 ---
+## Performance Testing
+This is a simple test scenario to learn how APIs behave under load. We simulate multiple users casting votes at the same time to understand. 
+
+Note: focus is on understanding API performance basics rather than achieving high-scale testing.
 
 #### Voting API
 
