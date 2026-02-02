@@ -1,93 +1,176 @@
 # Online UK Voting System
-UK-style election simulator demonstrating a first-past-the-post voting system. Features voter registration, candidate management, vote casting, and result tallying. Built with Spring Boot, this project highlights data handling, application logic, and system workflow implementation.
+
+UK-style election simulator demonstrating a first-past-the-post voting system. Features voter registration, candidate management, vote casting, and result tallying. Built with Spring Boot, this project highlights backend architecture, data handling, application logic, and system workflow implementation.
 
 ## Technologies
-This project uses a number of tools and frameworks to work properly:
 - Java, MySQL
-- Spring Boot 3 (Web, Actuator)
+- Spring Boot 3 (Web)
 - Spring Data JPA
-- Maven
-- Lombok
 - JUnit, Mockito, MockMVC
 - Swagger (OpenAPI)
 - SLF4J (logging)
 - Postman (API & performance testing)
+- SonarQube (code quality analysis)
+- Maven
 
-## Testing
-The services Voting, UserDetails, PartyList are unit-tested with JUnit, Mockito, and MockMVC.
+---
 
-This project is also being actively checked with SonarLint integrated in the developer's IDE. An analysis with SonarQube to would reveal the following:
+## Architectural Design
 
-![SonarQube](https://res.cloudinary.com/dvwxun4vh/image/upload/v1768582564/sonarqube_wasubl.png)
+The backend follows a **layered architecture**:
 
+```
+Controller → Service Interface → Service Implementation → Repository → Database
+```
+
+### Layers
+
+1. **Controller Layer**
+    - Handles HTTP requests/responses
+    - Delegates business logic to the service layer
+    - Examples: `VotingController`, `UserDetailsController`, `PartyListController`
+
+2. **Service Layer (Interface + Implementation)**
+    - Interfaces define available operations (`VotingService`, `UserDetailsService`, `PartyListService`)
+    - Implementations (`VotingServiceImpl`, etc.) contain **business logic**, validation, and repository calls
+    - Benefits: abstraction, testability, and flexibility for future extensions
+
+3. **Repository Layer**
+    - Handles database interactions via Spring Data JPA
+    - Examples: `VotingRepository`, `UserDetailsRepository`, `PartyListRepository`
+    - Custom queries used for aggregate functions, like total votes per party
+
+---
+
+## Key Backend Design Decisions
+
+### Idempotent Vote Casting
+- Each user can vote only once (`user_details_id` is unique in `voting` table)
+- Application and database validation prevent duplicates
+- Guarantees safe concurrent operations
+
+> “Idempotency is enforced through validation and unique constraints, mimicking production-ready transaction safety.”
+
+### Voter Eligibility & Validation
+- Only users **18+** can vote
+- Validated against **National Insurance Number** and **Last Name**
+- Custom exceptions for meaningful feedback:
+    - `DuplicateResourceException`
+    - `IneligibleVoterException`
+    - `InvalidRequestException`
+
+> “Validation is separated from persistence for clear error handling and maintainable code.”
+
+### Vote Counting & Data Types
+- Vote counts use **Long** to safely support large-scale elections
+- Aggregation handled efficiently in the service layer
+
+> “Using Long ensures the system can scale to millions of votes without overflow.”
+
+### REST API Design
+- `/api/v1/voting` → cast votes, get receipts, retrieve totals
+- `/api/v1/users` → manage voters (CRUD)
+- `/api/v1/uk/parties` → manage party lists
+
+### Logging & Observability
+- Critical actions logged with SLF4J
+- Supports debugging, auditing, and transparency
+
+---
 
 ## API Documentation
 The services below have their own Swagger OpenAPI specifications, in order access the API Docs locally copy and paste the following url http://localhost:8080/swagger-ui/index.html
 
+
 ![Swagger](https://res.cloudinary.com/dvwxun4vh/image/upload/v1768582221/Swagger_sauuxo.png)
 
+### Base URL
+```
+http://localhost:8080/api/v1
+```
 
 #### User Details API
-| Endpoint                    | Method | Parameter          | Type          | Description                                |
-| --------------------------- | ------ | ------------------ | ------------- | ------------------------------------------ |
-| `/api/v1/users`             | POST   | `userDetails`      | Object (JSON) | User personal details to create a new user |
-| `/api/v1/users/{id}`        | GET    | `id`               | Integer       | ID of the user to fetch details            |
-| `/api/v1/users/update/{id}` | PATCH  | `id`               | Integer       | ID of the user to update                   |
-| `/api/v1/users/update/{id}` | PATCH  | `updateDetailsDto` | Object (JSON) | Fields to update for the user              |
 
+| Endpoint                     | Method | Parameter          | Type          | Description                               |
+| ---------------------------- | ------ | ----------------- | ------------- | ----------------------------------------- |
+| `/users`                     | POST   | `userDetails`      | Object (JSON) | Create a new user with personal details   |
+| `/users/{id}`                | GET    | `id`               | Integer       | Retrieve a user’s personal details        |
+| `/users/update/{id}`         | PATCH  | `id`               | Integer       | Update an existing user’s details         |
+| `/users/update/{id}`         | PATCH  | `updateDetailsDto` | Object (JSON) | Fields to update for the user             |
+
+**Example JSON for creating a user:**
+```json
+{
+  "firstName": "John",
+  "lastName": "Doe",
+  "dateOfBirth": "1990-01-01",
+  "nationalInsuranceNumber": "AB123456C"
+}
+```
+
+---
 
 #### UK Party List API
-| Endpoint                 | Method | Parameter   | Type          | Description                  |
-| ------------------------ | ------ | ----------- | ------------- | ---------------------------- |
-| `/api/v1/uk/parties`     | POST   | `partyList` | Object (JSON) | Create a new political party |
-| `/api/v1/uk/parties/all` | GET    | —           | —             | Get all party members        |
+
+| Endpoint                  | Method | Parameter   | Type          | Description                  |
+| ------------------------- | ------ | ----------- | ------------- | ---------------------------- |
+| `/uk/parties`             | POST   | `partyList` | Object (JSON) | Create a new political party |
+| `/uk/parties/all`         | GET    | —           | —             | Retrieve all party members   |
+
+**Example JSON for creating a party:**
+```json
+{
+  "partyName": "Example Party",
+  "position": "Leader"
+}
+```
+
+---
 
 #### Voting API
-| Endpoint                         | Method | Parameter | Type          | Description                          |
-| -------------------------------- | ------ | --------- | ------------- | ------------------------------------ |
-| `/api/v1/voting`                 | POST   | `request` | Object (JSON) | Data required to cast a vote         |
-| `/api/v1/voting/receipts`        | GET    | —         | —             | Fetch all voting receipts            |
-| `/api/v1/voting/count`           | GET    | —         | Integer       | Get total number of votes            |
-| `/api/v1/voting/party/{partyId}` | GET    | `partyId` | Integer       | Get total votes for a specific party |
+
+| Endpoint                     | Method | Parameter | Type          | Description                          |
+| ---------------------------- | ------ | --------- | ------------- | ------------------------------------ |
+| `/voting`                    | POST   | `request` | Object (JSON) | Cast a vote for a party               |
+| `/voting/receipts`           | GET    | —         | —             | Fetch all voting receipts            |
+| `/voting/count`              | GET    | —         | Long          | Get total number of votes            |
+| `/voting/party/{partyId}`    | GET    | `partyId` | Integer       | Get total votes for a specific party |
+
+**Example JSON for casting a vote:**
+```json
+{
+  "nationalInsuranceNumber": "AB123456C",
+  "lastName": "Doe",
+  "partyId": 1
+}
+```
+
+---
+
+## Testing
+This project is also being actively checked with Sonarqube integrated in the developer's IDE. An analysis with SonarQube to would reveal the following:
+
+![SonarQube](https://res.cloudinary.com/dvwxun4vh/image/upload/v1768582564/sonarqube_wasubl.png)
 
 
 ## Performance Testing
-This is a simple test scenario to learn how APIs behave under load. We simulate multiple users casting votes at the same time to understand. 
-Note: focus is on understanding API performance basics rather than achieving high-scale testing.
-
-Cast Vote API `/api/v1/voting`
-
-* How fast the API responds
-* How the system handles concurrent requests
-* What happens if many users vote at once
-
-**Setup**
-
-* Initial load: 100 requests almost simultaneously
-* Ramp-up: Gradually increase by 25 users
-* Goal: Observe response times, successful votes, and any errors
-
-**Example Results**
-
 ![Performance Testing](https://res.cloudinary.com/dvwxun4vh/image/upload/v1768584967/2026-01-16_17_35_38-Cast_Vote_Perf_Test_-_Laurate_May_s_Workspace_iqa3af.png)
-* Total requests sent: 400
-* Requests/sec: 133.33
-* Average response time: 23 ms
-* P90 response time: 30 ms
-* P95 response time: 34 ms
-* P99 response time: 41 ms
-* Error %: 0.00%
-* Failure %: 0.00%
+- 
+- Simulated multiple users casting votes concurrently
+- Monitored API response times and errors
 
+**Example Metrics:**
+- Requests/sec: 133.33
+  - Average response time: 23 ms
+  - P90 response time: 30 ms
+  - Error %: 0.00%
 
 ## Cloud & Deployment
-
-Amazon Web Services (AWS)
-- Amazon RDS / Aurora (database)
-- Elastic Beanstalk (application deployment)
+- AWS RDS / Aurora for database
+- AWS Elastic Beanstalk for deployment
 
 ## Disclaimer
-It is not intended for real-world election or production use.
+This project is for **educational purposes only** and not suitable for real elections.
 
 ## Author
 @reicraftscodes
