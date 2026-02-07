@@ -21,12 +21,9 @@ This project is also being actively checked with Sonarqube integrated in the dev
 
 The backend follows a **layered architecture**:
 
-```
-Controller → Service Interface → Service Implementation → Repository → Database
-```
+![Architecture](https://res.cloudinary.com/dvwxun4vh/image/upload/v1770471779/archilayer_y1ipbu.png)
 
 ### Layers
-
 1. **Controller Layer**
     - Handles HTTP requests/responses
     - Delegates business logic to the service layer
@@ -51,20 +48,15 @@ Controller → Service Interface → Service Implementation → Repository → D
 - Application and database validation prevent duplicates
 - Guarantees safe concurrent operations
 
-> “Idempotency is enforced through validation and unique constraints, mimicking production-ready transaction safety.”
-
 ### Voter Eligibility & Validation
 - Only users **18+** can vote
 - Validated against **National Insurance Number** and **Last Name**
 - Custom exceptions for meaningful feedback
 
-> “Validation is separated from persistence for clear error handling and maintainable code.”
-
 ### Vote Counting & Data Types
 - Vote counts use **Long** to safely support large-scale elections
 - Aggregation handled efficiently in the service layer
 
-> “Using Long ensures the system can scale to millions of votes without overflow.”
 
 ### REST API Design
 - `/api/v1/voting` → cast votes, get receipts, retrieve totals
