@@ -9,7 +9,6 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Optional;
 
 
@@ -23,10 +22,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         this.userDetailsRepository = userDetailsRepository;
     }
 
-    // get all personal details
-    public List<UserDetails> getAllPersonalDetails() {
-        return userDetailsRepository.findAll();
-    }
 
     // add personal details
     public UserDetails addPersonalDetails(UserDetails userDetails) {
