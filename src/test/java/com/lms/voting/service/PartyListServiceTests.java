@@ -27,12 +27,12 @@ public class PartyListServiceTests {
     @InjectMocks
     private PartyListServiceImpl partyListService;
 
-    private PartyList partyCandidateOne;
-    private PartyList partyCandidateTwo;
     private List<PartyList> partyLists;
 
     @BeforeEach
     void setUp() {
+        PartyList partyCandidateOne;
+        PartyList partyCandidateTwo;
         // Create test data once, reused in all tests
         partyCandidateOne = new PartyList();
         partyCandidateOne.setId(1);
@@ -80,5 +80,6 @@ public class PartyListServiceTests {
         Assertions.assertEquals("Left Wing", result.get(0).getPosition());
         Assertions.assertEquals("Right Wing", result.get(1).getPosition());
     }
+
 
 }
