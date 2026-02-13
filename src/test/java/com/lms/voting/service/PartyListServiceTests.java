@@ -5,7 +5,6 @@ import com.lms.voting.entity.PartyList;
 import com.lms.voting.exception.ResourceNotFoundException;
 import com.lms.voting.repository.PartyListRepository;
 import com.lms.voting.service.imp.PartyListServiceImpl;
-import jakarta.servlet.http.Part;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -14,7 +13,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import javax.swing.text.html.Option;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -88,7 +86,7 @@ public class PartyListServiceTests {
     }
 
     @Test
-    void whenPartyListIsCreatedthenItIsSaved() {
+    void whenPartyListIsCreatedThenItIsSaved() {
 
         // mock the repository's save method to return the partyCandidateOne object
         when(partyListRepository.save(partyCandidateOne)).thenReturn(partyCandidateOne);
