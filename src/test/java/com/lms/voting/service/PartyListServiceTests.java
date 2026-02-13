@@ -5,6 +5,7 @@ import com.lms.voting.entity.PartyList;
 import com.lms.voting.exception.ResourceNotFoundException;
 import com.lms.voting.repository.PartyListRepository;
 import com.lms.voting.service.imp.PartyListServiceImpl;
+import jakarta.servlet.http.Part;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -13,10 +14,13 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import javax.swing.text.html.Option;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -84,7 +88,7 @@ public class PartyListServiceTests {
     }
 
     @Test
-    void createPartyListThenSave() {
+    void whenPartyListIsCreatedthenItIsSaved() {
 
         // mock the repository's save method to return the partyCandidateOne object
         when(partyListRepository.save(partyCandidateOne)).thenReturn(partyCandidateOne);
@@ -95,6 +99,27 @@ public class PartyListServiceTests {
         assertEquals(1, savedParty.getId());
         assertEquals("Labour", savedParty.getPartyName());
         assertEquals("Left Wing", savedParty.getPosition());
+    }
+
+    @Test
+    void whenPartyIdIsPresentThenReturnPartyId() {
+
+        // mock the repository to return a PartyList when searching by ID 1
+        when(partyListRepository.findById(1)).thenReturn(Optional.of(partyCandidateOne));
+
+        // all the service method to get the result
+        String result = partyListService.getPartyNameById(1);
+
+        // verify the party name is returned correctly
+        assertEquals(partyCandidateOne.getPartyName(), result, "Party name should be 'Labour'");
+    }
+
+    @Test
+    void whenPartyIdIsNotPresentThenReturnCorrectParty() {
+        when(partyListRepository.findById(999)).thenReturn(Optional.empty());
+        assertThrows(ResourceNotFoundException.class, () -> partyListService.getPartyById(999),
+                "Party not found with ID: 999");
+
     }
 
 }
