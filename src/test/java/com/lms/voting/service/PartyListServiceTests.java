@@ -16,6 +16,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -29,10 +30,11 @@ public class PartyListServiceTests {
 
     private List<PartyList> partyLists;
 
+    PartyList partyCandidateOne;
+    PartyList partyCandidateTwo;
+
     @BeforeEach
     void setUp() {
-        PartyList partyCandidateOne;
-        PartyList partyCandidateTwo;
         // Create test data once, reused in all tests
         partyCandidateOne = new PartyList();
         partyCandidateOne.setId(1);
@@ -53,9 +55,9 @@ public class PartyListServiceTests {
     void whenGetAllPartyMembersThenReturnList() {
         when(partyListRepository.findAll()).thenReturn(partyLists);
         List<PartyList> result = partyListService.getAllPartyMembers();
-        Assertions.assertEquals(2, result.size());
-        Assertions.assertEquals("Labour", result.get(0).getPartyName());
-        Assertions.assertEquals("Conservative", result.get(1).getPartyName());
+        assertEquals(2, result.size());
+        assertEquals("Labour", result.get(0).getPartyName());
+        assertEquals("Conservative", result.get(1).getPartyName());
 
         verify(partyListRepository, times(1)).findAll();
     }
@@ -77,9 +79,22 @@ public class PartyListServiceTests {
 
         List<PartyList> result = partyListService.getAllPartyMembers();
 
-        Assertions.assertEquals("Left Wing", result.get(0).getPosition());
-        Assertions.assertEquals("Right Wing", result.get(1).getPosition());
+        assertEquals("Left Wing", result.get(0).getPosition());
+        assertEquals("Right Wing", result.get(1).getPosition());
     }
 
+    @Test
+    void createPartyListThenSave() {
+
+        // mock the repository's save method to return the partyCandidateOne object
+        when(partyListRepository.save(partyCandidateOne)).thenReturn(partyCandidateOne);
+
+        // call the service method which will interact with the repository
+        PartyList savedParty = partyListService.createPartyList(partyCandidateOne);
+
+        assertEquals(1, savedParty.getId());
+        assertEquals("Labour", savedParty.getPartyName());
+        assertEquals("Left Wing", savedParty.getPosition());
+    }
 
 }
