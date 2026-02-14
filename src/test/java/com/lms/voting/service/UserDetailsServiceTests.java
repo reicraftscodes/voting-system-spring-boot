@@ -25,7 +25,7 @@ public class UserDetailsServiceTests {
     private UserDetailsServiceImpl userDetailsService;
 
     @Test
-    void userShouldRetrieveDetailsById() {
+    void shouldReturnUserDetailsWhenUserIdIsValid() {
         UserDetails userDetails = new UserDetails();
         userDetails.setId(1);
         userDetails.setFirstName("John");

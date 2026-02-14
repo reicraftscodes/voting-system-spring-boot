@@ -67,7 +67,8 @@ public class VotingServiceImpl implements VotingService {
         PartyList party = findParty(request.getPartyId());
 
         //  Generate receipt using utility class
-        String referenceNumber = ReceiptGenerator.generateReceipt(request.getPartyId());
+        ReceiptGenerator receiptGenerator = new ReceiptGenerator();
+        String referenceNumber = receiptGenerator.generateReceipt(request.getPartyId());
 
         // Save votes
         Voting vote = saveVote(userFound, party, referenceNumber);
