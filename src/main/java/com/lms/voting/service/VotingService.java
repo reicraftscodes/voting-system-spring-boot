@@ -17,6 +17,8 @@ public interface VotingService {
 
     boolean isEligibleToVote(UserDetails userDetails);
 
+    void validateVotingEligibility(UserDetails user);
+
     List<Voting> votingReceiptDisplays();
 
     PartyVoteSummary getTotalVotesByParty(Integer partyId);

@@ -5,6 +5,7 @@ import com.lms.voting.dto.VoteResponse;
 import com.lms.voting.entity.PartyList;
 import com.lms.voting.entity.UserDetails;
 import com.lms.voting.entity.Voting;
+import com.lms.voting.exception.IneligibleVoterException;
 import com.lms.voting.exception.InvalidRequestException;
 import com.lms.voting.repository.PartyListRepository;
 import com.lms.voting.repository.UserDetailsRepository;
@@ -72,16 +73,13 @@ public class VotingServiceTests {
 
         when(votingRepository.save(any(Voting.class))).thenReturn(mockVote);
 
-        // Act: Call the method
         VoteResponse response = votingService.castVote(castVoteRequest);
 
-        // Assert: Verify the expected result
         assertNotNull(response);
         assertEquals("REFERENCE123", response.getReferenceNo());
         assertEquals("Labour", response.getPartyName());
         assertEquals("Vote successfully cast", response.getDescription());
 
-        // verify interactions with repositories
         verify(userDetailsRepository, times(1)).findByNationalInsuranceNumberAndLastName(nationalInsuranceNumber, lastName);
         verify(partyListRepository, times(1)).findById(partyId);
         verify(votingRepository, times(1)).save(any(Voting.class));
@@ -89,7 +87,7 @@ public class VotingServiceTests {
 
     @Test
     void shouldThrowInvalidRequestExceptionWhenUserCredentialsAreInvalid() {
-        // test data
+
         String nationalInsuranceNumber = "123456SDLC";
         String lastName = "Doe";
         Integer partyId = 1;
@@ -101,19 +99,68 @@ public class VotingServiceTests {
 
         // mock UserDetails repository behaviour (invalid user)
         when(userDetailsRepository.findByNationalInsuranceNumberAndLastName(nationalInsuranceNumber, lastName))
-                .thenReturn(Optional.empty());  // Return empty Optional to simulate invalid credentials
+                // return empty Optional to simulate invalid credentials
+                .thenReturn(Optional.empty());
 
-        // call the method and expect an exception
         assertThrows(InvalidRequestException.class, () -> {
             votingService.castVote(castVoteRequest);
         });
 
-        //verify interactions with repositories
+        // verify interactions with repositories
         verify(userDetailsRepository, times(1)).findByNationalInsuranceNumberAndLastName(nationalInsuranceNumber, lastName);
         // party repository shouldn't be called if user is invalid
         verify(partyListRepository, never()).findById(partyId);
         // vote repository shouldn't be called if user is invalid
         verify(votingRepository, never()).save(any(Voting.class));
+    }
+
+    @Test
+    void verifyEligibleVoterAgeThenReturnSucess() {
+        UserDetails user = mock(UserDetails.class);
+        LocalDate dob = LocalDate.of(2000, 1, 1);
+
+        when(user.getDateOfBirth()).thenReturn(dob);
+
+        boolean isEligible = votingService.isEligibleToVote(user);
+
+        assertTrue(isEligible, "User must be %d or older to vote");
+
+    }
+
+    @Test
+    void verifyIneligibleVoterAgeThenReturnSuccess() {
+        UserDetails user = mock(UserDetails.class);
+        LocalDate dob = LocalDate.of(2010, 1, 1); // Birthdate: January 1, 2010 (ineligible)
+        when(user.getDateOfBirth()).thenReturn(dob);
+
+        boolean isEligible = votingService.isEligibleToVote(user);
+
+        assertFalse(isEligible, "User should not be eligible to vote");
+    }
+
+    @Test
+    void verifyValidateVotingEligibilityForEligibleUser() {
+        UserDetails user = mock(UserDetails.class);
+        LocalDate dob = LocalDate.of(2000, 1, 1); // Birthdate: January 1, 2000 (eligible)
+        when(user.getDateOfBirth()).thenReturn(dob);
+
+        assertDoesNotThrow(() -> votingService.isEligibleToVote(user), "Eligible user should not throw exception");
+    }
+
+
+    @Test
+    void verifyIneligibleVoterAgeThenReturnException() {
+
+        UserDetails user = mock(UserDetails.class);
+        LocalDate dob = LocalDate.of(2011, 1, 1);
+        when(user.getDateOfBirth()).thenReturn(dob);
+
+        // should throw IneligibleVoterException for ineligible user
+        IneligibleVoterException exception = assertThrows(IneligibleVoterException.class, () -> {
+            votingService.validateVotingEligibility(user);
+        });
+
+        assertEquals("User must be 18 or older to vote.", exception.getMessage());
     }
 
 
