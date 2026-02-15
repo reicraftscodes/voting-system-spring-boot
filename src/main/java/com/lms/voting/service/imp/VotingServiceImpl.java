@@ -80,8 +80,8 @@ public class VotingServiceImpl implements VotingService {
                 .build();
     }
 
-
-    private void validateVotingEligibility(UserDetails user) {
+    @Override
+    public void validateVotingEligibility(UserDetails user) {
         if (!isEligibleToVote(user)) {
             throw new IneligibleVoterException(
                     String.format("User must be %d or older to vote.", MINIMUM_VOTING_AGE)
