@@ -48,17 +48,12 @@ class UserDetailsControllerTests {
     @MockBean
     private UserDetailsService userDetailsService;
 
-    // test data
     private UserDetails userDetails;
     private UpdateUserDetailsDto updateUserDetailsDto;
 
-    /**
-     * Runs before each test method.
-     * Initialises fresh test data (UserDetails and UpdateUserDetailsDto) so every test starts with a clean, consistent state.
-     */
+
     @BeforeEach
     void setUp() {
-        // Default user for create/get tests
         userDetails = new UserDetails();
         userDetails.setId(1);
         userDetails.setFirstName("John");
@@ -78,12 +73,6 @@ class UserDetailsControllerTests {
 
     @Test
     void createNewUserTest() throws Exception {
-        userDetails.setId(1);
-        userDetails.setFirstName("John");
-        userDetails.setLastName("Doe");
-        userDetails.setDateOfBirth(LocalDate.of(2000, 1, 1));
-        userDetails.setNationalInsuranceNumber("CS200001S");
-
         // the any() means accept anything of this type. mockito will match whatever object the method receives.
         when(userDetailsService.addPersonalDetails(any(UserDetails.class))).thenReturn(userDetails);
 
@@ -100,11 +89,6 @@ class UserDetailsControllerTests {
 
     @Test
     void getPersonalDetailsByIDTest() throws Exception {
-        userDetails.setId(1);
-        userDetails.setFirstName("John");
-        userDetails.setLastName("Doe");
-        userDetails.setDateOfBirth(LocalDate.of(2000, 1, 1));
-        userDetails.setNationalInsuranceNumber("CS200001S");
 
         when(userDetailsService.getPersonalDetailsByID(userDetails.getId())).thenReturn(Optional.of(userDetails));
 
@@ -121,29 +105,21 @@ class UserDetailsControllerTests {
 
     @Test
     void updateUserDetailsTest() throws Exception {
-        int userId = 1;
-
-        updateUserDetailsDto.setId(userId);
-        updateUserDetailsDto.setFirstName("Jane");
-        updateUserDetailsDto.setLastName("Doe");
-        updateUserDetailsDto.setDateOfBirth(LocalDate.of(2000, 2, 2));
-        updateUserDetailsDto.setNationalInsuranceNumber("12345667");
-
-        when(userDetailsService.updateUserDetails(eq(userId), any(UpdateUserDetailsDto.class)))
+        when(userDetailsService.updateUserDetails(eq(1), any(UpdateUserDetailsDto.class)))
                 .thenReturn(updateUserDetailsDto);
 
-        mockMvc.perform(MockMvcRequestBuilders.patch("/api/v1/users/update/{id}", userId)
+        mockMvc.perform(MockMvcRequestBuilders.patch("/api/v1/users/update/{id}", 1)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(updateUserDetailsDto)))
                 .andExpect(status().isOk())
                 // Verify the response JSON matches our expected updated values
-                .andExpect(jsonPath("$.id").value(userId))
+                .andExpect(jsonPath("$.id").value(1))
                 .andExpect(jsonPath("$.firstName").value("Jane"))
                 .andExpect(jsonPath("$.lastName").value("Doe"))
                 .andExpect(jsonPath("$.dateOfBirth").value("2000-02-02"))
                 .andExpect(jsonPath("$.nationalInsuranceNumber").value("12345667"));
 
-        verify(userDetailsService).updateUserDetails(eq(userId), any(UpdateUserDetailsDto.class));
+        verify(userDetailsService).updateUserDetails(eq(1), any(UpdateUserDetailsDto.class));
     }
 }
 
