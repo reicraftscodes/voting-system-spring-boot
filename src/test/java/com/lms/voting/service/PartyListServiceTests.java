@@ -87,11 +87,8 @@ public class PartyListServiceTests {
 
     @Test
     void whenPartyListIsCreatedThenItIsSaved() {
-
-        // mock the repository's save method to return the partyCandidateOne object
         when(partyListRepository.save(partyCandidateOne)).thenReturn(partyCandidateOne);
 
-        // call the service method which will interact with the repository
         PartyList savedParty = partyListService.createPartyList(partyCandidateOne);
 
         assertEquals(1, savedParty.getId());
@@ -102,13 +99,10 @@ public class PartyListServiceTests {
     @Test
     void whenPartyIdIsPresentThenReturnPartyId() {
 
-        // mock the repository to return a PartyList when searching by ID 1
         when(partyListRepository.findById(1)).thenReturn(Optional.of(partyCandidateOne));
 
-        // all the service method to get the result
         String result = partyListService.getPartyNameById(1);
 
-        // verify the party name is returned correctly
         assertEquals(partyCandidateOne.getPartyName(), result, "Party name should be 'Labour'");
     }
 

@@ -74,7 +74,7 @@ public class VotingControllerTests {
                 .andExpect(jsonPath("$.partyName").value("Labour"))
                 .andExpect(jsonPath("$.description").value("Vote successfully cast"));
 
-        // Verify the service was called with correct argument
+
         verify(votingService).castVote(castVoteRequest);
     }
 
@@ -107,7 +107,6 @@ public class VotingControllerTests {
                 .andExpect(status().isOk())
                 // hasSize() matcher to verify array size
                 .andExpect(jsonPath("$", hasSize(1)))
-                // Check first element fields
                 .andExpect(jsonPath("$[0].id").value(1))
                 .andExpect(jsonPath("$[0].referenceNo").value("SampleReferences1234"))
                 .andExpect(jsonPath("$[0].userDetails.firstName").value("John"))
@@ -151,7 +150,6 @@ public class VotingControllerTests {
 
     @Test
     void whenUserCountTotalVotesByParty() throws Exception {
-        // Create a mock PartyVoteSummary using the builder pattern
         // Must use .builder() because PartyVoteSummary has @Builder annotation
         PartyVoteSummary partyVoteSummary = PartyVoteSummary.builder()
                 .partyId(1)
@@ -159,10 +157,8 @@ public class VotingControllerTests {
                 .totalVotes(15L)
                 .build();
 
-        // Mock the service method to return our test data when called with partyId = 1
         when(votingService.getTotalVotesByParty(1)).thenReturn(partyVoteSummary);
 
-        //  Perform the HTTP request and verify the response
         mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/voting/party/1")
                         // Request JSON response
                         .accept(MediaType.APPLICATION_JSON))
