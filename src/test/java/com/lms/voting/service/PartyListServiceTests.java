@@ -97,7 +97,7 @@ public class PartyListServiceTests {
     }
 
     @Test
-    void whenPartyIdIsPresentThenReturnPartyId() {
+    void whenPartyNameIdIsPresentThenReturnPartyId() {
 
         when(partyListRepository.findById(1)).thenReturn(Optional.of(partyCandidateOne));
 
@@ -108,7 +108,7 @@ public class PartyListServiceTests {
     }
 
     @Test
-    void whenPartyIdIsNotPresentThenReturnCorrectParty() {
+    void whenPartyNameIdIsNotPresentThenReturnCorrectParty() {
         when(partyListRepository.findById(1)).thenReturn(Optional.empty());
 
         assertThrows(ResourceNotFoundException.class, () ->
@@ -116,6 +116,18 @@ public class PartyListServiceTests {
         );
 
         verify(partyListRepository).findById(1);
+    }
+
+
+    @Test
+    void whenPartyIdISPresentThenReturnById() {
+        when(partyListRepository.findById(2)).thenReturn(Optional.of(partyCandidateTwo));
+        PartyList result = partyListServiceImp.getPartyById(2);
+
+        assertEquals(partyCandidateTwo.getId(), result.getId());
+
+        assertEquals(partyCandidateTwo, result);
+
     }
 
 }
