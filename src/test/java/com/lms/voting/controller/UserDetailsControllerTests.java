@@ -61,7 +61,6 @@ class UserDetailsControllerTests {
         userDetails.setDateOfBirth(LocalDate.of(2000, 1, 1));
         userDetails.setNationalInsuranceNumber("CS200001S");
 
-        // Update DTO for update test
         updateUserDetailsDto = new UpdateUserDetailsDto();
         updateUserDetailsDto.setId(1);
         updateUserDetailsDto.setFirstName("Jane");
@@ -73,7 +72,7 @@ class UserDetailsControllerTests {
 
     @Test
     void createNewUserTest() throws Exception {
-        // the any() means accept anything of this type. mockito will match whatever object the method receives.
+
         when(userDetailsService.addPersonalDetails(any(UserDetails.class))).thenReturn(userDetails);
 
         mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/users")

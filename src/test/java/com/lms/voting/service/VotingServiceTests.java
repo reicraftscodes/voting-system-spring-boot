@@ -41,7 +41,6 @@ public class VotingServiceTests {
 
     @Test
     void shouldReturnSuccessWhenUserSuccessfullyCastsVote() {
-        // Prepare test data
         String nationalInsuranceNumber = "123456SDLC";
         String lastName = "Doe";
         Integer partyId = 1;
@@ -97,7 +96,6 @@ public class VotingServiceTests {
         castVoteRequest.setLastName(lastName);
         castVoteRequest.setPartyId(partyId);
 
-        // mock UserDetails repository behaviour (invalid user)
         when(userDetailsRepository.findByNationalInsuranceNumberAndLastName(nationalInsuranceNumber, lastName))
                 // return empty Optional to simulate invalid credentials
                 .thenReturn(Optional.empty());

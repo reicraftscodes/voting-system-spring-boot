@@ -93,7 +93,6 @@ class PartyListControllerTests {
                 .andExpect(jsonPath("$.partyName").value("Labour Party"))
                 .andExpect(jsonPath("$.position").value("Leftist"));
 
-        // Verify that the service method was called with any PartyList object
         verify(partyListService).createPartyList(any(PartyList.class));
     }
 }

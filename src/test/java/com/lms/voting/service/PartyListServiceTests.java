@@ -28,7 +28,7 @@ public class PartyListServiceTests {
     private PartyListRepository partyListRepository;
 
     @InjectMocks
-    private PartyListServiceImpl partyListService;
+    private PartyListServiceImpl partyListServiceImp;
 
     private List<PartyList> partyLists;
 
@@ -56,7 +56,7 @@ public class PartyListServiceTests {
     @Test
     void whenGetAllPartyMembersThenReturnList() {
         when(partyListRepository.findAll()).thenReturn(partyLists);
-        List<PartyList> result = partyListService.getAllPartyMembers();
+        List<PartyList> result = partyListServiceImp.getAllPartyMembers();
         assertEquals(2, result.size());
         assertEquals("Labour", result.get(0).getPartyName());
         assertEquals("Conservative", result.get(1).getPartyName());
@@ -69,7 +69,7 @@ public class PartyListServiceTests {
         when(partyListRepository.findAll()).thenReturn(new ArrayList<>());
 
         Assertions.assertThrows(ResourceNotFoundException.class, () -> {
-            partyListService.getAllPartyMembers();
+            partyListServiceImp.getAllPartyMembers();
         });
 
         verify(partyListRepository, times(1)).findAll();
@@ -79,7 +79,7 @@ public class PartyListServiceTests {
     void whenGetAllPartyMembersThenVerifyCorrectPositions() {
         when(partyListRepository.findAll()).thenReturn(partyLists);
 
-        List<PartyList> result = partyListService.getAllPartyMembers();
+        List<PartyList> result = partyListServiceImp.getAllPartyMembers();
 
         assertEquals("Left Wing", result.get(0).getPosition());
         assertEquals("Right Wing", result.get(1).getPosition());
@@ -87,12 +87,9 @@ public class PartyListServiceTests {
 
     @Test
     void whenPartyListIsCreatedThenItIsSaved() {
-
-        // mock the repository's save method to return the partyCandidateOne object
         when(partyListRepository.save(partyCandidateOne)).thenReturn(partyCandidateOne);
 
-        // call the service method which will interact with the repository
-        PartyList savedParty = partyListService.createPartyList(partyCandidateOne);
+        PartyList savedParty = partyListServiceImp.createPartyList(partyCandidateOne);
 
         assertEquals(1, savedParty.getId());
         assertEquals("Labour", savedParty.getPartyName());
@@ -100,23 +97,48 @@ public class PartyListServiceTests {
     }
 
     @Test
-    void whenPartyIdIsPresentThenReturnPartyId() {
+    void whenPartyNameIdIsPresentThenReturnPartyId() {
 
-        // mock the repository to return a PartyList when searching by ID 1
         when(partyListRepository.findById(1)).thenReturn(Optional.of(partyCandidateOne));
 
-        // all the service method to get the result
-        String result = partyListService.getPartyNameById(1);
+        String result = partyListServiceImp.getPartyNameById(1);
 
-        // verify the party name is returned correctly
-        assertEquals(partyCandidateOne.getPartyName(), result, "Party name should be 'Labour'");
+        assertEquals(partyCandidateOne.getPartyName(), result);
+        verify(partyListRepository).findById(1);
     }
 
     @Test
-    void whenPartyIdIsNotPresentThenReturnCorrectParty() {
-        when(partyListRepository.findById(999)).thenReturn(Optional.empty());
-        assertThrows(ResourceNotFoundException.class, () -> partyListService.getPartyById(999),
-                "Party not found with ID: 999");
+    void whenPartyNameIdIsNotPresentThenReturnCorrectParty() {
+        when(partyListRepository.findById(1)).thenReturn(Optional.empty());
+
+        assertThrows(ResourceNotFoundException.class, () ->
+                partyListServiceImp.getPartyNameById(1)
+        );
+
+        verify(partyListRepository).findById(1);
+    }
+
+
+    @Test
+    void whenPartyIdISPresentThenReturnById() {
+        when(partyListRepository.findById(2)).thenReturn(Optional.of(partyCandidateTwo));
+        PartyList result = partyListServiceImp.getPartyById(2);
+
+        assertEquals(partyCandidateTwo.getId(), result.getId());
+
+        assertEquals(partyCandidateTwo, result);
+
+    }
+
+    @Test
+    void whenPartyIdIsNotPresentThenReturnCorrectPartyId() {
+        when(partyListRepository.findById(2)).thenReturn(Optional.empty());
+
+        assertThrows(ResourceNotFoundException.class, () ->
+                partyListServiceImp.getPartyById(2)
+        );
+
+        verify(partyListRepository).findById(2);
 
     }
 
