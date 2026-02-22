@@ -130,4 +130,16 @@ public class PartyListServiceTests {
 
     }
 
+    @Test
+    void whenPartyIdIsNotPresentThenReturnCorrectPartyId() {
+        when(partyListRepository.findById(2)).thenReturn(Optional.empty());
+
+        assertThrows(ResourceNotFoundException.class, () ->
+                partyListServiceImp.getPartyById(2)
+        );
+
+        verify(partyListRepository).findById(2);
+
+    }
+
 }
