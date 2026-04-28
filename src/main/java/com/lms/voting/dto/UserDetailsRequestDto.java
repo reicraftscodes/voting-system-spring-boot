@@ -1,4 +1,4 @@
-package com.lms.voting.entity;
+package com.lms.voting.dto;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
@@ -10,16 +10,11 @@ import lombok.ToString;
 
 import java.time.LocalDate;
 
-
 @Getter
 @Setter
 @ToString
-@Entity
-@Table(name = "user_details")
-public class UserDetails {
+public class UserDetailsRequestDto {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     @NotBlank(message = "First name cannot be empty")
@@ -32,10 +27,7 @@ public class UserDetails {
     private LocalDate dateOfBirth;
 
     @NotBlank(message = "National Insurance Number cannot be empty")
-    @Pattern(regexp = "[A-Z]{2}\\d{6}[A-D]",
-            message = "Invalid NI number format")
+    @Pattern(regexp = "[A-Z]{2}\\d{6}[A-D]", message = "Invalid NI number format")
     @Column(unique = true)
     private String nationalInsuranceNumber;
-
-
 }

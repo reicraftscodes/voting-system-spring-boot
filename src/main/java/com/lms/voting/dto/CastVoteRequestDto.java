@@ -11,7 +11,7 @@ import lombok.*;
 @AllArgsConstructor
 @Getter
 @Setter
-public class CastVoteRequest {
+public class CastVoteRequestDto {
 
     @NotBlank(message = "National Insurance Number is required")
     private String nationalInsuranceNumber;

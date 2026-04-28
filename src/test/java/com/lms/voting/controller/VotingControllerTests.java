@@ -2,8 +2,8 @@ package com.lms.voting.controller;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.lms.voting.dto.CastVoteRequest;
-import com.lms.voting.dto.PartyVoteSummary;
+import com.lms.voting.dto.CastVoteRequestDto;
+import com.lms.voting.dto.PartyVoteResponse;
 import com.lms.voting.dto.VoteResponse;
 import com.lms.voting.entity.PartyList;
 import com.lms.voting.entity.UserDetails;
@@ -42,10 +42,10 @@ public class VotingControllerTests {
 
     @Test
     void userCastVotes() throws Exception {
-        CastVoteRequest castVoteRequest = new CastVoteRequest();
-        castVoteRequest.setNationalInsuranceNumber("CS200001S");
-        castVoteRequest.setLastName("San");
-        castVoteRequest.setPartyId(1);
+        CastVoteRequestDto castVoteRequestDto = new CastVoteRequestDto();
+        castVoteRequestDto.setNationalInsuranceNumber("CS200001S");
+        castVoteRequestDto.setLastName("San");
+        castVoteRequestDto.setPartyId(1);
 
         // Create a VoteResponse object, representing the response after the vote is cast.
         VoteResponse voteResponse = VoteResponse.builder()
@@ -56,7 +56,7 @@ public class VotingControllerTests {
 
         // Mock the behaviour of the voting service, specifying that when the castVote method
         // is called with the castVoteRequest, it should return the voteResponse object.
-        when(votingService.castVote(castVoteRequest)).thenReturn(voteResponse);
+        when(votingService.castVote(castVoteRequestDto)).thenReturn(voteResponse);
 
         mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/voting")
                         // If Content-Type is not explicitly set to application/json, Spring treats the request body as application/octet-stream,
@@ -68,14 +68,14 @@ public class VotingControllerTests {
                         // Indicate that the response should be in JSON format or  expected response type
                         .accept(MediaType.APPLICATION_JSON)  // The response should also be JSON
                         //Serialize the castVoteRequest object to a JSON string as the body of the POST request
-                        .content(objectMapper.writeValueAsString(castVoteRequest)))
+                        .content(objectMapper.writeValueAsString(castVoteRequestDto)))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.referenceNo").value("20260130173747817001"))
                 .andExpect(jsonPath("$.partyName").value("Labour"))
                 .andExpect(jsonPath("$.description").value("Vote successfully cast"));
 
 
-        verify(votingService).castVote(castVoteRequest);
+        verify(votingService).castVote(castVoteRequestDto);
     }
 
     @Test
@@ -151,7 +151,7 @@ public class VotingControllerTests {
     @Test
     void whenUserCountTotalVotesByParty() throws Exception {
         // Must use .builder() because PartyVoteSummary has @Builder annotation
-        PartyVoteSummary partyVoteSummary = PartyVoteSummary.builder()
+        PartyVoteResponse partyVoteSummary = PartyVoteResponse.builder()
                 .partyId(1)
                 .partyName("Conservative")
                 .totalVotes(15L)

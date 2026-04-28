@@ -9,8 +9,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class PartyVoteSummary {
-
+public class PartyVoteResponse {
     private Integer partyId;
     private String partyName;
     private Long totalVotes;

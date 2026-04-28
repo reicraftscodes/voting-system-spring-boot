@@ -1,9 +1,9 @@
 package com.lms.voting.controller;
 
 import com.lms.voting.constant.VotingDetailsConstant;
-import com.lms.voting.dto.CastVoteRequest;
+import com.lms.voting.dto.CastVoteRequestDto;
+import com.lms.voting.dto.PartyVoteResponse;
 import com.lms.voting.dto.VoteResponse;
-import com.lms.voting.dto.PartyVoteSummary;
 import com.lms.voting.entity.Voting;
 import com.lms.voting.service.VotingService;
 import jakarta.validation.Valid;
@@ -28,7 +28,7 @@ public class VotingController {
     }
 
     @PostMapping
-    public ResponseEntity<VoteResponse> castVote(@Valid @RequestBody CastVoteRequest request) {
+    public ResponseEntity<VoteResponse> castVote(@Valid @RequestBody CastVoteRequestDto request) {
         VoteResponse vote = votingService.castVote(request);
         log.info(VotingDetailsConstant.RESULT_VOTED_SUCCESS);
         return ResponseEntity.status(HttpStatus.CREATED).body(vote);
@@ -48,8 +48,8 @@ public class VotingController {
     }
 
     @GetMapping("/party/{partyId}")
-    public ResponseEntity<PartyVoteSummary> getVotesByParty(@PathVariable Integer partyId) {
-        PartyVoteSummary summary = votingService.getTotalVotesByParty(partyId);
+    public ResponseEntity<PartyVoteResponse> getVotesByParty(@PathVariable Integer partyId) {
+        PartyVoteResponse summary = votingService.getTotalVotesByParty(partyId);
         log.info(VotingDetailsConstant.PARTY_TOTAL_VOTE_SUCCESS, summary.getPartyId(), summary.getTotalVotes());
         return ResponseEntity.status(HttpStatus.OK).body(summary);
     }

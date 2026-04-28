@@ -1,6 +1,7 @@
 package com.lms.voting.service.imp;
 
 import com.lms.voting.dto.UpdateUserDetailsDto;
+import com.lms.voting.dto.UserDetailsRequestDto;
 import com.lms.voting.entity.UserDetails;
 import com.lms.voting.repository.UserDetailsRepository;
 import com.lms.voting.service.UserDetailsService;
@@ -24,14 +25,33 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
 
     // add personal details
-    public UserDetails addPersonalDetails(UserDetails userDetails) {
-        // check if there's an existing insurance number
-        if (userDetailsRepository.existsByNationalInsuranceNumber(userDetails.getNationalInsuranceNumber())) {
-            throw new DuplicateRequestException();
+    public UserDetailsRequestDto addPersonalDetails(UserDetailsRequestDto userDetailsDto) {
+        // Check if there's an existing insurance number
+        if (userDetailsRepository.existsByNationalInsuranceNumber(userDetailsDto.getNationalInsuranceNumber())) {
+            throw new DuplicateRequestException("A user with this national insurance number already exists.");
         }
 
-        return userDetailsRepository.save(userDetails);
+        // Convert DTO to Entity
+        UserDetails userDetails = new UserDetails();
+        userDetails.setNationalInsuranceNumber(userDetailsDto.getNationalInsuranceNumber());
+        userDetails.setFirstName(userDetailsDto.getFirstName());
+        userDetails.setLastName(userDetailsDto.getLastName());
+        userDetails.setDateOfBirth(userDetailsDto.getDateOfBirth());
+
+        // Save the entity
+        UserDetails savedUserDetails = userDetailsRepository.save(userDetails);
+
+        // Map the saved entity to DTO before returning
+        UserDetailsRequestDto savedUserDetailsDto = new UserDetailsRequestDto();
+        savedUserDetailsDto.setId(savedUserDetails.getId());
+        savedUserDetailsDto.setFirstName(savedUserDetails.getFirstName());
+        savedUserDetailsDto.setLastName(savedUserDetails.getLastName());
+        savedUserDetailsDto.setDateOfBirth(savedUserDetails.getDateOfBirth());
+        savedUserDetailsDto.setNationalInsuranceNumber(savedUserDetails.getNationalInsuranceNumber());
+
+        return savedUserDetailsDto;
     }
+
 
     // retrieve a single user
     public Optional<UserDetails> getPersonalDetailsByID(Integer id) {

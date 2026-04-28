@@ -1,6 +1,6 @@
 package com.lms.voting.service;
 
-import com.lms.voting.dto.CastVoteRequest;
+import com.lms.voting.dto.CastVoteRequestDto;
 import com.lms.voting.dto.VoteResponse;
 import com.lms.voting.entity.PartyList;
 import com.lms.voting.entity.UserDetails;
@@ -45,10 +45,10 @@ public class VotingServiceTests {
         String lastName = "Doe";
         Integer partyId = 1;
 
-        CastVoteRequest castVoteRequest = new CastVoteRequest();
-        castVoteRequest.setNationalInsuranceNumber(nationalInsuranceNumber);
-        castVoteRequest.setLastName(lastName);
-        castVoteRequest.setPartyId(partyId);
+        CastVoteRequestDto castVoteRequestDto = new CastVoteRequestDto();
+        castVoteRequestDto.setNationalInsuranceNumber(nationalInsuranceNumber);
+        castVoteRequestDto.setLastName(lastName);
+        castVoteRequestDto.setPartyId(partyId);
 
         // mock UserDetails repository behaviour (valid user found)
         UserDetails mockUserDetails = new UserDetails();
@@ -72,7 +72,7 @@ public class VotingServiceTests {
 
         when(votingRepository.save(any(Voting.class))).thenReturn(mockVote);
 
-        VoteResponse response = votingService.castVote(castVoteRequest);
+        VoteResponse response = votingService.castVote(castVoteRequestDto);
 
         assertNotNull(response);
         assertEquals("REFERENCE123", response.getReferenceNo());
@@ -91,17 +91,17 @@ public class VotingServiceTests {
         String lastName = "Doe";
         Integer partyId = 1;
 
-        CastVoteRequest castVoteRequest = new CastVoteRequest();
-        castVoteRequest.setNationalInsuranceNumber(nationalInsuranceNumber);
-        castVoteRequest.setLastName(lastName);
-        castVoteRequest.setPartyId(partyId);
+        CastVoteRequestDto castVoteRequestDto = new CastVoteRequestDto();
+        castVoteRequestDto.setNationalInsuranceNumber(nationalInsuranceNumber);
+        castVoteRequestDto.setLastName(lastName);
+        castVoteRequestDto.setPartyId(partyId);
 
         when(userDetailsRepository.findByNationalInsuranceNumberAndLastName(nationalInsuranceNumber, lastName))
                 // return empty Optional to simulate invalid credentials
                 .thenReturn(Optional.empty());
 
         assertThrows(InvalidRequestException.class, () -> {
-            votingService.castVote(castVoteRequest);
+            votingService.castVote(castVoteRequestDto);
         });
 
         // verify interactions with repositories

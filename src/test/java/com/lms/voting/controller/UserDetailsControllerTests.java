@@ -3,6 +3,7 @@ package com.lms.voting.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lms.voting.dto.UpdateUserDetailsDto;
+import com.lms.voting.dto.UserDetailsRequestDto;
 import com.lms.voting.entity.UserDetails;
 import com.lms.voting.service.UserDetailsService;
 import org.junit.jupiter.api.BeforeEach;
@@ -47,15 +48,13 @@ class UserDetailsControllerTests {
      */
     @MockBean
     private UserDetailsService userDetailsService;
-
-    private UserDetails userDetails;
+    private UserDetailsRequestDto userDetails;
     private UpdateUserDetailsDto updateUserDetailsDto;
 
 
     @BeforeEach
     void setUp() {
-        userDetails = new UserDetails();
-        userDetails.setId(1);
+        userDetails = new UserDetailsRequestDto();
         userDetails.setFirstName("John");
         userDetails.setLastName("Doe");
         userDetails.setDateOfBirth(LocalDate.of(2000, 1, 1));
@@ -72,14 +71,21 @@ class UserDetailsControllerTests {
 
     @Test
     void createNewUserTest() throws Exception {
+        UserDetailsRequestDto mockResponse = new UserDetailsRequestDto();
+        mockResponse.setFirstName("John");
+        mockResponse.setLastName("Doe");
+        mockResponse.setDateOfBirth(LocalDate.of(2000, 1, 1));
+        mockResponse.setNationalInsuranceNumber("CS200001S");
+        mockResponse.setId(1);
 
-        when(userDetailsService.addPersonalDetails(any(UserDetails.class))).thenReturn(userDetails);
+        // Mock the service to return the DTO
+        when(userDetailsService.addPersonalDetails(any(UserDetailsRequestDto.class))).thenReturn(mockResponse);
 
         mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/users")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(userDetails)))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value("1"))
+                        .content(objectMapper.writeValueAsString(mockResponse)))
+                .andExpect(status().isOk())  // Expect status 200 OK
+                .andExpect(jsonPath("$.id").value(1))
                 .andExpect(jsonPath("$.firstName").value("John"))
                 .andExpect(jsonPath("$.lastName").value("Doe"))
                 .andExpect(jsonPath("$.dateOfBirth").value("2000-01-01"))
@@ -88,36 +94,38 @@ class UserDetailsControllerTests {
 
     @Test
     void getPersonalDetailsByIDTest() throws Exception {
+        UserDetails mockUserDetails = new UserDetails();
+        mockUserDetails.setId(1);
+        mockUserDetails.setFirstName("John");
+        mockUserDetails.setLastName("Doe");
+        mockUserDetails.setDateOfBirth(LocalDate.of(2000, 1, 1));
+        mockUserDetails.setNationalInsuranceNumber("CS200001S");
 
-        when(userDetailsService.getPersonalDetailsByID(userDetails.getId())).thenReturn(Optional.of(userDetails));
+        when(userDetailsService.getPersonalDetailsByID(1)).thenReturn(Optional.of(mockUserDetails));
 
         mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/users/1")
                         .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value("1"))
+                .andExpect(status().isOk())  // Expect status 200 OK
+                .andExpect(jsonPath("$.id").value(1))
                 .andExpect(jsonPath("$.firstName").value("John"))
                 .andExpect(jsonPath("$.lastName").value("Doe"))
                 .andExpect(jsonPath("$.dateOfBirth").value("2000-01-01"))
                 .andExpect(jsonPath("$.nationalInsuranceNumber").value("CS200001S"));
-
     }
 
     @Test
     void updateUserDetailsTest() throws Exception {
         when(userDetailsService.updateUserDetails(eq(1), any(UpdateUserDetailsDto.class)))
                 .thenReturn(updateUserDetailsDto);
-
         mockMvc.perform(MockMvcRequestBuilders.patch("/api/v1/users/update/{id}", 1)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(updateUserDetailsDto)))
                 .andExpect(status().isOk())
-                // Verify the response JSON matches our expected updated values
                 .andExpect(jsonPath("$.id").value(1))
                 .andExpect(jsonPath("$.firstName").value("Jane"))
                 .andExpect(jsonPath("$.lastName").value("Doe"))
                 .andExpect(jsonPath("$.dateOfBirth").value("2000-02-02"))
                 .andExpect(jsonPath("$.nationalInsuranceNumber").value("12345667"));
-
         verify(userDetailsService).updateUserDetails(eq(1), any(UpdateUserDetailsDto.class));
     }
 }

@@ -2,8 +2,10 @@ package com.lms.voting.controller;
 
 import com.lms.voting.constant.UserDetailsConstant;
 import com.lms.voting.dto.UpdateUserDetailsDto;
+import com.lms.voting.dto.UserDetailsRequestDto;
 import com.lms.voting.entity.UserDetails;
 import com.lms.voting.service.UserDetailsService;
+import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -23,8 +25,8 @@ public class UserDetailsController {
     }
 
     @PostMapping(produces = "application/json")
-    public ResponseEntity<UserDetails> createUser(@RequestBody UserDetails userDetails) {
-        UserDetails addedUserDetails = userDetailsService.addPersonalDetails(userDetails);
+    public ResponseEntity<UserDetailsRequestDto> createUser(@RequestBody @Valid UserDetailsRequestDto userDetails) {
+        UserDetailsRequestDto addedUserDetails = userDetailsService.addPersonalDetails(userDetails);
         log.info(UserDetailsConstant.RESULT_DESCRIPTION_SUCCESS, addedUserDetails.getNationalInsuranceNumber());
         return ResponseEntity.status(HttpStatus.OK).body(addedUserDetails);
     }

@@ -1,7 +1,7 @@
 package com.lms.voting.service.imp;
 
-import com.lms.voting.dto.CastVoteRequest;
-import com.lms.voting.dto.PartyVoteSummary;
+import com.lms.voting.dto.CastVoteRequestDto;
+import com.lms.voting.dto.PartyVoteResponse;
 import com.lms.voting.dto.VoteResponse;
 import com.lms.voting.entity.PartyList;
 import com.lms.voting.entity.UserDetails;
@@ -44,7 +44,7 @@ public class VotingServiceImpl implements VotingService {
 
     @Override
     @Transactional
-    public VoteResponse castVote(CastVoteRequest request) {
+    public VoteResponse castVote(CastVoteRequestDto request) {
 
         // Find and validate user based on NI and Last Name
         Optional<UserDetails> userOptional = userDetailsRepository.findByNationalInsuranceNumberAndLastName(
@@ -143,7 +143,7 @@ public class VotingServiceImpl implements VotingService {
     }
 
     @Override
-    public PartyVoteSummary getTotalVotesByParty(Integer partyId) {
+    public PartyVoteResponse getTotalVotesByParty(Integer partyId) {
         // Validate party exists
         PartyList party = findParty(partyId);
 
@@ -153,7 +153,7 @@ public class VotingServiceImpl implements VotingService {
             totalVotes = 0L;
         }
 
-        return PartyVoteSummary.builder()
+        return PartyVoteResponse.builder()
                 .partyId(partyId)
                 .partyName(party.getPartyName())
                 .totalVotes(totalVotes)
