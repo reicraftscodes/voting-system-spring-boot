@@ -1,6 +1,5 @@
 package com.lms.voting.dto;
 
-import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
@@ -27,7 +26,6 @@ public class UserDetailsRequestDto {
     private LocalDate dateOfBirth;
 
     @NotBlank(message = "National Insurance Number cannot be empty")
-    @Pattern(regexp = "[A-Z]{2}\\d{6}[A-D]", message = "Invalid NI number format")
-    @Column(unique = true)
+    @Pattern(regexp = "^(?!BG|GB|NK|KN|NT|TN|ZZ)[A-CEGHJ-PR-TW-Z][A-CEGHJ-NPR-TW-Z]\\d{6}[A-D]$", message = "Invalid National Insurance number format")
     private String nationalInsuranceNumber;
 }
