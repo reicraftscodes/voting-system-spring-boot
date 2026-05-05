@@ -48,24 +48,24 @@ class UserDetailsControllerTests {
      */
     @MockBean
     private UserDetailsService userDetailsService;
-    private UserDetailsRequestDto userDetails;
+    private UserDetailsRequestDto userDetailsDto;
     private UpdateUserDetailsDto updateUserDetailsDto;
 
 
     @BeforeEach
     void setUp() {
-        userDetails = new UserDetailsRequestDto();
-        userDetails.setFirstName("John");
-        userDetails.setLastName("Doe");
-        userDetails.setDateOfBirth(LocalDate.of(2000, 1, 1));
-        userDetails.setNationalInsuranceNumber("CS200001S");
+        userDetailsDto = new UserDetailsRequestDto();
+        userDetailsDto.setFirstName("John");
+        userDetailsDto.setLastName("Doe");
+        userDetailsDto.setDateOfBirth(LocalDate.of(2000, 1, 1));
+        userDetailsDto.setNationalInsuranceNumber("TW345679B");
 
         updateUserDetailsDto = new UpdateUserDetailsDto();
-        updateUserDetailsDto.setId(1);
+        updateUserDetailsDto.setId(21);
         updateUserDetailsDto.setFirstName("Jane");
         updateUserDetailsDto.setLastName("Doe");
         updateUserDetailsDto.setDateOfBirth(LocalDate.of(2000, 2, 2));
-        updateUserDetailsDto.setNationalInsuranceNumber("12345667");
+        updateUserDetailsDto.setNationalInsuranceNumber("TW345678B");
 
     }
 
@@ -75,7 +75,7 @@ class UserDetailsControllerTests {
         mockResponse.setFirstName("John");
         mockResponse.setLastName("Doe");
         mockResponse.setDateOfBirth(LocalDate.of(2000, 1, 1));
-        mockResponse.setNationalInsuranceNumber("CS200001S");
+        mockResponse.setNationalInsuranceNumber("TW345679B");
         mockResponse.setId(1);
 
         // Mock the service to return the DTO
@@ -89,7 +89,7 @@ class UserDetailsControllerTests {
                 .andExpect(jsonPath("$.firstName").value("John"))
                 .andExpect(jsonPath("$.lastName").value("Doe"))
                 .andExpect(jsonPath("$.dateOfBirth").value("2000-01-01"))
-                .andExpect(jsonPath("$.nationalInsuranceNumber").value("CS200001S"));
+                .andExpect(jsonPath("$.nationalInsuranceNumber").value("TW345679B"));
     }
 
     @Test
@@ -99,7 +99,7 @@ class UserDetailsControllerTests {
         mockUserDetails.setFirstName("John");
         mockUserDetails.setLastName("Doe");
         mockUserDetails.setDateOfBirth(LocalDate.of(2000, 1, 1));
-        mockUserDetails.setNationalInsuranceNumber("CS200001S");
+        mockUserDetails.setNationalInsuranceNumber("TW345679B");
 
         when(userDetailsService.getPersonalDetailsByID(1)).thenReturn(Optional.of(mockUserDetails));
 
@@ -110,7 +110,7 @@ class UserDetailsControllerTests {
                 .andExpect(jsonPath("$.firstName").value("John"))
                 .andExpect(jsonPath("$.lastName").value("Doe"))
                 .andExpect(jsonPath("$.dateOfBirth").value("2000-01-01"))
-                .andExpect(jsonPath("$.nationalInsuranceNumber").value("CS200001S"));
+                .andExpect(jsonPath("$.nationalInsuranceNumber").value("TW345679B"));
     }
 
     @Test
@@ -121,11 +121,11 @@ class UserDetailsControllerTests {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(updateUserDetailsDto)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(1))
+                .andExpect(jsonPath("$.id").value(21))
                 .andExpect(jsonPath("$.firstName").value("Jane"))
                 .andExpect(jsonPath("$.lastName").value("Doe"))
                 .andExpect(jsonPath("$.dateOfBirth").value("2000-02-02"))
-                .andExpect(jsonPath("$.nationalInsuranceNumber").value("12345667"));
+                .andExpect(jsonPath("$.nationalInsuranceNumber").value("TW345678B"));
         verify(userDetailsService).updateUserDetails(eq(1), any(UpdateUserDetailsDto.class));
     }
 }

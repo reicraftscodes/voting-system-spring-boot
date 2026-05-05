@@ -1,6 +1,7 @@
 package com.lms.voting.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.lms.voting.dto.PartyListDto;
 import com.lms.voting.entity.PartyList;
 import com.lms.voting.service.PartyListService;
 import org.junit.jupiter.api.Test;
@@ -47,43 +48,45 @@ class PartyListControllerTests {
 
     @Test
     void retrieveAllPartyMembersTest() throws Exception {
-        PartyList partyCandidateOne = new PartyList();
+
+        PartyListDto partyCandidateOne = new PartyListDto();
         partyCandidateOne.setId(1);
         partyCandidateOne.setPartyName("Party A");
         partyCandidateOne.setPosition("Leftist");
 
-        PartyList partyCandidateTwo = new PartyList();
+        PartyListDto partyCandidateTwo = new PartyListDto();
         partyCandidateTwo.setId(2);
         partyCandidateTwo.setPartyName("Party B");
         partyCandidateTwo.setPosition("Rightist");
 
-        List<PartyList> partyLists = Arrays.asList(partyCandidateOne, partyCandidateTwo);
+        List<PartyListDto> savedParty = List.of(partyCandidateOne, partyCandidateTwo);
 
-        when(partyListService.getAllPartyMembers()).thenReturn(partyLists);
+        when(partyListService.createPartyList(any(PartyListDto.class)))
+                .thenReturn((PartyListDto) savedParty);
 
         mockMvc.perform(get("/api/v1/uk/parties/all"))
                 .andExpect(status().isOk())
-                // Verify the partyName and position of the first party
                 .andExpect(jsonPath("$[0].partyName").value("Party A"))
                 .andExpect(jsonPath("$[0].position").value("Leftist"))
-                // Verify the partyName and position of the second party
                 .andExpect(jsonPath("$[1].partyName").value("Party B"))
                 .andExpect(jsonPath("$[1].position").value("Rightist"));
     }
 
     @Test
     void createPartyListTest() throws Exception {
-        PartyList newParty = new PartyList();
+        PartyListDto newParty = new PartyListDto();
         newParty.setId(1);
         newParty.setPartyName("Labour Party");
         newParty.setPosition("Leftist");
 
-        PartyList savedParty = new PartyList();
+        PartyListDto savedParty = new PartyListDto();
         savedParty.setId(1);
         savedParty.setPartyName("Labour Party");
         savedParty.setPosition("Leftist");
 
-        when(partyListService.createPartyList(any(PartyList.class))).thenReturn(savedParty);
+
+        when(partyListService.createPartyList(any(PartyListDto.class)))
+                .thenReturn(savedParty);
 
         mockMvc.perform(post("/api/v1/uk/parties")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -93,6 +96,6 @@ class PartyListControllerTests {
                 .andExpect(jsonPath("$.partyName").value("Labour Party"))
                 .andExpect(jsonPath("$.position").value("Leftist"));
 
-        verify(partyListService).createPartyList(any(PartyList.class));
+        verify(partyListService).createPartyList(any(PartyListDto.class));
     }
 }
