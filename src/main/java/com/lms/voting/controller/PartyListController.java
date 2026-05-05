@@ -1,8 +1,9 @@
 package com.lms.voting.controller;
 
 import com.lms.voting.constant.PartyListConstant;
-import com.lms.voting.entity.PartyList;
+import com.lms.voting.dto.PartyListDto;
 import com.lms.voting.service.PartyListService;
+import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -24,15 +25,15 @@ public class PartyListController {
     }
 
     @PostMapping(produces = "application/json")
-    public ResponseEntity<PartyList> createPartyList(@RequestBody PartyList partyList) {
-        PartyList addPartyList = partyListService.createPartyList(partyList);
+    public ResponseEntity<PartyListDto> createPartyList(@RequestBody @Valid PartyListDto partyListDto) {
+        PartyListDto addPartyList = partyListService.createPartyList(partyListDto);
         log.info(PartyListConstant.RESULT_DESCRIPTION_SUCCESS, addPartyList.getPartyName());
         return ResponseEntity.status(HttpStatus.OK).body(addPartyList);
     }
 
     @GetMapping("/all")
-    public ResponseEntity<List<PartyList>> getAllPartyMembers() {
-        List<PartyList> partyLists = partyListService.getAllPartyMembers();
+    public ResponseEntity<List<String>> getAllPartyMembers() {
+        List<String> partyLists = partyListService.getAllPartyMembers();
         log.info(PartyListConstant.RETRIEVE_DESCRIPTION_SUCCESS, partyLists);
         return ResponseEntity.status(HttpStatus.OK).body(partyLists);
     }

@@ -1,16 +1,21 @@
 package com.lms.voting.service.imp;
 
+import com.lms.voting.dto.PartyListDto;
 import com.lms.voting.entity.PartyList;
 import com.lms.voting.exception.ResourceNotFoundException;
 import com.lms.voting.repository.PartyListRepository;
 import com.lms.voting.service.PartyListService;
+import com.sun.jdi.request.DuplicateRequestException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 
+import static com.lms.voting.constant.PartyListConstant.PARTY_DESCRIPTION_NOT_FOUND;
+import static com.lms.voting.constant.PartyListConstant.PARTY_ID_DESCRIPTION_SUCCESS;
+
+@Slf4j
 @Service
 public class PartyListServiceImpl implements PartyListService {
 
@@ -21,41 +26,40 @@ public class PartyListServiceImpl implements PartyListService {
         this.partyListRepository = partyListRepository;
     }
 
+    // Todo redo this
     @Override
-    public List<PartyList> getAllPartyMembers() {
-        List<PartyList> parties = partyListRepository.findAll();
-        if (parties.isEmpty()) {
-            throw new ResourceNotFoundException("No parties found in the system.");
+    public List<String> getAllPartyMembers() {
+        List<String> partyListsNames = partyListRepository.findAllPartyNames();
+
+        if (partyListsNames.isEmpty()) {
+            throw new ResourceNotFoundException(PARTY_DESCRIPTION_NOT_FOUND);
         }
-        return parties;
+
+        return partyListsNames;
     }
 
-    @Override
-    @Transactional
-    public PartyList createPartyList(PartyList partyList) {
-        return partyListRepository.save(partyList);
-    }
 
     @Override
-    public String getPartyNameById(Integer partyId) {
-        Optional<PartyList> partyOptional = partyListRepository.findById(partyId);
+    public PartyListDto createPartyList(PartyListDto partyListDto) {
 
-        if (partyOptional.isPresent()) {
-            PartyList party = partyOptional.get();
-            return party.getPartyName();
-        } else {
-            throw new ResourceNotFoundException("Party not found with ID: " + partyId);
+        if (partyListRepository.existsByPartyName(partyListDto.getPartyName())) {
+            throw new DuplicateRequestException(PARTY_ID_DESCRIPTION_SUCCESS);
         }
+        // Convert DTO to Entity
+        PartyList partyList = new PartyList();
+        partyList.setPartyName(partyListDto.getPartyName());
+        partyList.setPosition(partyListDto.getPosition());
+
+        // save the entity
+        PartyList savedPartyList = partyListRepository.save(partyList);
+
+        // map the saved entity to DTO before returning
+        PartyListDto savedPartyListDto = new PartyListDto();
+        savedPartyListDto.setId(savedPartyList.getId());
+        savedPartyListDto.setPartyName(savedPartyList.getPartyName());
+        savedPartyListDto.setPosition(savedPartyList.getPosition());
+
+        return savedPartyListDto;
     }
 
-    @Override
-    public PartyList getPartyById(Integer partyId) {
-        Optional<PartyList> partyOptional = partyListRepository.findById(partyId);
-
-        if (partyOptional.isPresent()) {
-            return partyOptional.get();
-        } else {
-            throw new ResourceNotFoundException("Party not found with ID: " + partyId);
-        }
-    }
 }

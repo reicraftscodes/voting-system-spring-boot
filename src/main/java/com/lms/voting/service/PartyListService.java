@@ -1,16 +1,19 @@
 package com.lms.voting.service;
 
-import com.lms.voting.entity.PartyList;
+import com.lms.voting.dto.PartyListDto;
 
 import java.util.List;
 
 public interface PartyListService {
 
-    List<PartyList> getAllPartyMembers();
+    List<String> getAllPartyMembers();
 
-    PartyList createPartyList(PartyList partyList);
+//    PartyListDto createPartyList(PartyList partyList);
 
-    String getPartyNameById(Integer partyId);
+    PartyListDto createPartyList(PartyListDto partyListDto);
 
-    PartyList getPartyById(Integer partyId);
+
+    //    String getPartyNameById(Integer partyId);
+//
+//    PartyListDto getPartyById(Integer partyId);
 }
