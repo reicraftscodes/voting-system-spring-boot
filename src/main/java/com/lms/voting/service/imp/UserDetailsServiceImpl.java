@@ -52,12 +52,9 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         return savedUserDetailsDto;
     }
 
-
-    // retrieve a single user
     public Optional<UserDetails> getPersonalDetailsByID(Integer id) {
         return userDetailsRepository.findById(id);
     }
-
 
     private static UpdateUserDetailsDto getUpdateDetailsDto(UserDetails user) {
         UpdateUserDetailsDto updateDetailsDto = new UpdateUserDetailsDto();

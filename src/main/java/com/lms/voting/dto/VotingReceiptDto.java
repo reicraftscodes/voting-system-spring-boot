@@ -5,18 +5,12 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
-
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class VoteResponse {
-
+public class VotingReceiptDto {
     private String referenceNo;
     private String partyName;
-    private String description;
-
-    @Builder.Default
-    private LocalDateTime timestamp = LocalDateTime.now();
+    private String voterLastName;
 }

@@ -2,7 +2,7 @@ package com.lms.voting.service.imp;
 
 import com.lms.voting.dto.CastVoteRequestDto;
 import com.lms.voting.dto.PartyVoteResponse;
-import com.lms.voting.dto.VoteResponse;
+import com.lms.voting.dto.VoteResponseDto;
 import com.lms.voting.entity.PartyList;
 import com.lms.voting.entity.UserDetails;
 import com.lms.voting.entity.Voting;
@@ -21,7 +21,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.Period;
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -44,7 +43,7 @@ public class VotingServiceImpl implements VotingService {
 
     @Override
     @Transactional
-    public VoteResponse castVote(CastVoteRequestDto request) {
+    public VoteResponseDto castVote(CastVoteRequestDto request) {
 
         // Find and validate user based on NI and Last Name
         Optional<UserDetails> userOptional = userDetailsRepository.findByNationalInsuranceNumberAndLastName(
@@ -73,7 +72,7 @@ public class VotingServiceImpl implements VotingService {
         // Save votes
         Voting vote = saveVote(userFound, party, referenceNumber);
 
-        return VoteResponse.builder()
+        return VoteResponseDto.builder()
                 .referenceNo(vote.getReferenceNo())
                 .partyName(party.getPartyName())
                 .description("Vote successfully cast")
@@ -124,14 +123,14 @@ public class VotingServiceImpl implements VotingService {
         return votingRepository.save(vote);
     }
 
-    @Override
-    public List<Voting> votingReceiptDisplays() {
-        List<Voting> votes = votingRepository.findAll();
-        if (votes.isEmpty()) {
-            throw new ResourceNotFoundException("No voting records found.");
-        }
-        return votes;
-    }
+//    @Override
+//    public List<String> votingReceiptDisplays() {
+//        List<String> votes = votingRepository.findVotingReceipts();
+//        if (votes.isEmpty()) {
+//            throw new ResourceNotFoundException("No voting records found.");
+//        }
+//        return votes;
+//    }
 
     @Override
     public Long getTotalCountVoter() {

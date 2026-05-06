@@ -4,7 +4,7 @@ package com.lms.voting.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lms.voting.dto.CastVoteRequestDto;
 import com.lms.voting.dto.PartyVoteResponse;
-import com.lms.voting.dto.VoteResponse;
+import com.lms.voting.dto.VoteResponseDto;
 import com.lms.voting.entity.PartyList;
 import com.lms.voting.entity.UserDetails;
 import com.lms.voting.entity.Voting;
@@ -48,7 +48,7 @@ public class VotingControllerTests {
         castVoteRequestDto.setPartyId(1);
 
         // Create a VoteResponse object, representing the response after the vote is cast.
-        VoteResponse voteResponse = VoteResponse.builder()
+        VoteResponseDto voteResponseDto = VoteResponseDto.builder()
                 .referenceNo("20260130173747817001")
                 .partyName("Labour")
                 .description("Vote successfully cast")
@@ -56,7 +56,7 @@ public class VotingControllerTests {
 
         // Mock the behaviour of the voting service, specifying that when the castVote method
         // is called with the castVoteRequest, it should return the voteResponse object.
-        when(votingService.castVote(castVoteRequestDto)).thenReturn(voteResponse);
+        when(votingService.castVote(castVoteRequestDto)).thenReturn(voteResponseDto);
 
         mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/voting")
                         // If Content-Type is not explicitly set to application/json, Spring treats the request body as application/octet-stream,

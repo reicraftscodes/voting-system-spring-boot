@@ -2,7 +2,7 @@ package com.lms.voting.service;
 
 import com.lms.voting.dto.CastVoteRequestDto;
 import com.lms.voting.dto.PartyVoteResponse;
-import com.lms.voting.dto.VoteResponse;
+import com.lms.voting.dto.VoteResponseDto;
 import com.lms.voting.entity.PartyList;
 import com.lms.voting.entity.UserDetails;
 import com.lms.voting.entity.Voting;
@@ -11,7 +11,7 @@ import java.util.List;
 
 public interface VotingService {
 
-    VoteResponse castVote(CastVoteRequestDto castVoteRequestDto);
+    VoteResponseDto castVote(CastVoteRequestDto castVoteRequestDto);
 
     Voting saveVote(UserDetails user, PartyList partyList, String referenceNo);
 
@@ -19,10 +19,11 @@ public interface VotingService {
 
     void validateVotingEligibility(UserDetails user);
 
-    List<Voting> votingReceiptDisplays();
+//    List<String> votingReceiptDisplays();
 
     PartyVoteResponse getTotalVotesByParty(Integer partyId);
 
     Long getTotalCountVoter();
+
 
 }

@@ -1,7 +1,7 @@
 package com.lms.voting.service;
 
 import com.lms.voting.dto.CastVoteRequestDto;
-import com.lms.voting.dto.VoteResponse;
+import com.lms.voting.dto.VoteResponseDto;
 import com.lms.voting.entity.PartyList;
 import com.lms.voting.entity.UserDetails;
 import com.lms.voting.entity.Voting;
@@ -72,7 +72,7 @@ public class VotingServiceTests {
 
         when(votingRepository.save(any(Voting.class))).thenReturn(mockVote);
 
-        VoteResponse response = votingService.castVote(castVoteRequestDto);
+        VoteResponseDto response = votingService.castVote(castVoteRequestDto);
 
         assertNotNull(response);
         assertEquals("REFERENCE123", response.getReferenceNo());
