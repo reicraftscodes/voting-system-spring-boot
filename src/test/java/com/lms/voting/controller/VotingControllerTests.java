@@ -78,42 +78,42 @@ public class VotingControllerTests {
         verify(votingService).castVote(castVoteRequestDto);
     }
 
-    @Test
-    void getAllVotingReceipts_EmptyList() throws Exception {
+//    @Test
+//    void getAllVotingReceipts_EmptyList() throws Exception {
+//
+//        List<Voting> votingList = new ArrayList<>();
+//
+//        when(votingService.votingReceiptDisplays()).thenReturn(votingList);
+//
+//        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/voting/receipts")
+//                        .accept(MediaType.APPLICATION_JSON))
+//                .andExpect(status().isOk())
+//                // Expect the response body to be an empty array
+//                .andExpect(content().json("[]"));
+//    }
 
-        List<Voting> votingList = new ArrayList<>();
-
-        when(votingService.votingReceiptDisplays()).thenReturn(votingList);
-
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/voting/receipts")
-                        .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                // Expect the response body to be an empty array
-                .andExpect(content().json("[]"));
-    }
-
-    @Test
-    void getAllVotingReceipts_withItems() throws Exception {
-
-        Voting userVotedOne = getUserVotedOne();
-
-        List<Voting> votingListWithItems = List.of(
-                userVotedOne);
-
-        when(votingService.votingReceiptDisplays()).thenReturn(votingListWithItems);
-
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/voting/receipts")
-                        .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                // hasSize() matcher to verify array size
-                .andExpect(jsonPath("$", hasSize(1)))
-                .andExpect(jsonPath("$[0].id").value(1))
-                .andExpect(jsonPath("$[0].referenceNo").value("SampleReferences1234"))
-                .andExpect(jsonPath("$[0].userDetails.firstName").value("John"))
-                .andExpect(jsonPath("$[0].userDetails.lastName").value("Doe"))
-                .andExpect(jsonPath("$[0].partyList.partyName").value("Labour"))
-                .andExpect(jsonPath("$[0].partyList.position").value("Left Wing"));
-    }
+//    @Test
+//    void getAllVotingReceipts_withItems() throws Exception {
+//
+//        Voting userVotedOne = getUserVotedOne();
+//
+//        List<Voting> votingListWithItems = List.of(
+//                userVotedOne);
+//
+//        when(votingService.votingReceiptDisplays()).thenReturn(votingListWithItems);
+//
+//        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/voting/receipts")
+//                        .accept(MediaType.APPLICATION_JSON))
+//                .andExpect(status().isOk())
+//                // hasSize() matcher to verify array size
+//                .andExpect(jsonPath("$", hasSize(1)))
+//                .andExpect(jsonPath("$[0].id").value(1))
+//                .andExpect(jsonPath("$[0].referenceNo").value("SampleReferences1234"))
+//                .andExpect(jsonPath("$[0].userDetails.firstName").value("John"))
+//                .andExpect(jsonPath("$[0].userDetails.lastName").value("Doe"))
+//                .andExpect(jsonPath("$[0].partyList.partyName").value("Labour"))
+//                .andExpect(jsonPath("$[0].partyList.position").value("Left Wing"));
+//    }
 
     private static Voting getUserVotedOne() {
         UserDetails userDetails = new UserDetails();

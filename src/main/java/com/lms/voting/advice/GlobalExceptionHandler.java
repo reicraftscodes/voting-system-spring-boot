@@ -29,7 +29,7 @@ public class GlobalExceptionHandler {
 
         ApiResponse response = ApiResponse.builder()
                 .title("Resource not found")
-                .detail("Vote with id 42 was not found")
+                .detail("Resource not found")
                 .error(ErrorDetailsResponse.builder()
                         .code(ErrorCode.RESOURCE_NOT_FOUND.name())
                         .details(ex.getMessage())
