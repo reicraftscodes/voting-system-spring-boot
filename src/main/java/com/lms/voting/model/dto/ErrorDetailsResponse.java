@@ -1,4 +1,4 @@
-package com.lms.voting.dto;
+package com.lms.voting.model.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

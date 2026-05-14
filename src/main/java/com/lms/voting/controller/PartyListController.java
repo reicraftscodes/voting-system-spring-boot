@@ -1,7 +1,7 @@
 package com.lms.voting.controller;
 
 import com.lms.voting.constant.PartyListConstant;
-import com.lms.voting.dto.PartyListDto;
+import com.lms.voting.model.dto.PartyListDto;
 import com.lms.voting.service.PartyListService;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;

@@ -52,7 +52,7 @@ CREATE TABLE voter_address (
 
 -- -------------------------------------------------------------
 -- 5. voter_account
---    ('account' is a reserved word in MariaDB/MySQL)
+--    ('accountInfo' is a reserved word in MariaDB/MySQL)
 -- -------------------------------------------------------------
 CREATE TABLE voter_account (
   account_id                INT         NOT NULL AUTO_INCREMENT,

@@ -1,20 +1,18 @@
 package com.lms.voting.repository;
 
-import com.lms.voting.dto.VotingReceiptDto;
-import com.lms.voting.entity.UserDetails;
-import com.lms.voting.entity.Voting;
+import com.lms.voting.model.entity.AccountInfo;
+import com.lms.voting.model.entity.Voting;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
 import java.util.Optional;
 
 @Repository
 public interface VotingRepository extends JpaRepository<Voting, Long> {
 
-    Optional<Voting> findByUserDetails(UserDetails user);
+    Optional<Voting> findByUserDetails(AccountInfo user);
 
 //    List<VotingReceiptDto> findVotingByReferenceNo();
 

@@ -1,4 +1,4 @@
-package com.lms.voting.entity;
+package com.lms.voting.model.entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -13,7 +13,7 @@ import java.time.LocalDate;
 @ToString
 @Entity
 @Table(name = "user_details")
-public class UserDetails {
+public class AccountInfo {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

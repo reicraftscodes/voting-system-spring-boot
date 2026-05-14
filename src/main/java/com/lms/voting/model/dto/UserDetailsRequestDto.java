@@ -1,4 +1,4 @@
-package com.lms.voting.dto;
+package com.lms.voting.model.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;

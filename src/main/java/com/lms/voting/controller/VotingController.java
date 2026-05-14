@@ -1,9 +1,9 @@
 package com.lms.voting.controller;
 
 import com.lms.voting.constant.VotingDetailsConstant;
-import com.lms.voting.dto.CastVoteRequestDto;
-import com.lms.voting.dto.PartyVoteResponse;
-import com.lms.voting.dto.VoteResponseDto;
+import com.lms.voting.model.dto.CastVoteRequestDto;
+import com.lms.voting.model.dto.PartyVoteResponse;
+import com.lms.voting.model.dto.VoteResponseDto;
 import com.lms.voting.service.VotingService;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;

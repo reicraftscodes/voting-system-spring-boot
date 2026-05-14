@@ -1,10 +1,10 @@
 package com.lms.voting.service;
 
-import com.lms.voting.dto.CastVoteRequestDto;
-import com.lms.voting.dto.VoteResponseDto;
-import com.lms.voting.entity.PartyList;
-import com.lms.voting.entity.UserDetails;
-import com.lms.voting.entity.Voting;
+import com.lms.voting.model.dto.CastVoteRequestDto;
+import com.lms.voting.model.dto.VoteResponseDto;
+import com.lms.voting.model.entity.AccountInfo;
+import com.lms.voting.model.entity.PartyList;
+import com.lms.voting.model.entity.Voting;
 import com.lms.voting.exception.IneligibleVoterException;
 import com.lms.voting.exception.InvalidRequestException;
 import com.lms.voting.repository.PartyListRepository;
@@ -51,13 +51,13 @@ public class VotingServiceTests {
         castVoteRequestDto.setPartyId(partyId);
 
         // mock UserDetails repository behaviour (valid user found)
-        UserDetails mockUserDetails = new UserDetails();
-        mockUserDetails.setNationalInsuranceNumber(nationalInsuranceNumber);
-        mockUserDetails.setLastName(lastName);
-        mockUserDetails.setDateOfBirth(LocalDate.of(2000, 1, 1));
+        AccountInfo mockAccountInfo = new AccountInfo();
+        mockAccountInfo.setNationalInsuranceNumber(nationalInsuranceNumber);
+        mockAccountInfo.setLastName(lastName);
+        mockAccountInfo.setDateOfBirth(LocalDate.of(2000, 1, 1));
 
         when(userDetailsRepository.findByNationalInsuranceNumberAndLastName(nationalInsuranceNumber, lastName))
-                .thenReturn(Optional.of(mockUserDetails));
+                .thenReturn(Optional.of(mockAccountInfo));
 
         // mock PartyList repository behaviour (party exists)
         PartyList mockParty = new PartyList();
@@ -114,7 +114,7 @@ public class VotingServiceTests {
 
     @Test
     void verifyEligibleVoterAgeThenReturnSucess() {
-        UserDetails user = mock(UserDetails.class);
+        AccountInfo user = mock(AccountInfo.class);
         LocalDate dob = LocalDate.of(2000, 1, 1);
 
         when(user.getDateOfBirth()).thenReturn(dob);
@@ -127,7 +127,7 @@ public class VotingServiceTests {
 
     @Test
     void verifyIneligibleVoterAgeThenReturnSuccess() {
-        UserDetails user = mock(UserDetails.class);
+        AccountInfo user = mock(AccountInfo.class);
         LocalDate dob = LocalDate.of(2010, 1, 1); // Birthdate: January 1, 2010 (ineligible)
         when(user.getDateOfBirth()).thenReturn(dob);
 
@@ -138,7 +138,7 @@ public class VotingServiceTests {
 
     @Test
     void verifyValidateVotingEligibilityForEligibleUser() {
-        UserDetails user = mock(UserDetails.class);
+        AccountInfo user = mock(AccountInfo.class);
         LocalDate dob = LocalDate.of(2000, 1, 1); // Birthdate: January 1, 2000 (eligible)
         when(user.getDateOfBirth()).thenReturn(dob);
 
@@ -149,7 +149,7 @@ public class VotingServiceTests {
     @Test
     void verifyIneligibleVoterAgeThenReturnException() {
 
-        UserDetails user = mock(UserDetails.class);
+        AccountInfo user = mock(AccountInfo.class);
         LocalDate dob = LocalDate.of(2011, 1, 1);
         when(user.getDateOfBirth()).thenReturn(dob);
 

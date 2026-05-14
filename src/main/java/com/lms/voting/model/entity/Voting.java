@@ -1,9 +1,8 @@
-package com.lms.voting.entity;
+package com.lms.voting.model.entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
 
 
 @Getter
@@ -19,7 +18,7 @@ public class Voting {
 
     @ManyToOne
     @JoinColumn(name = "user_details")
-    private UserDetails userDetails;
+    private AccountInfo userDetails;
 
     @ManyToOne
     @JoinColumn(name = "party_list")

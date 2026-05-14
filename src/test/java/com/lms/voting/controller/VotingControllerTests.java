@@ -2,12 +2,12 @@ package com.lms.voting.controller;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.lms.voting.dto.CastVoteRequestDto;
-import com.lms.voting.dto.PartyVoteResponse;
-import com.lms.voting.dto.VoteResponseDto;
-import com.lms.voting.entity.PartyList;
-import com.lms.voting.entity.UserDetails;
-import com.lms.voting.entity.Voting;
+import com.lms.voting.model.dto.CastVoteRequestDto;
+import com.lms.voting.model.dto.PartyVoteResponse;
+import com.lms.voting.model.dto.VoteResponseDto;
+import com.lms.voting.model.entity.AccountInfo;
+import com.lms.voting.model.entity.PartyList;
+import com.lms.voting.model.entity.Voting;
 import com.lms.voting.service.VotingService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,9 +17,6 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.Mockito.verify;
@@ -116,11 +113,11 @@ public class VotingControllerTests {
 //    }
 
     private static Voting getUserVotedOne() {
-        UserDetails userDetails = new UserDetails();
-        userDetails.setId(1);
-        userDetails.setFirstName("John");
-        userDetails.setLastName("Doe");
-        userDetails.setNationalInsuranceNumber("SampleReferences1234");
+        AccountInfo accountInfo = new AccountInfo();
+        accountInfo.setId(1);
+        accountInfo.setFirstName("John");
+        accountInfo.setLastName("Doe");
+        accountInfo.setNationalInsuranceNumber("SampleReferences1234");
 
         PartyList partyListCandidateSample = new PartyList();
         partyListCandidateSample.setId(1);
@@ -130,7 +127,7 @@ public class VotingControllerTests {
         Voting userVotedOne = new Voting();
         userVotedOne.setId(1);
         userVotedOne.setReferenceNo("SampleReferences1234");
-        userVotedOne.setUserDetails(userDetails);
+        userVotedOne.setAccountInfo(accountInfo);
         userVotedOne.setPartyList(partyListCandidateSample);
         return userVotedOne;
     }

@@ -1,11 +1,11 @@
 package com.lms.voting.service.imp;
 
-import com.lms.voting.dto.CastVoteRequestDto;
-import com.lms.voting.dto.PartyVoteResponse;
-import com.lms.voting.dto.VoteResponseDto;
-import com.lms.voting.entity.PartyList;
-import com.lms.voting.entity.UserDetails;
-import com.lms.voting.entity.Voting;
+import com.lms.voting.model.dto.CastVoteRequestDto;
+import com.lms.voting.model.dto.PartyVoteResponse;
+import com.lms.voting.model.dto.VoteResponseDto;
+import com.lms.voting.model.entity.AccountInfo;
+import com.lms.voting.model.entity.PartyList;
+import com.lms.voting.model.entity.Voting;
 import com.lms.voting.exception.DuplicateResourceException;
 import com.lms.voting.exception.IneligibleVoterException;
 import com.lms.voting.exception.InvalidRequestException;
@@ -46,7 +46,7 @@ public class VotingServiceImpl implements VotingService {
     public VoteResponseDto castVote(CastVoteRequestDto request) {
 
         // Find and validate user based on NI and Last Name
-        Optional<UserDetails> userOptional = userDetailsRepository.findByNationalInsuranceNumberAndLastName(
+        Optional<AccountInfo> userOptional = userDetailsRepository.findByNationalInsuranceNumberAndLastName(
                 request.getNationalInsuranceNumber(),
                 request.getLastName()
         );
@@ -58,7 +58,7 @@ public class VotingServiceImpl implements VotingService {
         }
 
         // Continue processing with the found user
-        UserDetails userFound = userOptional.get();
+        AccountInfo userFound = userOptional.get();
         validateVotingEligibility(userFound);
         checkExistingVote(userFound);
 
@@ -80,7 +80,7 @@ public class VotingServiceImpl implements VotingService {
     }
 
     @Override
-    public void validateVotingEligibility(UserDetails user) {
+    public void validateVotingEligibility(AccountInfo user) {
         if (!isEligibleToVote(user)) {
             throw new IneligibleVoterException(
                     String.format("User must be %d or older to vote.", MINIMUM_VOTING_AGE)
@@ -88,8 +88,8 @@ public class VotingServiceImpl implements VotingService {
         }
     }
 
-    private void checkExistingVote(UserDetails user) {
-        Optional<Voting> existingVote = votingRepository.findByUserDetails(user);
+    private void checkExistingVote(AccountInfo accountInfo) {
+        Optional<Voting> existingVote = votingRepository.findByUserDetails(accountInfo);
 
         if (existingVote.isPresent()) {
             throw new DuplicateResourceException("This user has already voted.");
@@ -107,15 +107,15 @@ public class VotingServiceImpl implements VotingService {
     }
 
     @Override
-    public boolean isEligibleToVote(UserDetails userDetails) {
-        LocalDate dob = userDetails.getDateOfBirth();
+    public boolean isEligibleToVote(AccountInfo accountInfo) {
+        LocalDate dob = accountInfo.getDateOfBirth();
         int age = Period.between(dob, LocalDate.now()).getYears();
         return age >= MINIMUM_VOTING_AGE;
     }
 
     @Override
     @Transactional
-    public Voting saveVote(UserDetails user, PartyList partyList, String referenceNo) {
+    public Voting saveVote(AccountInfo user, PartyList partyList, String referenceNo) {
         Voting vote = new Voting();
         vote.setReferenceNo(referenceNo);
         vote.setUserDetails(user);

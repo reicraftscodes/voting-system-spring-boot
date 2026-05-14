@@ -1,6 +1,6 @@
 package com.lms.voting.service;
 
-import com.lms.voting.entity.UserDetails;
+import com.lms.voting.model.entity.AccountInfo;
 import com.lms.voting.repository.UserDetailsRepository;
 import com.lms.voting.service.imp.UserDetailsServiceImpl;
 import org.junit.jupiter.api.Assertions;
@@ -16,7 +16,7 @@ import java.util.Optional;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-public class UserDetailsServiceTests {
+public class AccountInfoServiceTests {
 
     @Mock
     private UserDetailsRepository userDetailsRepository;
@@ -26,16 +26,16 @@ public class UserDetailsServiceTests {
 
     @Test
     void shouldReturnUserDetailsWhenUserIdIsValid() {
-        UserDetails userDetails = new UserDetails();
-        userDetails.setId(1);
-        userDetails.setFirstName("John");
-        userDetails.setLastName("Doe");
-        userDetails.setNationalInsuranceNumber("1234567DL");
-        userDetails.setDateOfBirth(LocalDate.of(2000, 2, 2));
+        AccountInfo accountInfo = new AccountInfo();
+        accountInfo.setId(1);
+        accountInfo.setFirstName("John");
+        accountInfo.setLastName("Doe");
+        accountInfo.setNationalInsuranceNumber("1234567DL");
+        accountInfo.setDateOfBirth(LocalDate.of(2000, 2, 2));
 
-        when(userDetailsRepository.findById(1)).thenReturn(Optional.of(userDetails));
+        when(userDetailsRepository.findById(1)).thenReturn(Optional.of(accountInfo));
 
-        Optional<UserDetails> result = userDetailsService.getPersonalDetailsByID(1);
+        Optional<AccountInfo> result = userDetailsService.getPersonalDetailsByID(1);
 
         Assertions.assertTrue(result.isPresent());
         Assertions.assertEquals(1, result.get().getId());

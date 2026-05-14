@@ -1,4 +1,4 @@
-package com.lms.voting.dto;
+package com.lms.voting.model.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,8 +9,8 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class VotingReceiptDto {
-    private String referenceNo;
+public class PartyVoteResponse {
+    private Integer partyId;
     private String partyName;
-    private String voterLastName;
+    private Long totalVotes;
 }

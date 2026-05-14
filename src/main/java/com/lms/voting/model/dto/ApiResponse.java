@@ -1,4 +1,4 @@
-package com.lms.voting.dto;
+package com.lms.voting.model.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;

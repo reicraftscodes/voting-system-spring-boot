@@ -84,7 +84,7 @@ http://localhost:8080/api/v1
 
 | Endpoint                     | Method | Parameter          | Type          | Description                               |
 | ---------------------------- | ------ | ----------------- | ------------- | ----------------------------------------- |
-| `/users`                     | POST   | `userDetails`      | Object (JSON) | Create a new user with personal details   |
+| `/users`                     | POST   | `accountInfo`      | Object (JSON) | Create a new user with personal details   |
 | `/users/{id}`                | GET    | `id`               | Integer       | Retrieve a user’s personal details        |
 | `/users/update/{id}`         | PATCH  | `id`               | Integer       | Update an existing user’s details         |
 | `/users/update/{id}`         | PATCH  | `updateDetailsDto` | Object (JSON) | Fields to update for the user             |

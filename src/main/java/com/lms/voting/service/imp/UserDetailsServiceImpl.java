@@ -1,8 +1,8 @@
 package com.lms.voting.service.imp;
 
-import com.lms.voting.dto.UpdateUserDetailsDto;
-import com.lms.voting.dto.UserDetailsRequestDto;
-import com.lms.voting.entity.UserDetails;
+import com.lms.voting.model.dto.UpdateUserDetailsDto;
+import com.lms.voting.model.dto.UserDetailsRequestDto;
+import com.lms.voting.model.entity.AccountInfo;
 import com.lms.voting.repository.UserDetailsRepository;
 import com.lms.voting.service.UserDetailsService;
 import com.sun.jdi.request.DuplicateRequestException;
@@ -32,31 +32,31 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         }
 
         // Convert DTO to Entity
-        UserDetails userDetails = new UserDetails();
-        userDetails.setNationalInsuranceNumber(userDetailsDto.getNationalInsuranceNumber());
-        userDetails.setFirstName(userDetailsDto.getFirstName());
-        userDetails.setLastName(userDetailsDto.getLastName());
-        userDetails.setDateOfBirth(userDetailsDto.getDateOfBirth());
+        AccountInfo accountInfo = new AccountInfo();
+        accountInfo.setNationalInsuranceNumber(userDetailsDto.getNationalInsuranceNumber());
+        accountInfo.setFirstName(userDetailsDto.getFirstName());
+        accountInfo.setLastName(userDetailsDto.getLastName());
+        accountInfo.setDateOfBirth(userDetailsDto.getDateOfBirth());
 
         // Save the entity
-        UserDetails savedUserDetails = userDetailsRepository.save(userDetails);
+        AccountInfo savedAccountInfo = userDetailsRepository.save(accountInfo);
 
         // Map the saved entity to DTO before returning
         UserDetailsRequestDto savedUserDetailsDto = new UserDetailsRequestDto();
-        savedUserDetailsDto.setId(savedUserDetails.getId());
-        savedUserDetailsDto.setFirstName(savedUserDetails.getFirstName());
-        savedUserDetailsDto.setLastName(savedUserDetails.getLastName());
-        savedUserDetailsDto.setDateOfBirth(savedUserDetails.getDateOfBirth());
-        savedUserDetailsDto.setNationalInsuranceNumber(savedUserDetails.getNationalInsuranceNumber());
+        savedUserDetailsDto.setId(savedAccountInfo.getId());
+        savedUserDetailsDto.setFirstName(savedAccountInfo.getFirstName());
+        savedUserDetailsDto.setLastName(savedAccountInfo.getLastName());
+        savedUserDetailsDto.setDateOfBirth(savedAccountInfo.getDateOfBirth());
+        savedUserDetailsDto.setNationalInsuranceNumber(savedAccountInfo.getNationalInsuranceNumber());
 
         return savedUserDetailsDto;
     }
 
-    public Optional<UserDetails> getPersonalDetailsByID(Integer id) {
+    public Optional<AccountInfo> getPersonalDetailsByID(Integer id) {
         return userDetailsRepository.findById(id);
     }
 
-    private static UpdateUserDetailsDto getUpdateDetailsDto(UserDetails user) {
+    private static UpdateUserDetailsDto getUpdateDetailsDto(AccountInfo user) {
         UpdateUserDetailsDto updateDetailsDto = new UpdateUserDetailsDto();
         updateDetailsDto.setId(user.getId());
         updateDetailsDto.setFirstName(user.getFirstName());
@@ -69,7 +69,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Transactional
     public UpdateUserDetailsDto updateUserDetails(Integer id, UpdateUserDetailsDto updateDetailsDto) {
-        UserDetails user = userDetailsRepository
+        AccountInfo user = userDetailsRepository
                 .findById(id)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 

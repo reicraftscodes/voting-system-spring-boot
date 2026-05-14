@@ -1,21 +1,21 @@
 package com.lms.voting.repository;
 
-import com.lms.voting.entity.UserDetails;
+import com.lms.voting.model.entity.AccountInfo;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
 @Repository
-public interface UserDetailsRepository extends JpaRepository<UserDetails, Integer> {
+public interface UserDetailsRepository extends JpaRepository<AccountInfo, Integer> {
 
     @Override
-    Optional<UserDetails> findById(Integer id);
+    Optional<AccountInfo> findById(Integer id);
 
     void deleteById(Integer id);
 
     boolean existsByNationalInsuranceNumber(String nationalInsuranceNumber);
 
-    Optional<UserDetails> findByNationalInsuranceNumberAndLastName(String nationalInsuranceNumber, String lastName);
+    Optional<AccountInfo> findByNationalInsuranceNumberAndLastName(String nationalInsuranceNumber, String lastName);
 
 }

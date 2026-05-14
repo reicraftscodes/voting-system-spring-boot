@@ -1,23 +1,21 @@
 package com.lms.voting.service;
 
-import com.lms.voting.dto.CastVoteRequestDto;
-import com.lms.voting.dto.PartyVoteResponse;
-import com.lms.voting.dto.VoteResponseDto;
-import com.lms.voting.entity.PartyList;
-import com.lms.voting.entity.UserDetails;
-import com.lms.voting.entity.Voting;
-
-import java.util.List;
+import com.lms.voting.model.dto.CastVoteRequestDto;
+import com.lms.voting.model.dto.PartyVoteResponse;
+import com.lms.voting.model.dto.VoteResponseDto;
+import com.lms.voting.model.entity.AccountInfo;
+import com.lms.voting.model.entity.PartyList;
+import com.lms.voting.model.entity.Voting;
 
 public interface VotingService {
 
     VoteResponseDto castVote(CastVoteRequestDto castVoteRequestDto);
 
-    Voting saveVote(UserDetails user, PartyList partyList, String referenceNo);
+    Voting saveVote(AccountInfo user, PartyList partyList, String referenceNo);
 
-    boolean isEligibleToVote(UserDetails userDetails);
+    boolean isEligibleToVote(AccountInfo accountInfo);
 
-    void validateVotingEligibility(UserDetails user);
+    void validateVotingEligibility(AccountInfo user);
 
 //    List<String> votingReceiptDisplays();
 

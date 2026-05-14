@@ -1,9 +1,9 @@
 package com.lms.voting.controller;
 
 import com.lms.voting.constant.UserDetailsConstant;
-import com.lms.voting.dto.UpdateUserDetailsDto;
-import com.lms.voting.dto.UserDetailsRequestDto;
-import com.lms.voting.entity.UserDetails;
+import com.lms.voting.model.dto.UpdateUserDetailsDto;
+import com.lms.voting.model.dto.UserDetailsRequestDto;
+import com.lms.voting.model.entity.AccountInfo;
 import com.lms.voting.service.UserDetailsService;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
@@ -33,7 +33,7 @@ public class UserDetailsController {
 
 
     @GetMapping("/{id}")
-    public ResponseEntity<UserDetails> getPersonalDetailsByID(@PathVariable Integer id) {
+    public ResponseEntity<AccountInfo> getPersonalDetailsByID(@PathVariable Integer id) {
         log.info(UserDetailsConstant.RESULT_FETCH_SUCCESS_SUCCESS, userDetailsService.getPersonalDetailsByID(id));
         return userDetailsService.getPersonalDetailsByID(id)
                 .map(ResponseEntity::ok)

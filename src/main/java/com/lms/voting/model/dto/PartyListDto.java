@@ -1,20 +1,14 @@
-package com.lms.voting.entity;
+package com.lms.voting.model.dto;
 
-import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
 
 
 @Getter
 @Setter
-@ToString
-@Entity
-@Table(name = "party_list")
-public class PartyList {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+public class PartyListDto {
+
     private Integer id;
 
     @NotBlank(message = "Party name cannot be empty")

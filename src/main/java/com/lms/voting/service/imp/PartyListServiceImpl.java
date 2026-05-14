@@ -1,7 +1,7 @@
 package com.lms.voting.service.imp;
 
-import com.lms.voting.dto.PartyListDto;
-import com.lms.voting.entity.PartyList;
+import com.lms.voting.model.dto.PartyListDto;
+import com.lms.voting.model.entity.PartyList;
 import com.lms.voting.exception.ResourceNotFoundException;
 import com.lms.voting.repository.PartyListRepository;
 import com.lms.voting.service.PartyListService;

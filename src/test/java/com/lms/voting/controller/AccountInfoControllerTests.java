@@ -2,9 +2,9 @@ package com.lms.voting.controller;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.lms.voting.dto.UpdateUserDetailsDto;
-import com.lms.voting.dto.UserDetailsRequestDto;
-import com.lms.voting.entity.UserDetails;
+import com.lms.voting.model.dto.UpdateUserDetailsDto;
+import com.lms.voting.model.dto.UserDetailsRequestDto;
+import com.lms.voting.model.entity.AccountInfo;
 import com.lms.voting.service.UserDetailsService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -29,7 +29,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @AutoConfigureMockMvc
 @WebMvcTest(UserDetailsController.class)
-class UserDetailsControllerTests {
+class AccountInfoControllerTests {
 
     /**
      * Simulates HTTP requests to controller endpoints without starting the server
@@ -94,14 +94,14 @@ class UserDetailsControllerTests {
 
     @Test
     void getPersonalDetailsByIDTest() throws Exception {
-        UserDetails mockUserDetails = new UserDetails();
-        mockUserDetails.setId(1);
-        mockUserDetails.setFirstName("John");
-        mockUserDetails.setLastName("Doe");
-        mockUserDetails.setDateOfBirth(LocalDate.of(2000, 1, 1));
-        mockUserDetails.setNationalInsuranceNumber("TW345679B");
+        AccountInfo mockAccountInfo = new AccountInfo();
+        mockAccountInfo.setId(1);
+        mockAccountInfo.setFirstName("John");
+        mockAccountInfo.setLastName("Doe");
+        mockAccountInfo.setDateOfBirth(LocalDate.of(2000, 1, 1));
+        mockAccountInfo.setNationalInsuranceNumber("TW345679B");
 
-        when(userDetailsService.getPersonalDetailsByID(1)).thenReturn(Optional.of(mockUserDetails));
+        when(userDetailsService.getPersonalDetailsByID(1)).thenReturn(Optional.of(mockAccountInfo));
 
         mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/users/1")
                         .accept(MediaType.APPLICATION_JSON))

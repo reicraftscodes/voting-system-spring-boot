@@ -1,8 +1,8 @@
 package com.lms.voting.advice;
 
 import com.lms.voting.constant.ErrorCode;
-import com.lms.voting.dto.ApiResponse;
-import com.lms.voting.dto.ErrorDetailsResponse;
+import com.lms.voting.model.dto.ApiResponse;
+import com.lms.voting.model.dto.ErrorDetailsResponse;
 import com.lms.voting.exception.DuplicateResourceException;
 import com.lms.voting.exception.IneligibleVoterException;
 import com.lms.voting.exception.InvalidRequestException;

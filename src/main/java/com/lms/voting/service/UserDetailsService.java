@@ -1,8 +1,8 @@
 package com.lms.voting.service;
 
-import com.lms.voting.dto.UpdateUserDetailsDto;
-import com.lms.voting.dto.UserDetailsRequestDto;
-import com.lms.voting.entity.UserDetails;
+import com.lms.voting.model.dto.UpdateUserDetailsDto;
+import com.lms.voting.model.dto.UserDetailsRequestDto;
+import com.lms.voting.model.entity.AccountInfo;
 
 import java.util.Optional;
 
@@ -10,7 +10,7 @@ public interface UserDetailsService {
 
     UserDetailsRequestDto addPersonalDetails(UserDetailsRequestDto userDetails);
 
-    Optional<UserDetails> getPersonalDetailsByID(Integer id);
+    Optional<AccountInfo> getPersonalDetailsByID(Integer id);
 
     UpdateUserDetailsDto updateUserDetails(Integer id, UpdateUserDetailsDto updateDetailsDto);
 

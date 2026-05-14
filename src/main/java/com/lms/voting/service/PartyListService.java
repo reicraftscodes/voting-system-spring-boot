@@ -1,6 +1,6 @@
 package com.lms.voting.service;
 
-import com.lms.voting.dto.PartyListDto;
+import com.lms.voting.model.dto.PartyListDto;
 
 import java.util.List;
 

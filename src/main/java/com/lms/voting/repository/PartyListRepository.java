@@ -1,6 +1,6 @@
 package com.lms.voting.repository;
 
-import com.lms.voting.entity.PartyList;
+import com.lms.voting.model.entity.PartyList;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
