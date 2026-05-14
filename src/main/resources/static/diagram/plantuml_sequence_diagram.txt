@@ -1,0 +1,67 @@
+@startuml
+
+actor User
+participant FE as "Frontend"
+participant BE as "Backend"
+database DB as "Database"
+
+== Authentication ==
+
+User -> FE : 1.1 Enter email & password
+FE -> BE : 1.2 Send login request
+
+alt Invalid credentials
+    BE --> FE : 1.3 401 Unauthorized\nLogin failed
+else Valid credentials
+    BE --> FE : 1.4 200 OK\nAccess granted + session token
+end
+
+== Verification Flow (Poll Card) ==
+
+User -> FE : 2.1 Enter Poll Card Ref No + NI Number
+FE -> BE : 2.2 Send verification request
+
+BE -> DB : 2.3 Match poll card reference\nwith user records
+DB --> BE : 2.4 Verification result
+
+alt Verification successful
+    BE --> FE : 2.5 200 OK\nUser verified
+else Verification failed
+    BE --> FE : 2.6 404 Not Found\nDetails do not match
+end
+
+== Verification Flow (Identity) ==
+
+User -> FE : 3.1 Enter Last Name + DOB + Postcode
+FE -> BE : 3.2 Send identity validation request
+
+BE -> DB : 3.3 Validate against user + address records
+DB --> BE : 3.4 Validation result
+
+alt Validation successful
+    BE --> FE : 3.5 200 OK\nIdentity confirmed
+else Validation failed
+    BE --> FE : 3.6 400 Bad Request\nInvalid details
+end
+
+== Voting Process ==
+
+BE -> DB : 4.1 Retrieve constituency
+DB --> BE : 4.2 Constituency details
+BE --> FE : 4.3 Display constituency information
+
+User -> FE : 4.4 Select political party
+FE -> BE : 4.5 Submit selected party
+
+BE -> DB : 4.6 Store vote in voting records
+
+alt First vote submitted
+    DB --> BE : 4.7 Vote stored successfully
+    BE --> FE : 4.8 201 Created\nReceipt generated
+    FE --> User : 4.9 Show confirmation receipt
+else Duplicate vote detected
+    DB --> BE : 4.10 Duplicate vote found
+    BE --> FE : 4.11 409 Conflict\nDuplicate voting not allowed
+end
+
+@enduml
