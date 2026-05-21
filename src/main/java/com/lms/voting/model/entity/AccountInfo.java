@@ -19,14 +19,18 @@ public class AccountInfo {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    @Column(unique = true)
+    private String nationalInsuranceNumber;
+
+    private LocalDate dateOfBirth;
+
     private String firstName;
 
     private String lastName;
 
-    private LocalDate dateOfBirth;
-
-    @Column(unique = true)
-    private String nationalInsuranceNumber;
+    @ManyToOne
+    @JoinColumn(name = "voter_address_id")
+    private VoterAddress voterAddress;
 
 
 }

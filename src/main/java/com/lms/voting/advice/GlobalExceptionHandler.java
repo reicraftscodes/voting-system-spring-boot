@@ -25,7 +25,6 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<ApiResponse> handleResourceNotFound(ResourceNotFoundException ex) {
-        logger.error("Resource not found: {}", ex.getMessage());
 
         ApiResponse response = ApiResponse.builder()
                 .title("Resource not found")
@@ -41,8 +40,6 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(DuplicateResourceException.class)
     public ResponseEntity<ApiResponse> handleDuplicateResource(DuplicateResourceException ex) {
-        logger.error("Duplicate resource: {}", ex.getMessage());
-
         ApiResponse response = ApiResponse.builder()
                 .title("Duplicate Resource")
                 .detail("Duplicate Resource")
@@ -56,7 +53,6 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(InvalidRequestException.class)
     public ResponseEntity<ApiResponse> handleInvalidRequest(InvalidRequestException ex) {
-        logger.error("Invalid request: {}", ex.getMessage());
 
         ApiResponse response = ApiResponse.builder()
                 .title("Invalid Request")
@@ -72,7 +68,6 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(IneligibleVoterException.class)
     public ResponseEntity<ApiResponse> handleIneligibleVoter(IneligibleVoterException ex) {
-        logger.error("Ineligible voter: {}", ex.getMessage());
 
         ApiResponse response = ApiResponse.builder()
                 .title("Ineligible Voter")
@@ -117,8 +112,6 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ApiResponse> handleValidationErrors(MethodArgumentNotValidException ex) {
-        logger.error("Validation error: {}", ex.getMessage());
-
         String errors = ex.getBindingResult()
                 .getFieldErrors()
                 .stream()
@@ -139,8 +132,6 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ApiResponse> handleGenericException(Exception ex) {
-        logger.error("Unexpected error: ", ex);
-
         ApiResponse response = ApiResponse.builder()
                 .title("Internal Server Error")
                 .detail("An unexpected error occurred while processing your request")
