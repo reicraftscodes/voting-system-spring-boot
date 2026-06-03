@@ -3,6 +3,7 @@ package com.lms.voting.service.imp;
 import com.lms.voting.exception.DuplicateResourceException;
 import com.lms.voting.exception.ResourceNotFoundException;
 import com.lms.voting.model.dto.UpdateUserDetailsDto;
+import com.lms.voting.model.dto.UserDetailsDto;
 import com.lms.voting.model.dto.UserDetailsRequestDto;
 import com.lms.voting.model.dto.VoterAddressDto;
 import com.lms.voting.model.entity.AccountInfo;
@@ -16,7 +17,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -65,14 +65,14 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         AccountInfo savedAccountInfo = userDetailsRepository.save(accountInfo);
 
         // Convert saved entity back to DTO
-        UserDetailsRequestDto savedDto = new UserDetailsRequestDto();
-        savedDto.setId(savedAccountInfo.getId());
-        savedDto.setFirstName(savedAccountInfo.getFirstName());
-        savedDto.setLastName(savedAccountInfo.getLastName());
-        savedDto.setDateOfBirth(savedAccountInfo.getDateOfBirth());
-        savedDto.setNationalInsuranceNumber(savedAccountInfo.getNationalInsuranceNumber());
+        UserDetailsRequestDto userDetailsSavedDto = new UserDetailsRequestDto();
+        userDetailsSavedDto.setId(savedAccountInfo.getId());
+        userDetailsSavedDto.setFirstName(savedAccountInfo.getFirstName());
+        userDetailsSavedDto.setLastName(savedAccountInfo.getLastName());
+        userDetailsSavedDto.setDateOfBirth(savedAccountInfo.getDateOfBirth());
+        userDetailsSavedDto.setNationalInsuranceNumber(savedAccountInfo.getNationalInsuranceNumber());
 
-        return savedDto;
+        return userDetailsSavedDto;
     }
 
     /**
@@ -132,16 +132,27 @@ public class UserDetailsServiceImpl implements UserDetailsService {
                 .collect(Collectors.toList());
     }
 
-    /**
-     * Retrieves personal details for a user by ID.
-     *
-     * @param id User account ID
-     * @return Optional containing user details if found
-     */
+
     @Override
-    public Optional<AccountInfo> getPersonalDetailsByID(Integer id) {
-        return userDetailsRepository.findById(id);
+    public UserDetailsDto getPersonalDetailsById(Integer accountId) {
+
+        // find entity
+        AccountInfo user = userDetailsRepository.findById(accountId)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + accountId));
+
+        UserDetailsDto userDetailsdto = new UserDetailsDto();
+
+        userDetailsdto.setId(user.getId());
+        userDetailsdto.setFirstName(user.getFirstName());
+        userDetailsdto.setLastName(user.getLastName());
+        userDetailsdto.setNationalInsuranceNumber(user.getNationalInsuranceNumber());
+        userDetailsdto.setDateOfBirth(user.getDateOfBirth());
+        userDetailsdto.setVoterAddress(user.getVoterAddresses());
+
+        return userDetailsdto;
     }
+
+
 
     /**
      * Updates an existing user's personal information.

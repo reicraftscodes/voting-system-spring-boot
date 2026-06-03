@@ -2,6 +2,7 @@ package com.lms.voting.controller;
 
 import com.lms.voting.constant.UserDetailsConstant;
 import com.lms.voting.model.dto.UpdateUserDetailsDto;
+import com.lms.voting.model.dto.UserDetailsDto;
 import com.lms.voting.model.dto.UserDetailsRequestDto;
 import com.lms.voting.model.dto.VoterAddressDto;
 import com.lms.voting.model.entity.AccountInfo;
@@ -39,17 +40,16 @@ public class UserDetailsController {
     }
 
     // get all addresses for a user
-        @GetMapping(value = "/{accountId}/address", produces = "application/json")
+    @GetMapping(value = "/{accountId}/address", produces = "application/json")
     public ResponseEntity<List<VoterAddressDto>> getUserAddresses(@PathVariable Integer accountId) {
         List<VoterAddressDto> addresses = userDetailsService.getAddressesByAccountId(accountId);
         return ResponseEntity.ok(addresses);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<AccountInfo> getPersonalDetailsByID(@PathVariable Integer id) {
-        return userDetailsService.getPersonalDetailsByID(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+    public ResponseEntity<UserDetailsDto> getPersonalDetailsByID(@PathVariable Integer id) {
+        UserDetailsDto userDetailsDto = userDetailsService.getPersonalDetailsById(id);
+        return ResponseEntity.ok(userDetailsDto);
     }
 
     @PatchMapping("/update/{id}")

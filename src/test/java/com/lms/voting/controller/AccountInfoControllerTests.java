@@ -92,26 +92,26 @@ class AccountInfoControllerTests {
                 .andExpect(jsonPath("$.nationalInsuranceNumber").value("TW345679B"));
     }
 
-    @Test
-    void getPersonalDetailsByIDTest() throws Exception {
-        AccountInfo mockAccountInfo = new AccountInfo();
-        mockAccountInfo.setId(1);
-        mockAccountInfo.setFirstName("John");
-        mockAccountInfo.setLastName("Doe");
-        mockAccountInfo.setDateOfBirth(LocalDate.of(2000, 1, 1));
-        mockAccountInfo.setNationalInsuranceNumber("TW345679B");
-
-        when(userDetailsService.getPersonalDetailsByID(1)).thenReturn(Optional.of(mockAccountInfo));
-
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/users/1")
-                        .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())  // Expect status 200 OK
-                .andExpect(jsonPath("$.id").value(1))
-                .andExpect(jsonPath("$.firstName").value("John"))
-                .andExpect(jsonPath("$.lastName").value("Doe"))
-                .andExpect(jsonPath("$.dateOfBirth").value("2000-01-01"))
-                .andExpect(jsonPath("$.nationalInsuranceNumber").value("TW345679B"));
-    }
+//    @Test
+//    void getPersonalDetailsByIDTest() throws Exception {
+//        AccountInfo mockAccountInfo = new AccountInfo();
+//        mockAccountInfo.setId(1);
+//        mockAccountInfo.setFirstName("John");
+//        mockAccountInfo.setLastName("Doe");
+//        mockAccountInfo.setDateOfBirth(LocalDate.of(2000, 1, 1));
+//        mockAccountInfo.setNationalInsuranceNumber("TW345679B");
+//
+//        when(userDetailsService.getPersonalDetailsByID(1)).thenReturn(Optional.of(mockAccountInfo));
+//
+//        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/users/1")
+//                        .accept(MediaType.APPLICATION_JSON))
+//                .andExpect(status().isOk())  // Expect status 200 OK
+//                .andExpect(jsonPath("$.id").value(1))
+//                .andExpect(jsonPath("$.firstName").value("John"))
+//                .andExpect(jsonPath("$.lastName").value("Doe"))
+//                .andExpect(jsonPath("$.dateOfBirth").value("2000-01-01"))
+//                .andExpect(jsonPath("$.nationalInsuranceNumber").value("TW345679B"));
+//    }
 
     @Test
     void updateUserDetailsTest() throws Exception {

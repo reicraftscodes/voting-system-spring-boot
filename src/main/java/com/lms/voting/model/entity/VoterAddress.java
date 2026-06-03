@@ -1,5 +1,6 @@
 package com.lms.voting.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -24,6 +25,8 @@ public class VoterAddress {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "account_info_id", nullable = false)
+    @JsonIgnore
+    // account won't be serialized when returning an address.
     private AccountInfo accountInfo;
 
 
