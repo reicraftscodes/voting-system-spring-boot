@@ -11,8 +11,8 @@ import lombok.Setter;
 public class VoterAddress {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
 
     private String addressOne;
 
@@ -22,9 +22,9 @@ public class VoterAddress {
 
     private String postcode;
 
-    @ManyToOne
-    @JoinColumn(name = "constituency_id")
-    private Constituency constituency;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "account_info_id", nullable = false)
+    private AccountInfo accountInfo;
 
 
 }

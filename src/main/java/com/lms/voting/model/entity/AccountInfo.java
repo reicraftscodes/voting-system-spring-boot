@@ -6,6 +6,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 import java.time.LocalDate;
+import java.util.List;
 
 
 @Getter
@@ -28,9 +29,8 @@ public class AccountInfo {
 
     private String lastName;
 
-    @ManyToOne
-    @JoinColumn(name = "voter_address_id")
-    private VoterAddress voterAddress;
+    @OneToMany(mappedBy = "accountInfo", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<VoterAddress> voterAddresses;
 
 
 }

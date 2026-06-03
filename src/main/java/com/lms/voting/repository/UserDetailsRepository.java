@@ -9,9 +9,6 @@ import java.util.Optional;
 @Repository
 public interface UserDetailsRepository extends JpaRepository<AccountInfo, Integer> {
 
-    @Override
-    Optional<AccountInfo> findById(Integer id);
-
     void deleteById(Integer id);
 
     boolean existsByNationalInsuranceNumber(String nationalInsuranceNumber);

@@ -25,7 +25,11 @@ public class UserDetailsRequestDto {
     @NotNull(message = "Date of birth cannot be null")
     private LocalDate dateOfBirth;
 
+    @NotNull(message = "Voter address is required")
+    private Integer voterAddressId;
+
     @NotBlank(message = "National Insurance Number cannot be empty")
     @Pattern(regexp = "^(?!BG|GB|NK|KN|NT|TN|ZZ)[A-CEGHJ-PR-TW-Z][A-CEGHJ-NPR-TW-Z]\\d{6}[A-D]$", message = "Invalid National Insurance number format")
     private String nationalInsuranceNumber;
+
 }

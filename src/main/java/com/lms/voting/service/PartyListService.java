@@ -8,12 +8,6 @@ public interface PartyListService {
 
     List<String> getAllPartyMembers();
 
-//    PartyListDto createPartyList(PartyList partyList);
-
     PartyListDto createPartyList(PartyListDto partyListDto);
 
-
-    //    String getPartyNameById(Integer partyId);
-//
-//    PartyListDto getPartyById(Integer partyId);
 }

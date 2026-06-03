@@ -1,5 +1,6 @@
 package com.lms.voting.model.dto;
 
+import com.lms.voting.model.entity.VoterAddress;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -14,5 +15,6 @@ public class UpdateUserDetailsDto {
     private String lastName;
     private LocalDate dateOfBirth;
     private String nationalInsuranceNumber;
+    private VoterAddress voterAddress;
 
 }

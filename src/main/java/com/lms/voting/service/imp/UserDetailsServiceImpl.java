@@ -1,90 +1,206 @@
 package com.lms.voting.service.imp;
 
+import com.lms.voting.exception.DuplicateResourceException;
+import com.lms.voting.exception.ResourceNotFoundException;
 import com.lms.voting.model.dto.UpdateUserDetailsDto;
 import com.lms.voting.model.dto.UserDetailsRequestDto;
+import com.lms.voting.model.dto.VoterAddressDto;
 import com.lms.voting.model.entity.AccountInfo;
+import com.lms.voting.model.entity.VoterAddress;
 import com.lms.voting.repository.UserDetailsRepository;
+import com.lms.voting.repository.VoterAddressRepository;
 import com.lms.voting.service.UserDetailsService;
-import com.sun.jdi.request.DuplicateRequestException;
 import jakarta.transaction.Transactional;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
-
+/**
+ * Service implementation responsible for managing user personal details
+ * and voter address information.
+ */
+@Slf4j
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
 
-    private final UserDetailsRepository userDetailsRepository;
+    @Autowired
+    private UserDetailsRepository userDetailsRepository;
 
     @Autowired
-    public UserDetailsServiceImpl(UserDetailsRepository userDetailsRepository) {
-        this.userDetailsRepository = userDetailsRepository;
-    }
+    private VoterAddressRepository voterAddressRepository;
 
-
-    // add personal details
+    /**
+     * Creates a new user account after validating that the National Insurance Number is unique.
+     *
+     * @param userDetailsDto User details received from the client
+     * @return Saved user details as DTO
+     * @throws DuplicateResourceException if NI number already exists
+     */
+    @Override
     public UserDetailsRequestDto addPersonalDetails(UserDetailsRequestDto userDetailsDto) {
-        // Check if there's an existing insurance number
-        if (userDetailsRepository.existsByNationalInsuranceNumber(userDetailsDto.getNationalInsuranceNumber())) {
-            throw new DuplicateRequestException("A user with this national insurance number already exists.");
+
+        // Prevent duplicate user registration using NI number
+        if (userDetailsRepository.existsByNationalInsuranceNumber(
+                userDetailsDto.getNationalInsuranceNumber())) {
+
+            log.warn("Duplicate NI number attempt: {}",
+                    userDetailsDto.getNationalInsuranceNumber());
+
+            throw new DuplicateResourceException(
+                    "A user with this national insurance number already exists.");
         }
 
-        // Convert DTO to Entity
+        // Convert DTO to entity
         AccountInfo accountInfo = new AccountInfo();
         accountInfo.setNationalInsuranceNumber(userDetailsDto.getNationalInsuranceNumber());
         accountInfo.setFirstName(userDetailsDto.getFirstName());
         accountInfo.setLastName(userDetailsDto.getLastName());
         accountInfo.setDateOfBirth(userDetailsDto.getDateOfBirth());
 
-        // Save the entity
+        // Persist entity to database
         AccountInfo savedAccountInfo = userDetailsRepository.save(accountInfo);
 
-        // Map the saved entity to DTO before returning
-        UserDetailsRequestDto savedUserDetailsDto = new UserDetailsRequestDto();
-        savedUserDetailsDto.setId(savedAccountInfo.getId());
-        savedUserDetailsDto.setFirstName(savedAccountInfo.getFirstName());
-        savedUserDetailsDto.setLastName(savedAccountInfo.getLastName());
-        savedUserDetailsDto.setDateOfBirth(savedAccountInfo.getDateOfBirth());
-        savedUserDetailsDto.setNationalInsuranceNumber(savedAccountInfo.getNationalInsuranceNumber());
+        // Convert saved entity back to DTO
+        UserDetailsRequestDto savedDto = new UserDetailsRequestDto();
+        savedDto.setId(savedAccountInfo.getId());
+        savedDto.setFirstName(savedAccountInfo.getFirstName());
+        savedDto.setLastName(savedAccountInfo.getLastName());
+        savedDto.setDateOfBirth(savedAccountInfo.getDateOfBirth());
+        savedDto.setNationalInsuranceNumber(savedAccountInfo.getNationalInsuranceNumber());
 
-        return savedUserDetailsDto;
+        return savedDto;
     }
 
+    /**
+     * Adds a voter address for an existing user.
+     * The operation is transactional to ensure data consistency.
+     *
+     * @param accountInfoId User account ID
+     * @param voterAddressDto Address information
+     * @return Saved voter address DTO
+     * @throws ResourceNotFoundException if user does not exist
+     */
+    @Override
+    @Transactional
+    public VoterAddressDto addUserVoterAddress(Integer accountInfoId, VoterAddressDto voterAddressDto) {
+
+        // Retrieve the user account associated with this address
+        AccountInfo accountInfo = userDetailsRepository.findById(accountInfoId)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + accountInfoId));
+
+        // Create address entity from DTO
+        VoterAddress voterAddress = new VoterAddress();
+        voterAddress.setAddressOne(voterAddressDto.getAddressOne());
+        voterAddress.setAddressTwo(voterAddressDto.getAddressTwo());
+        voterAddress.setTownCity(voterAddressDto.getTownCity());
+        voterAddress.setPostcode(voterAddressDto.getPostcode());
+
+        // Establish relationship between address and user
+        voterAddress.setAccountInfo(accountInfo);
+
+        // Save address record
+        VoterAddress saved = voterAddressRepository.save(voterAddress);
+
+        log.info("Voter address created for accountId={}: {}", accountInfoId, saved.getId());
+
+        return toVoterAddressDto(saved);
+    }
+
+    /**
+     * Retrieves all voter addresses linked to a specific user account.
+     *
+     * @param accountInfoId User account ID
+     * @return List of voter address DTOs
+     * @throws ResourceNotFoundException if user does not exist
+     */
+    @Override
+    public List<VoterAddressDto> getAddressesByAccountId(Integer accountInfoId) {
+
+        // Validate that the user exists before searching for addresses
+        if (!userDetailsRepository.existsById(accountInfoId)) {
+            throw new ResourceNotFoundException("User not found with id: " + accountInfoId);
+        }
+
+        // Convert each address entity into a DTO
+        return voterAddressRepository.findByAccountInfoId(accountInfoId)
+                .stream()
+                .map(this::toVoterAddressDto)
+                .collect(Collectors.toList());
+    }
+
+    /**
+     * Retrieves personal details for a user by ID.
+     *
+     * @param id User account ID
+     * @return Optional containing user details if found
+     */
+    @Override
     public Optional<AccountInfo> getPersonalDetailsByID(Integer id) {
         return userDetailsRepository.findById(id);
     }
 
-    private static UpdateUserDetailsDto getUpdateDetailsDto(AccountInfo user) {
-        UpdateUserDetailsDto updateDetailsDto = new UpdateUserDetailsDto();
-        updateDetailsDto.setId(user.getId());
-        updateDetailsDto.setFirstName(user.getFirstName());
-        updateDetailsDto.setLastName(user.getLastName());
-        updateDetailsDto.setDateOfBirth(user.getDateOfBirth());
-        updateDetailsDto.setNationalInsuranceNumber(user.getNationalInsuranceNumber());
-
-        return updateDetailsDto;
-    }
-
+    /**
+     * Updates an existing user's personal information.
+     *
+     * @param id User account ID
+     * @param updateDetailsDto Updated user details
+     * @return Updated user details DTO
+     * @throws ResourceNotFoundException if user does not exist
+     */
+    @Override
     @Transactional
     public UpdateUserDetailsDto updateUserDetails(Integer id, UpdateUserDetailsDto updateDetailsDto) {
-        AccountInfo user = userDetailsRepository
-                .findById(id)
-                .orElseThrow(() -> new RuntimeException("User not found"));
 
+        // Retrieve existing user record
+        AccountInfo user = userDetailsRepository.findById(id)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException(
+                                "User not found with id: " + id));
+
+        // Apply updates
         user.setFirstName(updateDetailsDto.getFirstName());
         user.setLastName(updateDetailsDto.getLastName());
         user.setDateOfBirth(updateDetailsDto.getDateOfBirth());
         user.setNationalInsuranceNumber(updateDetailsDto.getNationalInsuranceNumber());
 
-        // save all new details to the repo
+        // Save updated entity
         userDetailsRepository.save(user);
 
-        // return new update user details via dto
-        return getUpdateDetailsDto(user);
-
+        return toUpdateUserDetailsDto(user);
     }
 
+    /**
+     * Converts a VoterAddress entity into a DTO.
+     * @param addr Address entity
+     * @return Address DTO
+     */
+    private VoterAddressDto toVoterAddressDto(VoterAddress addr) {
+        VoterAddressDto dto = new VoterAddressDto();
+        dto.setId(addr.getId());
+        dto.setAccountInfoId(addr.getAccountInfo().getId());
+        dto.setAddressOne(addr.getAddressOne());
+        dto.setAddressTwo(addr.getAddressTwo());
+        dto.setTownCity(addr.getTownCity());
+        dto.setPostcode(addr.getPostcode());
+        return dto;
+    }
 
+    /**
+     * Converts an AccountInfo entity into an UpdateUserDetailsDto.
+     * @param user User entity
+     * @return User details DTO
+     */
+    private static UpdateUserDetailsDto toUpdateUserDetailsDto(AccountInfo user) {
+        UpdateUserDetailsDto dto = new UpdateUserDetailsDto();
+        dto.setId(user.getId());
+        dto.setFirstName(user.getFirstName());
+        dto.setLastName(user.getLastName());
+        dto.setDateOfBirth(user.getDateOfBirth());
+        dto.setNationalInsuranceNumber(user.getNationalInsuranceNumber());
+        return dto;
+    }
 }
