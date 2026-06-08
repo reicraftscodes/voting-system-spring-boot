@@ -19,6 +19,8 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static com.lms.voting.constant.VotingDetailsConstant.ERR_MAX_VALID_ADDRESSES_REACHED;
+
 /**
  * Service implementation responsible for managing user personal details
  * and voter address information.
@@ -79,7 +81,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
      * Adds a voter address for an existing user.
      * The operation is transactional to ensure data consistency.
      *
-     * @param accountInfoId User account ID
+     * @param accountInfoId   User account ID
      * @param voterAddressDto Address information
      * @return Saved voter address DTO
      * @throws ResourceNotFoundException if user does not exist
@@ -106,6 +108,12 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         VoterAddress saved = voterAddressRepository.save(voterAddress);
 
         log.info("Voter address created for accountId={}: {}", accountInfoId, saved.getId());
+
+        // Users can only have 2 maximum addresses
+        if (saved.getId() > 2) {
+            log.warn(ERR_MAX_VALID_ADDRESSES_REACHED, accountInfoId);
+            throw new IllegalArgumentException("Maximum number of valid addresses reached for user.");
+        }
 
         return toVoterAddressDto(saved);
     }
@@ -153,11 +161,10 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     }
 
 
-
     /**
      * Updates an existing user's personal information.
      *
-     * @param id User account ID
+     * @param id               User account ID
      * @param updateDetailsDto Updated user details
      * @return Updated user details DTO
      * @throws ResourceNotFoundException if user does not exist
@@ -186,6 +193,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     /**
      * Converts a VoterAddress entity into a DTO.
+     *
      * @param addr Address entity
      * @return Address DTO
      */
@@ -202,6 +210,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     /**
      * Converts an AccountInfo entity into an UpdateUserDetailsDto.
+     *
      * @param user User entity
      * @return User details DTO
      */

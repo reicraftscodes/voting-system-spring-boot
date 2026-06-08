@@ -1,6 +1,5 @@
 package com.lms.voting.repository;
 
-import com.lms.voting.model.dto.UserDetailsDto;
 import com.lms.voting.model.entity.AccountInfo;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;

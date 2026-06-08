@@ -19,7 +19,8 @@ import static com.lms.voting.constant.PartyListConstant.PARTY_ID_DESCRIPTION_SUC
 @Service
 public class PartyListServiceImpl implements PartyListService {
 
-    private final PartyListRepository partyListRepository;
+    @Autowired
+    private PartyListRepository partyListRepository;
 
     @Autowired
     public PartyListServiceImpl(PartyListRepository partyListRepository) {
