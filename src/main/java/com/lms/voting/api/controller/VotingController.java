@@ -31,18 +31,6 @@ public class VotingController {
         return ResponseEntity.status(HttpStatus.CREATED).body(vote);
     }
 
-//    @GetMapping("/receipts")
-//    public ResponseEntity<List<VotingReceiptDto>> getAllVotingReceipts() {
-//        List<VotingReceiptDto> receipts = votingService.votingReceiptDisplays();
-//
-//        if (receipts.isEmpty()) {
-//            // Return 204 No Content instead of 200 OK if no records found
-//            return ResponseEntity.noContent().build();
-//        }
-//
-//        return ResponseEntity.ok(receipts);
-//    }
-
     @GetMapping("/count")
     public ResponseEntity<Long> getTotalVoteCount() {
         Long totalVotes = votingService.getTotalCountVoter();
