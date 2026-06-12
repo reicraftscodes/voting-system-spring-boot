@@ -16,6 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -134,10 +135,12 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         }
 
         // Convert each address entity into a DTO
-        return voterAddressRepository.findByAccountInfoId(accountInfoId)
-                .stream()
-                .map(this::toVoterAddressDto)
-                .collect(Collectors.toList());
+        List<VoterAddressDto> list = new ArrayList<>();
+        for (VoterAddress voterAddress : voterAddressRepository.findByAccountInfoId(accountInfoId)) {
+            VoterAddressDto voterAddressDto = toVoterAddressDto(voterAddress);
+            list.add(voterAddressDto);
+        }
+        return list;
     }
 
 

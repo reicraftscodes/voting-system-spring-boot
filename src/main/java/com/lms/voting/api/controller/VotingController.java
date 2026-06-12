@@ -17,31 +17,15 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/v1/voting")
 public class VotingController {
 
-    private final VotingService votingService;
-
     @Autowired
-    public VotingController(VotingService votingService) {
-        this.votingService = votingService;
-    }
+    private VotingService votingService;
 
-    @PostMapping
+    @PostMapping("/castVote")
     public ResponseEntity<VoteResponseDto> castVote(@Valid @RequestBody CastVoteRequestDto request) {
         VoteResponseDto vote = votingService.castVote(request);
-        log.info(VotingDetailsConstant.RESULT_VOTED_SUCCESS);
+        log.info(VotingDetailsConstant.RESULT_VOTED_SUCCESS, request.getNationalInsuranceNumber());
         return ResponseEntity.status(HttpStatus.CREATED).body(vote);
     }
-
-//    @GetMapping("/receipts")
-//    public ResponseEntity<List<VotingReceiptDto>> getAllVotingReceipts() {
-//        List<VotingReceiptDto> receipts = votingService.votingReceiptDisplays();
-//
-//        if (receipts.isEmpty()) {
-//            // Return 204 No Content instead of 200 OK if no records found
-//            return ResponseEntity.noContent().build();
-//        }
-//
-//        return ResponseEntity.ok(receipts);
-//    }
 
     @GetMapping("/count")
     public ResponseEntity<Long> getTotalVoteCount() {

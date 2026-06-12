@@ -17,8 +17,6 @@ public interface VotingService {
 
     void validateVotingEligibility(AccountInfo user);
 
-//    List<String> votingReceiptDisplays();
-
     PartyVoteResponse getTotalVotesByParty(Integer partyId);
 
     Long getTotalCountVoter();

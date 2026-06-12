@@ -14,8 +14,6 @@ import java.time.LocalDateTime;
 public class VoteResponseDto {
 
     private String referenceNo;
-    private String partyName;
-    private String description;
 
     @Builder.Default
     private LocalDateTime timestamp = LocalDateTime.now();
