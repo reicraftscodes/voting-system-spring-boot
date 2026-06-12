@@ -1,5 +1,6 @@
 package com.lms.voting.api.service.imp;
 
+import com.lms.voting.api.constant.VotingDetailsConstant;
 import com.lms.voting.api.model.dto.CastVoteRequestDto;
 import com.lms.voting.api.model.dto.PartyVoteResponse;
 import com.lms.voting.api.model.dto.VoteResponseDto;
@@ -18,24 +19,28 @@ import com.lms.voting.api.util.ReceiptGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import static com.lms.voting.api.constant.VotingDetailsConstant.MINIMUM_VOTING_AGE;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.Period;
 import java.util.Optional;
+
 
 @Service
 public class VotingServiceImpl implements VotingService {
 
-    private static final int MINIMUM_VOTING_AGE = 18;
-
-    private final PartyListRepository partyListRepository;
-    private final UserDetailsRepository userDetailsRepository;
-    private final VotingRepository votingRepository;
+    @Autowired
+    private PartyListRepository partyListRepository;
 
     @Autowired
-    public VotingServiceImpl(PartyListRepository partyListRepository,
-                             UserDetailsRepository userDetailsRepository,
-                             VotingRepository votingRepository) {
+    private UserDetailsRepository userDetailsRepository;
+
+    @Autowired
+    private VotingRepository votingRepository;
+
+    @Autowired
+    public VotingServiceImpl(PartyListRepository partyListRepository, UserDetailsRepository userDetailsRepository, VotingRepository votingRepository) {
         this.partyListRepository = partyListRepository;
         this.userDetailsRepository = userDetailsRepository;
         this.votingRepository = votingRepository;
@@ -74,8 +79,7 @@ public class VotingServiceImpl implements VotingService {
 
         return VoteResponseDto.builder()
                 .referenceNo(vote.getReferenceNo())
-                .partyName(party.getPartyName())
-                .description("Vote successfully cast")
+                .timestamp(LocalDateTime.now())
                 .build();
     }
 
@@ -123,14 +127,6 @@ public class VotingServiceImpl implements VotingService {
         return votingRepository.save(vote);
     }
 
-//    @Override
-//    public List<String> votingReceiptDisplays() {
-//        List<String> votes = votingRepository.findVotingReceipts();
-//        if (votes.isEmpty()) {
-//            throw new ResourceNotFoundException("No voting records found.");
-//        }
-//        return votes;
-//    }
 
     @Override
     public Long getTotalCountVoter() {

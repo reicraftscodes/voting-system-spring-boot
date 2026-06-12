@@ -17,12 +17,9 @@ import java.util.List;
 @RequestMapping("api/v1/uk/parties")
 public class PartyListController {
 
-    private final PartyListService partyListService;
-
     @Autowired
-    public PartyListController(PartyListService partyListService) {
-        this.partyListService = partyListService;
-    }
+    private PartyListService partyListService;
+
 
     @PostMapping(produces = "application/json")
     public ResponseEntity<PartyListDto> createPartyList(@RequestBody @Valid PartyListDto partyListDto) {

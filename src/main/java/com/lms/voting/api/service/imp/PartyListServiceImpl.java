@@ -27,7 +27,6 @@ public class PartyListServiceImpl implements PartyListService {
         this.partyListRepository = partyListRepository;
     }
 
-    // Todo redo this
     @Override
     public List<String> getAllPartyMembers() {
         List<String> partyListsNames = partyListRepository.findAllPartyNames();
