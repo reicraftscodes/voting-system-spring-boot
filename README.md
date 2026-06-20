@@ -1,146 +1,83 @@
-# Online UK Voting System
+<p align="center">
+  <img src="https://img.shields.io/badge/java-%23ED8B00.svg?style=for-the-badge&logo=openjdk&logoColor=white" />
+  <img src="https://img.shields.io/badge/spring%20boot-%236DB33F.svg?style=for-the-badge&logo=springboot&logoColor=white" />
+  <img src="https://img.shields.io/badge/MySQL-4479A1.svg?style=for-the-badge&logo=mysql&logoColor=white" />
+  <img src="https://img.shields.io/badge/Hibernate-59666C?style=for-the-badge&logo=hibernate&logoColor=white" />
+  <img src="https://img.shields.io/badge/Maven-C71A36?style=for-the-badge&logo=apachemaven&logoColor=white" />
+  <img src="https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white" />
+  <img src="https://img.shields.io/badge/Prometheus-E6522C?style=for-the-badge&logo=prometheus&logoColor=white" />
+  <img src="https://img.shields.io/badge/Grafana-F46800?style=for-the-badge&logo=grafana&logoColor=white" />
+  <img src="https://img.shields.io/badge/Spring%20Actuator-6DB33F?style=for-the-badge&logo=spring&logoColor=white" />
+  <img src="https://img.shields.io/badge/Swagger-85EA2D?style=for-the-badge&logo=swagger&logoColor=black" />
+  <img src="https://img.shields.io/badge/Postman-FF6C37?style=for-the-badge&logo=postman&logoColor=white" />
+  <img src="https://img.shields.io/badge/SonarQube-4E9BCD?style=for-the-badge&logo=sonarqube&logoColor=white" />
+  <img src="https://img.shields.io/badge/JUnit5-25A162?style=for-the-badge&logo=junit5&logoColor=white" />
 
-UK-style election simulator demonstrating a first-past-the-post voting system. Features voter registration, candidate management, vote casting, and result tallying. Built with Spring Boot, this project highlights backend architecture, data handling, application logic, and system workflow implementation.
+</p>
+
+# E-Ballot UK
+
+E-Ballot UK is a web-based election simulator that demonstrates a First-Past-The-Post voting system. It is a personal project exploring how online voting could improve accessibility for users who face challenges voting in person due to address changes, constituency mismatches, or practical issues such as travel distance, registration problems, or postal voting delays.
+
+**Disclaimer**: This project is for educational and demonstration purposes only and is not intended for real-world electoral use. The UI is currently under development.
+
+
+## Features
+- First-Past-The-Post voting system simulation 
+- Multistep user verification (email, poll card reference, National Insurance number, name, address, date of birth)
+- Constituency-based voting eligibility 
+- One vote per user enforcement 
+- Session timeout with automatic logout after 15 minutes
+
+## Business Requirements
+- Each user must only be allowed to vote once per election 
+- Users must only vote within their assigned constituency 
+- Identity must be verified before voting access is granted 
+- Voting sessions must expire after a fixed time period for security 
+- System must prevent duplicate, fraudulent, or unauthorised votes
 
 ## Technologies
-- Java, MySQL
+- Java 21
 - Spring Boot 3 (Web)
-- Spring Data JPA
-- JUnit, Mockito, MockMVC
+- Spring Data JPA, MySQL
+- Spring Boot Actuator
+- JUnit, Mockito, MockMvc
 - Swagger (OpenAPI)
-- Api documentation
+- API documentation
 - SLF4J (logging)
-- Postman (API & performance testing)
+- Prometheus (metrics monitoring)
+- Grafana (metrics visualisation)
+- Postman (API and performance testing)
 - SonarQube (code quality analysis)
 - Maven
 
 ---
 
 ## Architectural Design
-This project is also being actively checked with Sonarqube integrated in the developer's IDE. An analysis with SonarQube to would reveal the following:
+This project is built using a layered monolithic architecture, chosen to keep the system simple, maintainable, and easy to extend while preserving clear separation of concerns between components.
 
-The backend follows a **layered architecture**:
-
-![Architecture](https://res.cloudinary.com/dvwxun4vh/image/upload/v1770471779/archilayer_y1ipbu.png)
-
-### Layers
-1. **Controller Layer**
-    - Handles HTTP requests/responses
-    - Delegates business logic to the service layer
-    - Examples: `VotingController`, `UserDetailsController`, `PartyListController`
-
-2. **Service Layer (Interface + Implementation)**
-    - Interfaces define available operations (`VotingService`, `UserDetailsService`, `PartyListService`)
-    - Implementations (`VotingServiceImpl`, etc.) contain **business logic**, validation, and repository calls
-    - Benefits: abstraction, testability, and flexibility for future extensions
-
-3. **Repository Layer**
-    - Handles database interactions via Spring Data JPA
-    - Examples: `VotingRepository`, `UserDetailsRepository`, `PartyListRepository`
-    - Custom queries used for aggregate functions, like total votes per party
-
----
-
-## Key Backend Design Decisions
-
-### Idempotent Vote Casting
-- Each user can vote only once (`user_details_id` is unique in `voting` table)
-- Application and database validation prevent duplicates
-- Guarantees safe concurrent operations
-
-### Voter Eligibility & Validation
-- Only users **18+** can vote
-- Validated against **National Insurance Number** and **Last Name**
-- Custom exceptions for meaningful feedback
-
-### Vote Counting & Data Types
-- Vote counts use **Long** to safely support large-scale elections
-- Aggregation handled efficiently in the service layer
+![Architecture](https://res.cloudinary.com/dphavvlgs/image/upload/v1781989442/clkja42_dhh80i.png)
 
 
-### REST API Design
-- `/api/v1/voting` → cast votes, get receipts, retrieve totals
-- `/api/v1/users` → manage voters (CRUD)
-- `/api/v1/uk/parties` → manage party lists
+## Sequence Diagram
+This sequence diagram shows the step-by-step process of user authentication and vote casting within the system.
 
-### Logging & Observability
+[View Diagram]()
+
+## Logging & Observability
 - Critical actions logged with SLF4J
 - Supports debugging, auditing, and transparency
+- Prometheus and Grafana are used for monitoring and visualisation of system metrics
+
 
 ---
 
 ## API Documentation
-The services below have their own Swagger OpenAPI specifications, in order access the API Docs locally copy and paste the following url http://localhost:8080/swagger-ui/index.html
 
+The services are documented using Swagger (OpenAPI). To access the API documentation locally, run the application and navigate to: http://localhost:8080/swagger-ui/index.html
 
-![Swagger](https://res.cloudinary.com/dvwxun4vh/image/upload/v1768582221/Swagger_sauuxo.png)
+![Swagger UI](https://res.cloudinary.com/dvwxun4vh/image/upload/v1768582221/Swagger_sauuxo.png)
 
-### Base URL
-```
-http://localhost:8080/api/v1
-```
-
-#### User Details API
-
-| Endpoint                     | Method | Parameter          | Type          | Description                               |
-| ---------------------------- | ------ | ----------------- | ------------- | ----------------------------------------- |
-| `/users`                     | POST   | `accountInfo`      | Object (JSON) | Create a new user with personal details   |
-| `/users/{id}`                | GET    | `id`               | Integer       | Retrieve a user’s personal details        |
-| `/users/update/{id}`         | PATCH  | `id`               | Integer       | Update an existing user’s details         |
-| `/users/update/{id}`         | PATCH  | `updateDetailsDto` | Object (JSON) | Fields to update for the user             |
-
-**Example JSON for creating a user:**
-```json
-{
-  "firstName": "John",
-  "lastName": "Doe",
-  "dateOfBirth": "1990-01-01",
-  "nationalInsuranceNumber": "AB123456C"
-}
-```
-
----
-
-#### UK Party List API
-
-| Endpoint                  | Method | Parameter   | Type          | Description                  |
-| ------------------------- | ------ | ----------- | ------------- | ---------------------------- |
-| `/uk/parties`             | POST   | `partyList` | Object (JSON) | Create a new political party |
-| `/uk/parties/all`         | GET    | —           | —             | Retrieve all party members   |
-
-**Example JSON for creating a party:**
-```json
-{
-  "partyName": "Example Party",
-  "position": "Leader"
-}
-```
-
----
-## Performance Testing
-This is a simple test scenario to learn how APIs behave under load. We simulate multiple users casting votes at the same time to understand. 
-
-Note: focus is on understanding API performance basics rather than achieving high-scale testing.
-
-#### Voting API
-
-| Endpoint                     | Method | Parameter | Type          | Description                          |
-| ---------------------------- | ------ | --------- | ------------- | ------------------------------------ |
-| `/voting`                    | POST   | `request` | Object (JSON) | Cast a vote for a party               |
-| `/voting/receipts`           | GET    | —         | —             | Fetch all voting receipts            |
-| `/voting/count`              | GET    | —         | Long          | Get total number of votes            |
-| `/voting/party/{partyId}`    | GET    | `partyId` | Integer       | Get total votes for a specific party |
-
-**Example JSON for casting a vote:**
-```json
-{
-  "nationalInsuranceNumber": "AB123456C",
-  "lastName": "Doe",
-  "partyId": 1
-}
-```
-
----
 
 ## Testing
 This project is also being actively checked with Sonarqube integrated in the developer's IDE. An analysis with SonarQube to would reveal the following:
@@ -160,12 +97,7 @@ This project is also being actively checked with Sonarqube integrated in the dev
   - P90 response time: 30 ms
   - Error %: 0.00%
 
-## Cloud & Deployment
-- AWS RDS / Aurora for database
-- AWS Elastic Beanstalk for deployment
-
-## Disclaimer
-This project is not suitable for real elections.
+---
 
 ## Author
 @reicraftscodes
