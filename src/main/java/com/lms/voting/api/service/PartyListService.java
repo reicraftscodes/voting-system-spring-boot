@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface PartyListService {
 
-    List<String> getAllPartyMembers();
+    List<PartyListDto> getAllPartyMembers();
 
     PartyListDto createPartyList(PartyListDto partyListDto);
 

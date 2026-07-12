@@ -10,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.lms.voting.api.constant.PartyListConstant.PARTY_DESCRIPTION_NOT_FOUND;
@@ -28,16 +29,23 @@ public class PartyListServiceImpl implements PartyListService {
     }
 
     @Override
-    public List<String> getAllPartyMembers() {
-        List<String> partyListsNames = partyListRepository.findAllPartyNames();
+    public List<PartyListDto> getAllPartyMembers() {
+        List<PartyList> partyLists = partyListRepository.findAll();
 
-        if (partyListsNames.isEmpty()) {
-            throw new ResourceNotFoundException(PARTY_DESCRIPTION_NOT_FOUND);
+        List<PartyListDto> partyListDtos = new ArrayList<>();
+
+        for (PartyList partyList : partyLists) {
+
+            PartyListDto listDto = new PartyListDto();
+            listDto.setId(partyList.getId());
+            listDto.setPartyName(partyList.getPartyName());
+            listDto.setPosition(partyList.getPosition());
+
+            partyListDtos.add(listDto);
         }
 
-        return partyListsNames;
+        return partyListDtos;
     }
-
 
     @Override
     public PartyListDto createPartyList(PartyListDto partyListDto) {
