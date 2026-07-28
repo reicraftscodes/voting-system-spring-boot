@@ -18,8 +18,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
+import static com.lms.voting.api.constant.UserDetailsConstant.USER_NOT_FOUND_DESCRIPTION;
 import static com.lms.voting.api.constant.VotingDetailsConstant.ERR_MAX_VALID_ADDRESSES_REACHED;
 
 /**
@@ -93,7 +93,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
         // Retrieve the user account associated with this address
         AccountInfo accountInfo = userDetailsRepository.findById(accountInfoId)
-                .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + accountInfoId));
+                .orElseThrow(() -> new ResourceNotFoundException(USER_NOT_FOUND_DESCRIPTION + accountInfoId));
 
         // Create address entity from DTO
         VoterAddress voterAddress = new VoterAddress();

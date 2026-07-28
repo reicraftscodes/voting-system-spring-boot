@@ -23,7 +23,6 @@ public class UserDetailsController {
     @Autowired
     private UserDetailsService userDetailsService;
 
-    // create user (personal details only, no address)
     @PostMapping(produces = "application/json")
     public ResponseEntity<UserDetailsRequestDto> createUser(@RequestBody @Valid UserDetailsRequestDto userDetails) {
         UserDetailsRequestDto addedUserDetails = userDetailsService.addPersonalDetails(userDetails);
@@ -31,14 +30,12 @@ public class UserDetailsController {
         return ResponseEntity.status(HttpStatus.CREATED).body(addedUserDetails);
     }
 
-    // add an address to an existing user acountId
     @PostMapping(value = "/{accountId}/address", produces = "application/json", consumes = "application/json")
     public ResponseEntity<VoterAddressDto> createUserAddress(@PathVariable Integer accountId, @RequestBody @Valid VoterAddressDto voterAddress) {
         VoterAddressDto added = userDetailsService.addUserVoterAddress(accountId, voterAddress);
         return ResponseEntity.status(HttpStatus.CREATED).body(added);
     }
 
-    // get all addresses for a user
     @GetMapping(value = "/{accountId}/address", produces = "application/json")
     public ResponseEntity<List<VoterAddressDto>> getUserAddresses(@PathVariable Integer accountId) {
         List<VoterAddressDto> addresses = userDetailsService.getAddressesByAccountId(accountId);

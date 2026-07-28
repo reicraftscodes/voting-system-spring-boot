@@ -29,8 +29,8 @@ public class PartyListController {
     }
 
     @GetMapping("/all")
-    public ResponseEntity<List<String>> getAllPartyMembers() {
-        List<String> partyLists = partyListService.getAllPartyMembers();
+    public ResponseEntity<List<PartyListDto>> getAllPartyMembers() {
+        List<PartyListDto> partyLists = partyListService.getAllPartyMembers();
         log.info(PartyListConstant.RETRIEVE_DESCRIPTION_SUCCESS, partyLists);
         return ResponseEntity.status(HttpStatus.OK).body(partyLists);
     }

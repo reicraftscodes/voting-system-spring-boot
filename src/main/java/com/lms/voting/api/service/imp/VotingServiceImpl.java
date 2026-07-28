@@ -39,13 +39,6 @@ public class VotingServiceImpl implements VotingService {
     @Autowired
     private VotingRepository votingRepository;
 
-    @Autowired
-    public VotingServiceImpl(PartyListRepository partyListRepository, UserDetailsRepository userDetailsRepository, VotingRepository votingRepository) {
-        this.partyListRepository = partyListRepository;
-        this.userDetailsRepository = userDetailsRepository;
-        this.votingRepository = votingRepository;
-    }
-
     @Override
     @Transactional
     public VoteResponseDto castVote(CastVoteRequestDto request) {

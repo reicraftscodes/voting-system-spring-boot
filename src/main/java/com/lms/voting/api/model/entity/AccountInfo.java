@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.springframework.data.annotation.CreatedBy;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -31,6 +32,9 @@ public class AccountInfo {
 
     @OneToMany(mappedBy = "accountInfo", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<VoterAddress> voterAddresses;
+
+    @CreatedBy
+    private LocalDate localDate;
 
 
 }
