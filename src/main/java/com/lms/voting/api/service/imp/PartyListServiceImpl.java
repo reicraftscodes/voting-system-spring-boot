@@ -2,7 +2,6 @@ package com.lms.voting.api.service.imp;
 
 import com.lms.voting.api.model.dto.PartyListDto;
 import com.lms.voting.api.model.entity.PartyList;
-import com.lms.voting.api.exception.ResourceNotFoundException;
 import com.lms.voting.api.repository.PartyListRepository;
 import com.lms.voting.api.service.PartyListService;
 import com.sun.jdi.request.DuplicateRequestException;
@@ -13,7 +12,6 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.lms.voting.api.constant.PartyListConstant.PARTY_DESCRIPTION_NOT_FOUND;
 import static com.lms.voting.api.constant.PartyListConstant.PARTY_ID_DESCRIPTION_SUCCESS;
 
 @Slf4j
