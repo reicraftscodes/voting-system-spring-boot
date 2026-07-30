@@ -1,13 +1,13 @@
 package com.lms.voting.api.service.imp;
 
+import com.lms.voting.api.constant.VotingDetailsConstant;
 import com.lms.voting.api.exception.DuplicateResourceException;
 import com.lms.voting.api.exception.ResourceNotFoundException;
-import com.lms.voting.api.model.dto.UpdateUserDetailsDto;
-import com.lms.voting.api.model.dto.UserDetailsDto;
-import com.lms.voting.api.model.dto.UserDetailsRequestDto;
-import com.lms.voting.api.model.dto.VoterAddressDto;
+import com.lms.voting.api.model.dto.*;
 import com.lms.voting.api.model.entity.AccountInfo;
+import com.lms.voting.api.model.entity.PollReference;
 import com.lms.voting.api.model.entity.VoterAddress;
+import com.lms.voting.api.repository.PollReferenceRepository;
 import com.lms.voting.api.repository.UserDetailsRepository;
 import com.lms.voting.api.repository.VoterAddressRepository;
 import com.lms.voting.api.service.UserDetailsService;
@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.lms.voting.api.constant.UserDetailsConstant.USER_NOT_FOUND_DESCRIPTION;
-import static com.lms.voting.api.constant.VotingDetailsConstant.ERR_MAX_VALID_ADDRESSES_REACHED;
+import static com.lms.voting.api.constant.VotingDetailsConstant.*;
 
 /**
  * Service implementation responsible for managing user personal details
@@ -35,6 +35,10 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Autowired
     private VoterAddressRepository voterAddressRepository;
+
+    @Autowired
+    private PollReferenceRepository pollReferenceRepository;
+
 
     /**
      * Creates a new user account after validating that the National Insurance Number is unique.
@@ -95,6 +99,14 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         AccountInfo accountInfo = userDetailsRepository.findById(accountInfoId)
                 .orElseThrow(() -> new ResourceNotFoundException(USER_NOT_FOUND_DESCRIPTION + accountInfoId));
 
+        // check the user's existing address count
+        long existingAddressCount = voterAddressRepository.countByAccountInfoId(accountInfoId);
+
+        if (existingAddressCount >= 2) {
+            log.warn(ERR_MAX_VALID_ADDRESSES_REACHED, accountInfoId);
+            throw new IllegalArgumentException(ERR_MAX_VALID_ADDRESSES_REACHED);
+        }
+
         // Create address entity from DTO
         VoterAddress voterAddress = new VoterAddress();
         voterAddress.setAddressOne(voterAddressDto.getAddressOne());
@@ -110,14 +122,33 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
         log.info("Voter address created for accountId={}: {}", accountInfoId, saved.getId());
 
-        // Users can only have 2 maximum addresses
-        if (saved.getId() > 2) {
-            log.warn(ERR_MAX_VALID_ADDRESSES_REACHED, accountInfoId);
-            throw new IllegalArgumentException("Maximum number of valid addresses reached for user.");
-        }
-
         return toVoterAddressDto(saved);
     }
+
+//    @Override
+//    @Transactional
+//    public PollReferenceDto addUserVoterPollReference(Integer accountInfoId, PollReferenceDto pollReferenceDto) {
+//
+//        AccountInfo accountInfo = userDetailsRepository.findById(accountInfoId)
+//                .orElseThrow(() -> new ResourceNotFoundException(USER_NOT_FOUND_DESCRIPTION + accountInfoId));
+//
+//        long pollReferenceCountForUser = pollReferenceRepository.countByAccountInfoId(accountInfoId);
+//
+//        if (pollReferenceCountForUser >= MAX_POLL_REFERENCES_PER_USER) {
+//            log.warn(String.valueOf(VotingDetailsConstant.MAX_POLL_REFERENCES_PER_USER), accountInfoId);
+//            throw new IllegalArgumentException(ERR_MAX_NUM_ON_REGISTER_REACHED);
+//        }
+//
+//        PollReference pollReference = new PollReference();
+//        pollReference.setNumRegister(pollReferenceDto.getNumRegister());
+//        pollReference.setAccountInfo(accountInfo);
+//
+//        PollReference saved = pollReferenceRepository.save(pollReference);
+//
+//        log.info("Poll reference created for accountId={}: {}", accountInfoId, saved.getId());
+//
+//        return toPollReferenceDto(saved);
+//    }
 
     /**
      * Retrieves all voter addresses linked to a specific user account.
@@ -208,6 +239,13 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         dto.setAddressTwo(addr.getAddressTwo());
         dto.setTownCity(addr.getTownCity());
         dto.setPostcode(addr.getPostcode());
+        return dto;
+    }
+
+    private PollReferenceDto toPollReferenceDto(PollReference pollref) {
+        PollReferenceDto dto = new PollReferenceDto();
+        dto.setId(pollref.getId());
+        dto.setNumRegister(pollref.getNumRegister());
         return dto;
     }
 
