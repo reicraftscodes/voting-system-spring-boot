@@ -7,6 +7,7 @@ import lombok.ToString;
 import org.springframework.data.annotation.CreatedBy;
 
 import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.List;
 
 
@@ -32,6 +33,9 @@ public class AccountInfo {
 
     @OneToMany(mappedBy = "accountInfo", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<VoterAddress> voterAddresses;
+
+    @OneToMany(mappedBy = "accountInfo", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<PollReference> pollReferences;
 
     @CreatedBy
     private LocalDate localDate;

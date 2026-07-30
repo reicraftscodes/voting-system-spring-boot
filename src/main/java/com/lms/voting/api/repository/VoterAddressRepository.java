@@ -8,7 +8,8 @@ import java.util.List;
 
 @Repository
 public interface VoterAddressRepository extends JpaRepository<VoterAddress, Integer> {
-    // fetches ALL addresses for a given user
     List<VoterAddress> findByAccountInfoId(Integer accountInfoId);
+
+    long countByAccountInfoId(Integer accountInfoId);
 
 }

@@ -1,10 +1,7 @@
 package com.lms.voting.api.controller;
 
 import com.lms.voting.api.constant.UserDetailsConstant;
-import com.lms.voting.api.model.dto.UpdateUserDetailsDto;
-import com.lms.voting.api.model.dto.UserDetailsDto;
-import com.lms.voting.api.model.dto.UserDetailsRequestDto;
-import com.lms.voting.api.model.dto.VoterAddressDto;
+import com.lms.voting.api.model.dto.*;
 import com.lms.voting.api.service.UserDetailsService;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
@@ -39,8 +36,15 @@ public class UserDetailsController {
     @GetMapping(value = "/{accountId}/address", produces = "application/json")
     public ResponseEntity<List<VoterAddressDto>> getUserAddresses(@PathVariable Integer accountId) {
         List<VoterAddressDto> addresses = userDetailsService.getAddressesByAccountId(accountId);
-        return ResponseEntity.ok(addresses);
+        return ResponseEntity.status(HttpStatus.CREATED).body(addresses);
     }
+
+    @PostMapping(value = "/{accountId}/pollReferenceNo", produces = "application/json", consumes = "application/json")
+    public ResponseEntity<PollReferenceDto> createPollRef(@PathVariable Integer accountId, @RequestBody @Valid PollReferenceDto pollReferenceDto) {
+        PollReferenceDto pollReference = userDetailsService.addUserVoterPollReference(accountId, pollReferenceDto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(pollReference);
+    }
+
 
     @GetMapping("/{id}")
     public ResponseEntity<UserDetailsDto> getPersonalDetailsByID(@PathVariable Integer id) {

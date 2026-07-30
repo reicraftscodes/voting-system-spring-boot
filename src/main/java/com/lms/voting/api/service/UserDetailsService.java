@@ -1,9 +1,6 @@
 package com.lms.voting.api.service;
 
-import com.lms.voting.api.model.dto.UpdateUserDetailsDto;
-import com.lms.voting.api.model.dto.UserDetailsDto;
-import com.lms.voting.api.model.dto.UserDetailsRequestDto;
-import com.lms.voting.api.model.dto.VoterAddressDto;
+import com.lms.voting.api.model.dto.*;
 
 import java.util.List;
 
@@ -18,4 +15,6 @@ public interface UserDetailsService {
     List<VoterAddressDto> getAddressesByAccountId(Integer accountInfoId);
 
     UserDetailsDto getPersonalDetailsById(Integer accountId);
+
+    PollReferenceDto addUserVoterPollReference(Integer accountInfoId, PollReferenceDto pollReferenceDto);
 }
