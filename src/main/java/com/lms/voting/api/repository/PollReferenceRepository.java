@@ -7,5 +7,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface PollReferenceRepository extends JpaRepository<PollReference, Integer> {
 
-    long countByAccountInfoId(Integer accountInfoId);
+    long countByAccountInfoId(Integer accountId);
 }

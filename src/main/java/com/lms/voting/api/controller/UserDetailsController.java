@@ -39,9 +39,9 @@ public class UserDetailsController {
         return ResponseEntity.status(HttpStatus.CREATED).body(addresses);
     }
 
-    @PostMapping(value = "/{accountId}/pollReferenceNo", produces = "application/json", consumes = "application/json")
-    public ResponseEntity<PollReferenceDto> createPollRef(@PathVariable Integer accountId, @RequestBody @Valid PollReferenceDto pollReferenceDto) {
-        PollReferenceDto pollReference = userDetailsService.addUserVoterPollReference(accountId, pollReferenceDto);
+    @PostMapping(value = "/{accountId}/pollRef", produces = "application/json", consumes = "application/json")
+    public ResponseEntity<PollReferenceRequestDto> createPollRef(@PathVariable Integer accountId, @RequestBody PollReferenceRequestDto pollReferenceRequestDto) {
+        PollReferenceRequestDto pollReference = userDetailsService.addUserVoterPollReference(accountId, pollReferenceRequestDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(pollReference);
     }
 
