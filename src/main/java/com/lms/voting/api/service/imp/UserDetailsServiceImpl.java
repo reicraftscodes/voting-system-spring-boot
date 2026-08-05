@@ -125,30 +125,31 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         return toVoterAddressDto(saved);
     }
 
-//    @Override
-//    @Transactional
-//    public PollReferenceDto addUserVoterPollReference(Integer accountInfoId, PollReferenceDto pollReferenceDto) {
-//
-//        AccountInfo accountInfo = userDetailsRepository.findById(accountInfoId)
-//                .orElseThrow(() -> new ResourceNotFoundException(USER_NOT_FOUND_DESCRIPTION + accountInfoId));
-//
-//        long pollReferenceCountForUser = pollReferenceRepository.countByAccountInfoId(accountInfoId);
-//
-//        if (pollReferenceCountForUser >= MAX_POLL_REFERENCES_PER_USER) {
-//            log.warn(String.valueOf(VotingDetailsConstant.MAX_POLL_REFERENCES_PER_USER), accountInfoId);
-//            throw new IllegalArgumentException(ERR_MAX_NUM_ON_REGISTER_REACHED);
-//        }
-//
-//        PollReference pollReference = new PollReference();
-//        pollReference.setNumRegister(pollReferenceDto.getNumRegister());
-//        pollReference.setAccountInfo(accountInfo);
-//
-//        PollReference saved = pollReferenceRepository.save(pollReference);
-//
-//        log.info("Poll reference created for accountId={}: {}", accountInfoId, saved.getId());
-//
-//        return toPollReferenceDto(saved);
-//    }
+    @Override
+    @Transactional
+    public PollReferenceRequestDto addUserVoterPollReference(Integer accountInfoId, PollReferenceRequestDto pollReferenceRequestDto) {
+
+        AccountInfo accountInfo = userDetailsRepository.findById(accountInfoId)
+                .orElseThrow(() -> new ResourceNotFoundException(USER_NOT_FOUND_DESCRIPTION + accountInfoId));
+
+        long pollReferenceCountForUser = pollReferenceRepository.countByAccountInfoId(accountInfoId);
+
+        if (pollReferenceCountForUser >= MAX_POLL_REFERENCES_PER_USER) {
+            log.warn(String.valueOf(VotingDetailsConstant.MAX_POLL_REFERENCES_PER_USER), accountInfoId);
+            throw new IllegalArgumentException(ERR_MAX_NUM_ON_REGISTER_REACHED);
+        }
+
+        PollReference pollReference = new PollReference();
+
+        pollReference.setNumRegister(pollReferenceRequestDto.getNumRegister());
+        pollReference.setAccountInfo(accountInfo);
+
+        PollReference saved = pollReferenceRepository.save(pollReference);
+
+        log.info("Poll reference created for accountId={}: {}", accountInfoId, saved.getId());
+
+        return toPollReferenceDto(saved);
+    }
 
     /**
      * Retrieves all voter addresses linked to a specific user account.
@@ -242,8 +243,8 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         return dto;
     }
 
-    private PollReferenceDto toPollReferenceDto(PollReference pollref) {
-        PollReferenceDto dto = new PollReferenceDto();
+    private PollReferenceRequestDto toPollReferenceDto(PollReference pollref) {
+        PollReferenceRequestDto dto = new PollReferenceRequestDto();
         dto.setId(pollref.getId());
         dto.setNumRegister(pollref.getNumRegister());
         return dto;

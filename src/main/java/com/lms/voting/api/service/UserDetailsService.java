@@ -16,5 +16,5 @@ public interface UserDetailsService {
 
     UserDetailsDto getPersonalDetailsById(Integer accountId);
 
-    PollReferenceDto addUserVoterPollReference(Integer accountInfoId, PollReferenceDto pollReferenceDto);
+    PollReferenceRequestDto addUserVoterPollReference(Integer accountInfoId, PollReferenceRequestDto pollReferenceRequestDto);
 }
