@@ -1,9 +1,7 @@
 package com.lms.voting.api.controller;
 
 import com.lms.voting.api.constant.VotingDetailsConstant;
-import com.lms.voting.api.model.dto.CastVoteRequestDto;
-import com.lms.voting.api.model.dto.PartyVoteResponse;
-import com.lms.voting.api.model.dto.VoteResponseDto;
+import com.lms.voting.api.model.dto.*;
 import com.lms.voting.api.service.VotingService;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
@@ -15,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 @Slf4j
 @RestController
 @RequestMapping("/api/v1/voting")
+@CrossOrigin(origins = "http://localhost:5173/")
 public class VotingController {
 
     @Autowired
@@ -26,6 +25,14 @@ public class VotingController {
         log.info(VotingDetailsConstant.RESULT_VOTED_SUCCESS, request.getNationalInsuranceNumber());
         return ResponseEntity.status(HttpStatus.CREATED).body(vote);
     }
+
+    @PostMapping("/verify")
+    public ResponseEntity<VoterVerificationResponseDto> verifyVoter(@Valid @RequestBody VerifyVoterRequestDto request) {
+        VoterVerificationResponseDto verification = votingService.verifyVoter(request);
+        log.info("Voter verified successfully: {}", request.getNationalInsuranceNumber());
+        return ResponseEntity.status(HttpStatus.OK).body(verification);
+    }
+
 
     @GetMapping("/count")
     public ResponseEntity<Long> getTotalVoteCount() {

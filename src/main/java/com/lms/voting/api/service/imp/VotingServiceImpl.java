@@ -1,16 +1,13 @@
 package com.lms.voting.api.service.imp;
 
-import com.lms.voting.api.constant.VotingDetailsConstant;
-import com.lms.voting.api.model.dto.CastVoteRequestDto;
-import com.lms.voting.api.model.dto.PartyVoteResponse;
-import com.lms.voting.api.model.dto.VoteResponseDto;
-import com.lms.voting.api.model.entity.AccountInfo;
-import com.lms.voting.api.model.entity.PartyList;
-import com.lms.voting.api.model.entity.Voting;
 import com.lms.voting.api.exception.DuplicateResourceException;
 import com.lms.voting.api.exception.IneligibleVoterException;
 import com.lms.voting.api.exception.InvalidRequestException;
 import com.lms.voting.api.exception.ResourceNotFoundException;
+import com.lms.voting.api.model.dto.*;
+import com.lms.voting.api.model.entity.AccountInfo;
+import com.lms.voting.api.model.entity.PartyList;
+import com.lms.voting.api.model.entity.Voting;
 import com.lms.voting.api.repository.PartyListRepository;
 import com.lms.voting.api.repository.UserDetailsRepository;
 import com.lms.voting.api.repository.VotingRepository;
@@ -19,12 +16,15 @@ import com.lms.voting.api.util.ReceiptGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import static com.lms.voting.api.constant.VotingDetailsConstant.MINIMUM_VOTING_AGE;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Period;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
+
+import static com.lms.voting.api.constant.VotingDetailsConstant.MINIMUM_VOTING_AGE;
 
 
 @Service
@@ -43,21 +43,10 @@ public class VotingServiceImpl implements VotingService {
     @Transactional
     public VoteResponseDto castVote(CastVoteRequestDto request) {
 
-        // Find and validate user based on NI and Last Name
-        Optional<AccountInfo> userOptional = userDetailsRepository.findByNationalInsuranceNumberAndLastName(
-                request.getNationalInsuranceNumber(),
-                request.getLastName()
-        );
+        AccountInfo userFound = findVoter(request.getNationalInsuranceNumber(), request.getLastName());
 
-        if (userOptional.isEmpty()) {
-            throw new InvalidRequestException(
-                    "Invalid credentials. Please check your National Insurance Number and Last Name."
-            );
-        }
-
-        // Continue processing with the found user
-        AccountInfo userFound = userOptional.get();
         validateVotingEligibility(userFound);
+
         checkExistingVote(userFound);
 
         // Validate party exists
@@ -74,6 +63,52 @@ public class VotingServiceImpl implements VotingService {
                 .referenceNo(vote.getReferenceNo())
                 .timestamp(LocalDateTime.now())
                 .build();
+    }
+
+    @Override
+    public VoterVerificationResponseDto verifyVoter(VerifyVoterRequestDto request) {
+
+        AccountInfo userFound = findVoter(request.getNationalInsuranceNumber(), request.getLastName());
+
+        checkExistingVote(userFound);
+
+        validateVotingEligibility(userFound);
+
+        return VoterVerificationResponseDto.builder()
+                .accountId(userFound.getId())
+                .firstName(userFound.getFirstName())
+                .lastName(userFound.getLastName())
+                .nationalInsuranceNumber(userFound.getNationalInsuranceNumber())
+                .dateOfBirth(userFound.getDateOfBirth())
+                .parties(getAllParties())
+                .build();
+    }
+
+    // Looks up a voter by National Insurance number and last name. Shared by castVote and verifyVoter so both go through the same electoral register match.
+    private AccountInfo findVoter(String nationalInsuranceNumber, String lastName) {
+        Optional<AccountInfo> userOptional = userDetailsRepository.findByNationalInsuranceNumberAndLastName(nationalInsuranceNumber, lastName);
+
+        if (userOptional.isEmpty()) {
+            throw new InvalidRequestException("Invalid credentials. Please check your National Insurance Number and Last Name.");
+        }
+
+        return userOptional.get();
+    }
+
+    private List<PartyListDto> getAllParties() {
+        List<PartyList> partyLists = partyListRepository.findAll();
+
+        List<PartyListDto> partyListDtos = new ArrayList<>();
+
+        for (PartyList partyList : partyLists) {
+            PartyListDto dto = new PartyListDto();
+            dto.setId(partyList.getId());
+            dto.setPartyName(partyList.getPartyName());
+            dto.setPosition(partyList.getPosition());
+            partyListDtos.add(dto);
+        }
+
+        return partyListDtos;
     }
 
     @Override
