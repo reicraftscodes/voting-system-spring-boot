@@ -129,18 +129,25 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     @Transactional
     public PollReferenceRequestDto addUserVoterPollReference(Integer accountInfoId, PollReferenceRequestDto pollReferenceRequestDto) {
 
+        // Find the specific user
         AccountInfo accountInfo = userDetailsRepository.findById(accountInfoId)
-                .orElseThrow(() -> new ResourceNotFoundException(USER_NOT_FOUND_DESCRIPTION + accountInfoId));
+                .orElseThrow(() ->
+                        new ResourceNotFoundException(
+                                USER_NOT_FOUND_DESCRIPTION + accountInfoId));
 
-        long pollReferenceCountForUser = pollReferenceRepository.countByAccountInfoId(accountInfoId);
+        // Count ONLY poll references belonging to this user
+        long pollReferenceCountForUser =
+                pollReferenceRepository.countByAccountInfoId(accountInfoId);
 
+        // Maximum of 2 poll references PER USER
         if (pollReferenceCountForUser >= MAX_POLL_REFERENCES_PER_USER) {
-            log.warn(String.valueOf(VotingDetailsConstant.MAX_POLL_REFERENCES_PER_USER), accountInfoId);
+            log.warn("Maximum poll references reached for accountId={}", accountInfoId);
+
             throw new IllegalArgumentException(ERR_MAX_NUM_ON_REGISTER_REACHED);
         }
 
+        // Create the new poll reference
         PollReference pollReference = new PollReference();
-
         pollReference.setNumRegister(pollReferenceRequestDto.getNumRegister());
         pollReference.setAccountInfo(accountInfo);
 
