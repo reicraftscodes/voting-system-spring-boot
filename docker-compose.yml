@@ -1,21 +1,87 @@
 services:
+
   mysql:
     image: mysql:latest
+    container_name: eballot-mysql
     restart: always
     environment:
-      MYSQL_DATABASE: 'brownCat'
-      MYSQL_USER: 'userOne'
-      MYSQL_PASSWORD: 'project01'
-      MYSQL_ROOT_PASSWORD: 'project01'
+      MYSQL_DATABASE: brownCat
+      MYSQL_USER: userOne
+      MYSQL_PASSWORD: project01
+      MYSQL_ROOT_PASSWORD: project01
     ports:
-      - '3306:3306'
-    expose:
-      # Opens port 3306 on the container
-      - '3306'
-      # Where data will be persisted
+      - "3307:3306"
     volumes:
       - my-db:/var/lib/mysql
+    networks:
+      - eballot
 
-# Name of volume
+  kafka:
+    image: confluentinc/cp-kafka:7.4.0
+    container_name: kafka
+    hostname: kafka
+    restart: always
+    ports:
+      - "9092:9092"
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_NODE_ID: 1
+      KAFKA_PROCESS_ROLES: broker,controller
+
+      KAFKA_LISTENERS: INTERNAL://kafka:29092,EXTERNAL://0.0.0.0:9092,CONTROLLER://kafka:29093
+      KAFKA_ADVERTISED_LISTENERS: INTERNAL://kafka:29092,EXTERNAL://localhost:9092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INTERNAL:PLAINTEXT,EXTERNAL:PLAINTEXT,CONTROLLER:PLAINTEXT
+
+      KAFKA_INTER_BROKER_LISTENER_NAME: INTERNAL
+      KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
+      KAFKA_CONTROLLER_QUORUM_VOTERS: 1@kafka:29093
+
+      CLUSTER_ID: q8m8RjChQm-U3kOmAZq5WA
+
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+      KAFKA_LOG_DIRS: /tmp/kraft-combined-logs
+    networks:
+      - eballot
+
+  kafka-ui:
+    image: provectuslabs/kafka-ui:latest
+    container_name: kafka-ui
+    restart: always
+    ports:
+      - "8081:8080"
+    environment:
+      KAFKA_CLUSTERS_0_NAME: eballot-cluster
+      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka:29092
+    depends_on:
+      - kafka
+    networks:
+      - eballot
+
+  grafana:
+    image: grafana/grafana:10.0.2
+    container_name: grafana
+    restart: always
+    ports:
+      - "3000:3000"
+    networks:
+      - eballot
+
+  prometheus:
+    image: prom/prometheus
+    container_name: prometheus
+    restart: always
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    networks:
+      - eballot
+
 volumes:
   my-db:
+
+networks:
+  eballot:
+    driver: bridge
