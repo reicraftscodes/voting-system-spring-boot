@@ -7,6 +7,7 @@
   <img src="https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white" />
   <img src="https://img.shields.io/badge/Prometheus-E6522C?style=for-the-badge&logo=prometheus&logoColor=white" />
   <img src="https://img.shields.io/badge/Grafana-F46800?style=for-the-badge&logo=grafana&logoColor=white" />
+  <img src="https://img.shields.io/badge/Apache%20Kafka-FF6A00?style=for-the-badge&logo=apachekafka&logoColor=white" />
   <img src="https://img.shields.io/badge/Spring%20Actuator-6DB33F?style=for-the-badge&logo=spring&logoColor=white" />
   <img src="https://img.shields.io/badge/Swagger-85EA2D?style=for-the-badge&logo=swagger&logoColor=black" />
   <img src="https://img.shields.io/badge/Postman-FF6C37?style=for-the-badge&logo=postman&logoColor=white" />
@@ -56,8 +57,7 @@ E-Ballot UK is a web-based election simulator that demonstrates a First-Past-The
 ## Architectural Design
 This project is built using a layered monolithic architecture, chosen to keep the system simple, maintainable, and easy to extend while preserving clear separation of concerns between components.
 
-![Architecture](https://res.cloudinary.com/dphavvlgs/image/upload/v1781989442/clkja42_dhh80i.png)
-
+<img src="https://res.cloudinary.com/dphavvlgs/image/upload/v1786626092/Container-eballot_nwqo6y.png" width="600" alt="eBallot">)
 
 ## Sequence Diagram
 This sequence diagram shows the step-by-step process of user authentication and vote casting within the system.
@@ -76,14 +76,8 @@ This sequence diagram shows the step-by-step process of user authentication and 
 
 The services are documented using Swagger (OpenAPI). To access the API documentation locally, run the application and navigate to: http://localhost:8080/swagger-ui/index.html
 
-![Swagger UI](https://res.cloudinary.com/dvwxun4vh/image/upload/v1768582221/Swagger_sauuxo.png)
-
-
 ## Testing
 This project is also being actively checked with Sonarqube integrated in the developer's IDE. An analysis with SonarQube to would reveal the following:
-
-![SonarQube](https://res.cloudinary.com/dvwxun4vh/image/upload/v1768582564/sonarqube_wasubl.png)
-
 
 ## Performance Testing
 ![Performance Testing](https://res.cloudinary.com/dvwxun4vh/image/upload/v1768584967/2026-01-16_17_35_38-Cast_Vote_Perf_Test_-_Laurate_May_s_Workspace_iqa3af.png)
